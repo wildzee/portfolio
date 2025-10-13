@@ -6,13 +6,19 @@ import { useState, useEffect } from 'react'
 import emailjs from '@emailjs/browser'
 
 export default function Home() {
+  const [mounted, setMounted] = useState(false)
   const [activeSection, setActiveSection] = useState('home')
   const [showMenu, setShowMenu] = useState(false)
   const [formData, setFormData] = useState({ name: '', email: '', message: '' })
 
   useEffect(() => {
+    setMounted(true)
     emailjs.init('msBwFZssq8MrNjXhP')
   }, [])
+
+  if (!mounted) {
+    return null
+  }
 
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId)
@@ -68,6 +74,15 @@ export default function Home() {
                   onClick={() => scrollToSection('work')}
                 >
                   Work
+                </a>
+              </li>
+              <li className="nav__item">
+                <a 
+                  href="#resume" 
+                  className={`nav__link ${activeSection === 'resume' ? 'active-link' : ''}`}
+                  onClick={() => scrollToSection('resume')}
+                >
+                  Resume
                 </a>
               </li>
               <li className="nav__item">
@@ -185,6 +200,52 @@ export default function Home() {
                 <h3 className="work__title">Iqra App - Co-Designer & UX Lead</h3>
                 <p className="work__description">A live mobile application for Roman Hindi users, available on the Google Play Store and Apple App Store.</p>
                 <Link href="/case-studies/iqra" className="work__button button">View Case Study</Link>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Resume Section */}
+        <section className="resume section" id="resume">
+          <h2 className="section-title">Resume</h2>
+          <div className="resume__container bd-grid">
+            <div className="resume__content">
+              <p className="resume__text">
+                Download my complete resume to learn more about my experience, skills, and achievements.
+              </p>
+              <div className="resume__buttons">
+                <a 
+                  href="/resume/MdAfjalKhan_Resume_2025.pdf" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="button resume__button"
+                >
+                  <i className='bx bx-download'></i>
+                  Download Resume
+                </a>
+                <a 
+                  href="/resume/MdAfjalKhan_Resume_2025.pdf" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="button button--outline resume__button"
+                >
+                  <i className='bx bx-show'></i>
+                  View Resume
+                </a>
+              </div>
+            </div>
+            <div className="resume__preview">
+              <div className="resume__frame">
+                <iframe 
+                  src="/resume/MdAfjalKhan_Resume_2025.pdf" 
+                  width="100%" 
+                  height="600"
+                  title="Md Afjal Khan Resume"
+                >
+                  <p>Your browser does not support PDFs. 
+                    <a href="/resume/MdAfjalKhan_Resume_2025.pdf">Download the PDF</a>.
+                  </p>
+                </iframe>
               </div>
             </div>
           </div>
