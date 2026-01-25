@@ -108,9 +108,10 @@ export default function Home() {
         <section className="home bd-grid" id="home">
           <div className="home__data">
             <h1 className="home__title">
-              <span className="home__title-color">Md Afjal Khan</span><br />Product Designer &<br />AI/ML Founder
+              <span className="home__title-color">Senior Product Designer</span><br />AI-SaaS Architect
             </h1>
-            <a href="#contact" className="button" onClick={() => scrollToSection('contact')}>Contact</a>
+            <p className="home__subtitle">Architecting high-performance digital ecosystems for enterprise scale and AI-driven startups.</p>
+            <a href="#contact" className="button" onClick={() => scrollToSection('contact')}>Consult for your Project</a>
           </div>
 
           <div className="home__social">
@@ -148,7 +149,10 @@ export default function Home() {
             <div>
               <h2 className="about__subtitle">I&apos;am Md Afjal Khan</h2>
               <p className="about__text">
-                As the Founder & Product Lead of Rasoipay.com, I have a proven track record of bringing innovative, AI/ML-driven products from conception to production. My expertise is in full-stack UX/UI design and strategic product development. I am now seeking a foundational role within a dynamic team to apply my entrepreneurial experience, contribute deeply to a single product, and grow with the company long-term.
+                I am a Product Architect focused on bridging the gap between complex business logic and high-conversion user experiences. Currently, I am leading the digital transformation of enterprise ecosystems at Danway EME, migrating legacy industrial workflows into automated, high-performance dashboards.
+              </p>
+              <p className="about__text">
+                As the Founder of Rasoi Pay, I&apos;ve pioneered the integration of Agentic AI in the B2B SaaS space, optimizing user retention and order-flow efficiency. I don&apos;t just design interfaces; I build ROI-driven products that scale. I&apos;m currently based in Dubai, helping companies solve high-stakes design challenges with data and engineering-led UX.
               </p>
             </div>
           </div>
@@ -159,19 +163,19 @@ export default function Home() {
           <h2 className="section-title">Skills & Expertise</h2>
           <div className="skills__container bd-grid">
             <div>
-              <h3 className="skills__category">UX/UI Design</h3>
+              <h3 className="skills__category">Product Strategy</h3>
               <p className="skills__list">
-                User Research, Wireframing, Prototyping, Usability Testing, Information Architecture, Interaction Design, Design Systems, Accessibility
+                Service Design, Design Systems Governance, Conversion Rate Optimization (CRO), Heuristic Evaluation, Stakeholder Management
               </p>
               
-              <h3 className="skills__category">Product Development</h3>
+              <h3 className="skills__category">Design & UX</h3>
               <p className="skills__list">
-                Product Strategy, Roadmap Planning, Full Stack Development (Next.js, Firebase), AI/ML Integration, Payment Gateway Integration
+                Atomic Design Systems, Advanced Prototyping, User Journey Mapping, Accessibility (WCAG 2.2), Interaction Design
               </p>
               
-              <h3 className="skills__category">Tools</h3>
+              <h3 className="skills__category">Technical Stack</h3>
               <p className="skills__list">
-                Figma, Adobe XD, Photoshop, Hotjar, Maze, Google Analytics, Sketch
+                Next.js, Firebase, Agentic AI Integration, AI/ML Logic Implementation, Cursor AI, Front-end Architecture
               </p>
             </div>
           </div>
@@ -183,22 +187,34 @@ export default function Home() {
           <div className="work__container bd-grid">
             <div className="work__project">
               <div className="work__img">
-                <Image src="/Rasoi_Pay/rasoipay_mochup.jpg" alt="Rasoipay.com Platform" width={400} height={250} style={{objectFit: 'cover', width: '100%', height: '100%', display: 'block'}} />
+                <Image src="/Rasoi_Pay/rasoipay_mochup.jpg" alt="Rasoi Pay Platform" width={400} height={250} style={{objectFit: 'cover', width: '100%', height: '100%', display: 'block'}} />
               </div>
               <div className="work__content">
-                <h3 className="work__title">Rasoipay.com - Founder & Product Lead</h3>
-                <p className="work__description">An AI-powered B2B SaaS platform for restaurant management, built from concept to a live, production-ready application.</p>
+                <h3 className="work__title">Rasoi Pay — Founder & Product Lead</h3>
+                <p className="work__description">An AI-powered B2B SaaS platform for restaurant management. Built from concept to production, integrating Agentic AI for menu optimization and real-time payment architectures.</p>
                 <Link href="/case-studies/rasoipay" className="work__button button">View Case Study</Link>
               </div>
             </div>
             
             <div className="work__project">
               <div className="work__img">
+                <div style={{background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', width: '100%', height: '250px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontSize: '1.5rem', fontWeight: 'bold'}}>
+                  Confidential Project
+                </div>
+              </div>
+              <div className="work__content">
+                <h3 className="work__title">Danway EME — Lead Product Designer</h3>
+                <p className="work__description">Designing a proprietary enterprise resource dashboard for a multi-million dollar engineering firm. Automating workforce tracking and labor-cost analytics for 500+ employees.</p>
+              </div>
+            </div>
+
+            <div className="work__project">
+              <div className="work__img">
                 <Image src="/Iqra/Iqra_mockup.png" alt="Iqra App" width={400} height={250} style={{objectFit: 'cover', width: '100%', height: '100%', display: 'block'}} />
               </div>
               <div className="work__content">
-                <h3 className="work__title">Iqra App - Co-Designer & UX Lead</h3>
-                <p className="work__description">A live mobile application for Roman Hindi users, available on the Google Play Store and Apple App Store.</p>
+                <h3 className="work__title">Iqra App — UX Lead & Co-Designer</h3>
+                <p className="work__description">Scaling a live mobile product to 50,000+ users. Focused on high-accessibility design and Roman-Hindi localized user flows.</p>
                 <Link href="/case-studies/iqra" className="work__button button">View Case Study</Link>
               </div>
             </div>
@@ -211,11 +227,11 @@ export default function Home() {
           <div className="resume__container bd-grid">
             <div className="resume__content">
               <p className="resume__text">
-                Download my complete resume to learn more about my experience, skills, and achievements.
+                Download my Technical Resume for Senior Product & Strategy roles.
               </p>
               <div className="resume__buttons">
                 <a 
-                  href="/resume/MdAfjalKhan_Resume_2025.pdf" 
+                  href="/resume/MdAfjalKhan_Resume_2026.pdf" 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="button resume__button"
@@ -223,29 +239,6 @@ export default function Home() {
                   <i className='bx bx-download'></i>
                   Download Resume
                 </a>
-                <a 
-                  href="/resume/MdAfjalKhan_Resume_2025.pdf" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="button button--outline resume__button"
-                >
-                  <i className='bx bx-show'></i>
-                  View Resume
-                </a>
-              </div>
-            </div>
-            <div className="resume__preview">
-              <div className="resume__frame">
-                <iframe 
-                  src="/resume/MdAfjalKhan_Resume_2025.pdf" 
-                  width="100%" 
-                  height="600"
-                  title="Md Afjal Khan Resume"
-                >
-                  <p>Your browser does not support PDFs. 
-                    <a href="/resume/MdAfjalKhan_Resume_2025.pdf">Download the PDF</a>.
-                  </p>
-                </iframe>
               </div>
             </div>
           </div>
@@ -253,7 +246,7 @@ export default function Home() {
 
         {/* Contact Section */}
         <section className="contact section" id="contact">
-          <h2 className="section-title">Contact</h2>
+          <h2 className="section-title">Partnership & Consultations</h2>
           <div className="contact__container bd-grid">
             <form className="contact__form" onSubmit={async (e) => {
               e.preventDefault()
@@ -284,7 +277,7 @@ export default function Home() {
               />
               <input 
                 type="email" 
-                placeholder="Email" 
+                placeholder="Business Email" 
                 className="contact__input" 
                 value={formData.email}
                 onChange={(e) => setFormData({...formData, email: e.target.value})}
@@ -293,7 +286,7 @@ export default function Home() {
               <textarea 
                 cols={0} 
                 rows={10} 
-                placeholder="Message"
+                placeholder="Tell me about your project/product challenges"
                 className="contact__input"
                 value={formData.message}
                 onChange={(e) => setFormData({...formData, message: e.target.value})}

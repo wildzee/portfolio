@@ -1,39 +1,48 @@
-# Afjal Khan - Portfolio (Next.js)
+# Md Afjal Khan - Senior Product Designer Portfolio
 
-A modern, responsive portfolio website built with Next.js 15, TypeScript, and original CSS design - migrated from HTML to React while maintaining exact visual fidelity.
+A modern, professional portfolio website showcasing senior-level product design and AI-SaaS architecture expertise. Built with Next.js 15, TypeScript, and custom CSS.
 
-## 🚀 Migration Overview
+## 🚀 Recent Updates (January 2026)
 
-This project is a complete migration of an existing HTML portfolio to Next.js while preserving every design detail:
+### Portfolio Repositioning
+- **Hero Section**: Updated to "Senior Product Designer | AI-SaaS Architect" with professional subtitle
+- **About Section**: Repositioned as Product Architect with focus on enterprise solutions and AI integration
+- **Skills Section**: Reorganized into Product Strategy, Design & UX, and Technical Stack categories
+- **Work Section**: Added Danway EME project and reorganized case studies
+- **Resume**: Updated to 2026 version highlighting senior roles
+- **Contact Form**: Rebranded as "Partnership & Consultations" with business-focused fields
 
-- **Original HTML Portfolio**: `/Users/mdafjalkhan/my-portfolio`
-- **Next.js Version**: This repository
-- **Design Fidelity**: 100% visual match with original
+### Technical Improvements
+- Fixed z-index layering issues in hero section
+- Improved responsive text layout to prevent overlap with profile image
+- Added flexbox alignment for case study cards with bottom-aligned buttons
+- Enhanced visual hierarchy and professional presentation
 
 ## ✨ Features
 
-- **Exact Design Match**: Pixel-perfect recreation of original HTML portfolio
+- **Professional Positioning**: Senior-level product design and AI-SaaS architecture focus
 - **Modern Framework**: Built with Next.js 15 and TypeScript
-- **Original CSS**: Preserved all original CSS variables, animations, and responsive design
-- **Organic SVG Profile**: Custom SVG blob shape with masked profile image
-- **Responsive Design**: Mobile-first approach with all original breakpoints
+- **Responsive Design**: Mobile-first approach with optimized breakpoints
+- **Case Studies**: Detailed project showcases including Rasoi Pay, Danway EME, and Iqra App
+- **Email Integration**: EmailJS integration for contact form
 - **Performance Optimized**: Next.js Image optimization and proper loading priorities
 - **SEO Ready**: Proper meta tags and semantic HTML structure
 
 ## 🎨 Design System
 
 - **Color Scheme**: Blue primary (#4f9cf9) with dark secondary colors
-- **Typography**: Poppins font family with original font weights
+- **Typography**: Poppins font family with professional hierarchy
 - **Icons**: Boxicons for consistent iconography
-- **Layout**: CSS Grid and Flexbox with original responsive breakpoints
+- **Layout**: CSS Grid and Flexbox with responsive breakpoints
 
 ## 🛠 Tech Stack
 
 - **Framework**: Next.js 15 with App Router
 - **Language**: TypeScript
-- **Styling**: Original CSS with CSS Variables
+- **Styling**: Custom CSS with CSS Variables
 - **Icons**: Boxicons CDN
 - **Images**: Next.js Image component with optimization
+- **Email**: EmailJS for contact form
 - **Deployment**: Vercel ready
 
 ## 📁 Project Structure
@@ -42,47 +51,59 @@ This project is a complete migration of an existing HTML portfolio to Next.js wh
 src/
 ├── app/
 │   ├── case-studies/
-│   │   └── bookshelf/
-│   │       └── page.tsx          # Bookshelf case study
-│   ├── globals.css               # Original portfolio CSS
+│   │   ├── rasoipay/
+│   │   │   └── page.tsx          # Rasoi Pay case study
+│   │   └── iqra/
+│   │       └── page.tsx          # Iqra App case study
+│   ├── globals.css               # Custom CSS with design system
 │   ├── layout.tsx                # Root layout with Boxicons
 │   └── page.tsx                  # Main portfolio page
 public/
-├── images/                       # All portfolio images
-│   ├── perfil.png               # Profile image for SVG blob
-│   ├── about.jpg                # About section image
-│   ├── work1.jpg - work6.jpg    # Portfolio work samples
-└── book_shelf/                   # Case study images
+├── images/                       # Portfolio images
+│   ├── perfil.png               # Profile image
+│   └── about.jpg                # About section image
+├── Rasoi_Pay/                    # Rasoi Pay case study assets
+├── Iqra/                         # Iqra case study assets
+└── resume/
+    └── MdAfjalKhan_Resume_2026.pdf  # Latest resume
 ```
 
-## 🔧 Key Implementation Details
+## 🔧 Key Features
 
-### SVG Profile Image
-- Custom organic blob shape with SVG masking
-- Profile image positioned within blue organic shape
-- Proper mask fill for image visibility
+### Hero Section
+- Professional title: "Senior Product Designer | AI-SaaS Architect"
+- Compelling subtitle highlighting enterprise and AI expertise
+- Custom organic SVG blob shape with profile image
+- Call-to-action: "Consult for your Project"
 
-### Responsive Navigation
-- Mobile hamburger menu with smooth transitions
-- Active link highlighting
-- Smooth scroll navigation between sections
+### About Section
+- Product Architect positioning
+- Focus on enterprise digital transformation at Danway EME
+- Founder story of Rasoi Pay with AI integration
+- Dubai-based with global perspective
 
-### Image Optimization
-- Next.js Image component for all images
-- Proper aspect ratios and loading priorities
-- Performance warnings resolved
+### Skills & Expertise
+- **Product Strategy**: Service Design, Design Systems Governance, CRO, Stakeholder Management
+- **Design & UX**: Atomic Design Systems, Advanced Prototyping, Accessibility (WCAG 2.2)
+- **Technical Stack**: Next.js, Firebase, Agentic AI Integration, Front-end Architecture
 
-### CSS Architecture
-- Original CSS variables preserved
-- All responsive breakpoints maintained
-- Hover effects and animations intact
+### Work Portfolio
+- **Rasoi Pay**: AI-powered B2B SaaS platform for restaurant management
+- **Danway EME**: Enterprise resource dashboard for multi-million dollar engineering firm
+- **Iqra App**: Mobile product with 5,000+ users and high-accessibility design
+
+### Contact Form
+- Rebranded as "Partnership & Consultations"
+- Business Email field
+- Project/product challenges textarea
+- EmailJS integration for reliable delivery
 
 ## 🚀 Getting Started
 
 1. **Clone the repository**
    ```bash
    git clone <repository-url>
-   cd portfolio-nextjs
+   cd portfolio-AfjalKhan
    ```
 
 2. **Install dependencies**
@@ -90,33 +111,41 @@ public/
    npm install
    ```
 
-3. **Run development server**
+3. **Set up environment variables**
+   Create a `.env.local` file with your EmailJS credentials:
+   ```
+   NEXT_PUBLIC_EMAILJS_SERVICE_ID=your_service_id
+   NEXT_PUBLIC_EMAILJS_TEMPLATE_ID=your_template_id
+   NEXT_PUBLIC_EMAILJS_PUBLIC_KEY=your_public_key
+   ```
+
+4. **Run development server**
    ```bash
    npm run dev
    ```
 
-4. **Open browser**
+5. **Open browser**
    Navigate to [http://localhost:3000](http://localhost:3000)
 
 ## 📱 Sections
 
-- **Home**: Hero section with organic SVG profile image
-- **About**: Personal introduction with profile image
-- **Skills**: Technical skills with progress bars and icons
-- **Work**: Portfolio showcase with hover effects
-- **Contact**: Contact form and information
+- **Home**: Hero section with professional positioning and organic SVG profile
+- **About**: Product Architect narrative with enterprise and startup experience
+- **Skills**: Organized by Product Strategy, Design & UX, and Technical Stack
+- **Work**: Three featured projects with case studies
+- **Resume**: Downloadable 2026 resume for senior roles
+- **Partnership & Consultations**: Business-focused contact form
 - **Footer**: Social links and copyright
 
-## 🎯 Migration Achievements
+## 🎯 Professional Positioning
 
-- ✅ 100% visual fidelity with original HTML design
-- ✅ All CSS animations and transitions preserved
-- ✅ Responsive design across all breakpoints
-- ✅ TypeScript integration without design changes
-- ✅ Next.js Image optimization implemented
-- ✅ SEO and performance optimizations
-- ✅ Bookshelf case study page migrated
-- ✅ All original images and assets transferred
+- ✅ Senior Product Designer & AI-SaaS Architect
+- ✅ Enterprise digital transformation experience
+- ✅ AI/ML integration expertise
+- ✅ B2B SaaS product development
+- ✅ Design systems governance
+- ✅ ROI-driven product strategy
+- ✅ Dubai-based with global reach
 
 ## 🔗 Links
 
@@ -126,8 +155,8 @@ public/
 
 ## 📄 License
 
-This project maintains the same license as the original HTML portfolio.
+© 2025 MD Afjal Khan. All rights reserved
 
 ---
 
-**Migration Status**: ✅ Complete - Exact visual match achieved with modern Next.js architecture# portfolio
+**Status**: ✅ Production Ready - Senior-level professional portfolio
