@@ -2,9 +2,18 @@
 
 A modern, professional portfolio website showcasing senior-level product design and AI-SaaS architecture expertise. Built with Next.js 15, TypeScript, and custom CSS.
 
-## 🚀 Recent Updates (January 2026)
+## 🚀 Recent Updates (February 2026)
 
-### Portfolio Repositioning
+### Danway EME Case Study Enhancement
+- **Strategic Positioning**: Reframed as "Workforce Intelligence Platform - Internal Digital Transformation Initiative"
+- **Role Refinement**: Updated to "Product Architect & Internal Digital Lead" for professional credibility
+- **Business Impact**: Added ROI metrics (80% reduction in manual entry, zero-error tolerance, MOHRE compliance)
+- **SAP Integration**: Emphasized throughout with focus on eliminating 24-48 hour reporting delays
+- **Scale Update**: Updated from 500+ to 5,000+ employees across 40 sites
+- **Pain Points**: Added MOHRE compliance and audit risk challenges
+- **Live Demo**: Integrated Vercel deployment link for interactive demonstration
+
+### Portfolio Repositioning (January 2026)
 - **Hero Section**: Updated to "Senior Product Designer | AI-SaaS Architect" with professional subtitle
 - **About Section**: Repositioned as Product Architect with focus on enterprise solutions and AI integration
 - **Skills Section**: Reorganized into Product Strategy, Design & UX, and Technical Stack categories
@@ -53,6 +62,8 @@ src/
 │   ├── case-studies/
 │   │   ├── rasoipay/
 │   │   │   └── page.tsx          # Rasoi Pay case study
+│   │   ├── danway/
+│   │   │   └── page.tsx          # Danway EME case study (NEW)
 │   │   └── iqra/
 │   │       └── page.tsx          # Iqra App case study
 │   ├── globals.css               # Custom CSS with design system
@@ -65,7 +76,7 @@ public/
 ├── Rasoi_Pay/                    # Rasoi Pay case study assets
 ├── Iqra/                         # Iqra case study assets
 └── resume/
-    └── MdAfjalKhan_Resume_2026.pdf  # Latest resume
+    └── MdAfjalKhan_Resume_2026.pdf  # Latest resume (Product Architect)
 ```
 
 ## 🔧 Key Features
@@ -88,9 +99,24 @@ public/
 - **Technical Stack**: Next.js, Firebase, Agentic AI Integration, Front-end Architecture
 
 ### Work Portfolio
-- **Rasoi Pay**: AI-powered B2B SaaS platform for restaurant management
-- **Danway EME**: Enterprise resource dashboard for multi-million dollar engineering firm
-- **Iqra App**: Mobile product with 5,000+ users and high-accessibility design
+
+#### Rasoi Pay - Founder & Product Lead
+- AI-powered B2B SaaS platform for restaurant management
+- Agentic AI integration for menu optimization
+- Real-time payment architectures
+- [Live Site](https://rasoipay.com/)
+
+#### Danway EME - Product Architect & Internal Digital Lead
+- Workforce Intelligence Platform for 5,000+ employees across 40 sites
+- SAP integration architecture eliminating 24-48 hour reporting delays
+- 80% reduction in manual timesheet entry time
+- MOHRE compliance-ready digital audit trail
+- [Live Demo](https://danway-963f6ywqn-mdafjalkhan29-gmailcoms-projects.vercel.app)
+
+#### Iqra App - UX Lead & Co-Designer
+- Mobile product with 50,000+ users
+- High-accessibility design
+- Roman-Hindi localized user flows
 
 ### Contact Form
 - Rebranded as "Partnership & Consultations"
@@ -132,7 +158,7 @@ public/
 - **Home**: Hero section with professional positioning and organic SVG profile
 - **About**: Product Architect narrative with enterprise and startup experience
 - **Skills**: Organized by Product Strategy, Design & UX, and Technical Stack
-- **Work**: Three featured projects with case studies
+- **Work**: Three featured projects with case studies and live demos
 - **Resume**: Downloadable 2026 resume for senior roles
 - **Partnership & Consultations**: Business-focused contact form
 - **Footer**: Social links and copyright
@@ -140,11 +166,12 @@ public/
 ## 🎯 Professional Positioning
 
 - ✅ Senior Product Designer & AI-SaaS Architect
-- ✅ Enterprise digital transformation experience
+- ✅ Enterprise digital transformation experience (5,000+ employees, 40 sites)
 - ✅ AI/ML integration expertise
 - ✅ B2B SaaS product development
 - ✅ Design systems governance
 - ✅ ROI-driven product strategy
+- ✅ SAP integration architecture
 - ✅ Dubai-based with global reach
 
 ## 🔗 Links
@@ -159,4 +186,5 @@ public/
 
 ---
 
-**Status**: ✅ Production Ready - Senior-level professional portfolio
+**Status**: ✅ Production Ready - Senior-level professional portfolio with enterprise case studies
+

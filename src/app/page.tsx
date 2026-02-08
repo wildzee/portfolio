@@ -204,7 +204,8 @@ export default function Home() {
               </div>
               <div className="work__content">
                 <h3 className="work__title">Danway EME — Lead Product Designer</h3>
-                <p className="work__description">Designing a proprietary enterprise resource dashboard for a multi-million dollar engineering firm. Automating workforce tracking and labor-cost analytics for 500+ employees.</p>
+                <p className="work__description">Designing a proprietary enterprise resource dashboard for a multi-million dollar engineering firm. Automating workforce tracking and labor-cost analytics for 5,000+ employees.</p>
+                <Link href="/case-studies/danway" className="work__button button">View Case Study</Link>
               </div>
             </div>
 
