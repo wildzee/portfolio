@@ -4,7 +4,7 @@ import 'material-icons/iconfont/material-icons.css'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'Afjal Khan - Portfolio',
+  title: 'Afjal Khan - Product Designer',
   description: 'UI/UX Designer Portfolio',
 }
 
