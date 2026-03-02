@@ -179,7 +179,7 @@ export default function Home() {
       status: 'SHIPPED',
       title: 'Rasoi Pay',
       role: 'Founder & Product Lead',
-      description: 'AI-powered B2B SaaS for restaurant management',
+      description: 'B2B SaaS for restaurant management',
       href: '/case-studies/rasoipay',
       public: true,
     },
@@ -658,7 +658,7 @@ export default function Home() {
               {/* Download CV */}
               <div className="flex justify-end">
                 <a
-                  href="/resume/MdAfjalKhan_Resume_2026.pdf"
+                  href="/resume/Afjal_Khan_CV.pdf"
                   target="_blank"
                   rel="noreferrer"
                   data-cursor="Open"
