@@ -2,334 +2,836 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 import emailjs from '@emailjs/browser'
-import { motion, useScroll, useTransform, Variants } from 'framer-motion'
+import { motion, useScroll, useTransform, useInView, useSpring, Variants, AnimatePresence } from 'framer-motion'
+import CustomCursor from './components/CustomCursor'
 
+function CountUp({ target, duration = 2 }: { target: number; duration?: number }) {
+  const ref = useRef<HTMLSpanElement>(null)
+  const isInView = useInView(ref, { once: true, margin: '-50px' })
+  const [count, setCount] = useState(0)
+
+  useEffect(() => {
+    if (!isInView) return
+    let start = 0
+    const increment = target / (duration * 60)
+    const timer = () => {
+      start += increment
+      if (start >= target) {
+        setCount(target)
+        return
+      }
+      setCount(Math.floor(start))
+      requestAnimationFrame(timer)
+    }
+    requestAnimationFrame(timer)
+  }, [isInView, target, duration])
+
+  return <span ref={ref}>{count.toLocaleString()}</span>
+}
+
+// ─── Preloader Component ───────────────────────────────────────────────────────
+function Preloader({ onComplete, isDark }: { onComplete: () => void; isDark: boolean }) {
+  useEffect(() => {
+    const timer = setTimeout(onComplete, 2800)
+    return () => clearTimeout(timer)
+  }, [onComplete])
+
+  const bg = isDark ? '#050505' : '#fafafa'
+  const textColor = isDark ? 'rgba(255,255,255,0.4)' : 'rgba(0,0,0,0.4)'
+  const trackColor = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)'
+  const logoSrc = isDark ? '/images/logos/logo-green.svg' : '/images/logos/logo-black.svg'
+
+  return (
+    <motion.div
+      className="fixed inset-0 z-[100] flex flex-col items-center justify-center overflow-hidden"
+      style={{ background: bg }}
+      initial={{ opacity: 1 }}
+      exit={{ opacity: 0, y: -20, transition: { duration: 0.9, ease: [0.76, 0, 0.24, 1] } }}
+    >
+      {/* Logo */}
+      <motion.div
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
+        className="mb-8"
+      >
+        <img src={logoSrc} alt="Md Afjal Khan" className="w-14 h-14" />
+      </motion.div>
+
+      {/* Name */}
+      <motion.p
+        initial={{ opacity: 0, y: 6 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.3 }}
+        className="text-[10px] tracking-[0.4em] uppercase mb-10 font-sans"
+        style={{ color: textColor }}
+      >
+        Md Afjal Khan
+      </motion.p>
+
+      {/* Thin progress line */}
+      <div className="w-32 h-[1px] relative overflow-hidden rounded-full" style={{ background: trackColor }}>
+        <motion.div
+          className="absolute left-0 top-0 h-full rounded-full"
+          style={{ background: '#3CDA64' }}
+          initial={{ width: '0%' }}
+          animate={{ width: '100%' }}
+          transition={{ duration: 2.2, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
+        />
+      </div>
+    </motion.div>
+  )
+}
+
+// ─── Main Page ─────────────────────────────────────────────────────────────────
 export default function Home() {
   const [mounted, setMounted] = useState(false)
+  const [showPreloader, setShowPreloader] = useState(true)
   const [activeSection, setActiveSection] = useState('home')
   const [showMenu, setShowMenu] = useState(false)
   const [formData, setFormData] = useState({ name: '', email: '', message: '' })
+  const [formStatus, setFormStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle')
+  const [isDark, setIsDark] = useState(true)
+  const [expandedExp, setExpandedExp] = useState<number | null>(null)
 
-  const { scrollY } = useScroll();
-  const titleWeight = useTransform(scrollY, [0, 300], [800, 300]);
-  const subtitleWeight = useTransform(scrollY, [0, 300], [300, 600]);
+  // Scroll + Parallax
+  const { scrollYProgress } = useScroll()
+  const progressWidth = useTransform(scrollYProgress, [0, 1], ['0%', '100%'])
+  const heroY = useTransform(scrollYProgress, [0, 0.15], [0, 150])
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.12], [1, 0])
 
   useEffect(() => {
+    // Read saved theme preference or default to dark
+    const saved = localStorage.getItem('theme')
+    const prefersDark = saved ? saved === 'dark' : true
+    setIsDark(prefersDark)
+    document.documentElement.classList.toggle('dark', prefersDark)
     setMounted(true)
     emailjs.init('msBwFZssq8MrNjXhP')
   }, [])
 
-  if (!mounted) {
-    return null
-  }
+  // Sync dark class and persist on change
+  useEffect(() => {
+    if (!mounted) return
+    document.documentElement.classList.toggle('dark', isDark)
+    localStorage.setItem('theme', isDark ? 'dark' : 'light')
+  }, [isDark, mounted])
+
+  // Intersection Observer for auto-updating active nav
+  useEffect(() => {
+    if (!mounted) return
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) setActiveSection(entry.target.id)
+        })
+      },
+      { rootMargin: '-40% 0px -55% 0px' }
+    )
+    document.querySelectorAll('section[id]').forEach((s) => observer.observe(s))
+    return () => observer.disconnect()
+  }, [mounted])
+
+  if (!mounted) return null
 
   const scrollToSection = (sectionId: string) => {
-    const element = document.getElementById(sectionId)
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' })
-      setActiveSection(sectionId)
-      setShowMenu(false)
-    }
+    document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' })
+    setShowMenu(false)
   }
 
-  const navItems = ['home', 'about', 'skills', 'work', 'resume', 'contact'];
-
   const fadeInUp: Variants = {
-    hidden: { opacity: 0, y: 40 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut" } }
-  };
-
-  const staggerContainer: Variants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: 'easeOut' } },
+  }
+  const stagger: Variants = {
     hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.2
-      }
-    }
-  };
+    visible: { opacity: 1, transition: { staggerChildren: 0.15 } },
+  }
+  // Word-by-word reveal for hero
+  const wordContainer: Variants = {
+    hidden: {},
+    visible: { transition: { staggerChildren: 0.08, delayChildren: 0.3 } },
+  }
+  const wordReveal: Variants = {
+    hidden: { y: '100%', opacity: 0 },
+    visible: { y: '0%', opacity: 1, transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] } },
+  }
+  // Skill reveal stagger
+  const skillStagger: Variants = {
+    hidden: {},
+    visible: { transition: { staggerChildren: 0.06, delayChildren: 0.1 } },
+  }
+  const skillReveal: Variants = {
+    hidden: { opacity: 0, x: -30 },
+    visible: { opacity: 1, x: 0, transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] } },
+  }
+
+  const navItems = [
+    { id: 'work', label: 'Works' },
+    { id: 'about', label: 'About' },
+    { id: 'contact', label: 'Contact' },
+  ]
+
+  const projects = [
+    {
+      status: 'SHIPPED',
+      title: 'Rasoi Pay',
+      role: 'Founder & Product Lead',
+      description: 'AI-powered B2B SaaS for restaurant management',
+      href: '/case-studies/rasoipay',
+      public: true,
+    },
+    {
+      status: 'SHIPPED',
+      title: 'Iqra App',
+      role: 'UX Lead & Co-Designer',
+      description: 'Mobile product, 50,000+ active users',
+      href: '/case-studies/iqra',
+      public: true,
+    },
+    {
+      status: 'CONFIDENTIAL',
+      title: 'Danway EME',
+      role: 'Lead Product Designer',
+      description: 'Enterprise workforce & labor-cost dashboard',
+      href: null,
+      public: false,
+    },
+  ]
 
   return (
-    <div className="bg-background text-foreground min-h-screen overflow-x-hidden selection:bg-primary selection:text-white pb-20">
-      {/* Header */}
-      <header className="fixed top-0 left-0 w-full z-50 bg-background/80 backdrop-blur-md border-b border-[rgba(255,255,255,0.05)]">
-        <nav className="max-w-6xl mx-auto px-6 h-20 flex justify-between items-center">
-          <div>
-            <a href="#" className="text-xl font-display font-bold tracking-wider text-foreground hover:text-primary transition-colors">MD AFJAL KHAN</a>
-          </div>
+    <div className="bg-background text-foreground min-h-screen selection:bg-primary/20 selection:text-primary">
+      <AnimatePresence>
+        {showPreloader && <Preloader key="preloader" isDark={isDark} onComplete={() => setShowPreloader(false)} />}
+      </AnimatePresence>
 
-          {/* Desktop Menu */}
-          <div className="hidden md:block">
-            <ul className="flex space-x-8">
-              {navItems.map((item) => (
-                <li key={item}>
-                  <a
-                    href={`#${item}`}
-                    className={`text-sm uppercase tracking-widest font-medium transition-all hover:text-primary ${activeSection === item ? 'text-primary' : 'text-gray-400'}`}
-                    onClick={(e) => { e.preventDefault(); scrollToSection(item); }}
-                  >
-                    {item}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
+      <CustomCursor />
 
-          {/* Mobile Toggle */}
-          <div className="md:hidden cursor-pointer text-2xl text-foreground" onClick={() => setShowMenu(!showMenu)}>
-            <i className={showMenu ? 'bx bx-x' : 'bx bx-menu'}></i>
+      {/* Grain Texture */}
+      <div className="grain-overlay" />
+
+      {/* Scroll Progress Bar */}
+      <motion.div
+        className="fixed top-0 left-0 h-[1.5px] bg-gradient-to-r from-primary to-[#6aeaa4] z-[60]"
+        style={{ width: progressWidth }}
+      />
+
+      {/* ── NAV ──────────────────────────────────────────────────────────────── */}
+      <header className="fixed top-0 left-0 w-full z-50 backdrop-blur-md border-b transition-all duration-300" style={{ backgroundColor: 'var(--glass-bg)', borderColor: 'var(--border)' }}>
+        <nav className="max-w-7xl mx-auto px-4 sm:px-6 h-16 sm:h-20 flex justify-between items-center">
+          <a
+            href="#"
+            data-cursor=""
+            className="text-sm font-display font-medium tracking-widest uppercase hover:text-primary transition-colors"
+            onClick={(e) => { e.preventDefault(); scrollToSection('home') }}
+          >
+            Md Afjal Khan
+          </a>
+
+          <div className="flex items-center gap-4">
+            <a
+              href="#contact"
+              data-cursor=""
+              onClick={(e) => { e.preventDefault(); scrollToSection('contact') }}
+              className="hidden sm:flex items-center gap-2 px-4 py-2 border rounded-md text-xs uppercase tracking-widest hover:border-foreground transition-colors"
+              style={{ borderColor: 'var(--border)' }}
+            >
+              <i className="bx bx-phone" /> Book a call
+            </a>
+            {/* Theme Toggle */}
+            <button
+              data-cursor=""
+              onClick={() => setIsDark(!isDark)}
+              className="w-9 h-9 flex items-center justify-center rounded-full border text-lg hover:text-primary transition-all"
+              style={{ borderColor: 'var(--border)' }}
+              aria-label="Toggle theme"
+            >
+              {isDark ? (
+                <i className="bx bx-sun" />
+              ) : (
+                <i className="bx bx-moon" />
+              )}
+            </button>
+            <button
+              className="text-3xl hover:opacity-70 transition-opacity"
+              data-cursor=""
+              onClick={() => setShowMenu(true)}
+            >
+              <i className="bx bx-menu" />
+            </button>
           </div>
         </nav>
-
-        {/* Mobile Menu Dropdown */}
-        {showMenu && (
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="md:hidden absolute top-20 left-0 w-full bg-surface border-b border-[rgba(255,255,255,0.05)] p-6 z-40"
-          >
-            <ul className="flex flex-col space-y-6 text-center">
-              {navItems.map((item) => (
-                <li key={item}>
-                  <a
-                    href={`#${item}`}
-                    className={`text-lg uppercase tracking-widest font-medium ${activeSection === item ? 'text-primary' : 'text-gray-400'}`}
-                    onClick={(e) => { e.preventDefault(); scrollToSection(item); }}
-                  >
-                    {item}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </motion.div>
-        )}
       </header>
 
-      <main className="pt-32 max-w-6xl mx-auto px-6 space-y-40">
+      {/* ── FULL SCREEN MENU ──────────────────────────────────────────────────── */}
+      <AnimatePresence>
+        {showMenu && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+            className="fixed inset-0 z-[100] bg-background flex flex-col"
+          >
+            {/* Menu Header */}
+            <header className="w-full">
+              <nav className="max-w-7xl mx-auto px-6 h-24 flex justify-between items-center text-foreground">
+                <a
+                  href="#"
+                  data-cursor=""
+                  className="text-sm font-display tracking-widest uppercase hover:opacity-70 transition-opacity"
+                  onClick={(e) => { e.preventDefault(); setShowMenu(false); scrollToSection('home'); }}
+                >
+                  Md Afjal Khan
+                </a>
 
-        {/* Home Section */}
+                <div className="flex items-center gap-6">
+                  <a
+                    href="#contact"
+                    data-cursor=""
+                    onClick={(e) => { e.preventDefault(); setShowMenu(false); scrollToSection('contact') }}
+                    className="hidden sm:flex items-center gap-2 px-4 py-2 border border-white/20 rounded-md text-xs uppercase tracking-widest hover:border-white transition-colors"
+                  >
+                    <i className="bx bx-phone" /> Book a call
+                  </a>
+                  <button
+                    className="text-3xl hover:opacity-70 transition-opacity"
+                    data-cursor=""
+                    onClick={() => setShowMenu(false)}
+                  >
+                    <i className="bx bx-x" />
+                  </button>
+                </div>
+              </nav>
+            </header>
+
+            {/* Menu Links */}
+            <div className="flex-grow flex items-center justify-center md:justify-end max-w-7xl mx-auto w-full px-6 pb-20 md:pr-32">
+              <ul className="flex flex-col gap-2 text-center md:text-left items-center md:items-start" style={{ width: 'fit-content' }}>
+                {[{ id: 'home', label: 'Home' }, ...navItems].map((item, i) => (
+                  <motion.li
+                    key={item.id}
+                    initial={{ opacity: 0, y: 40 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
+                    transition={{ duration: 0.4, delay: i * 0.05, ease: [0.16, 1, 0.3, 1] }}
+                    className="group relative"
+                  >
+                    {/* Hover dot indicator (Dousan style) */}
+                    <span className="absolute left-[-2rem] top-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-primary opacity-0 group-hover:opacity-100 transition-opacity duration-300 hidden md:block" />
+
+                    <a
+                      href={`#${item.id}`}
+                      data-cursor=""
+                      className="text-5xl md:text-7xl leading-[1.1] font-display font-medium text-foreground hover:text-white transition-colors inline-block"
+                      onClick={(e) => { e.preventDefault(); scrollToSection(item.id) }}
+                    >
+                      {item.label}
+                    </a>
+                  </motion.li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Menu Footer */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.3 }}
+              className="max-w-7xl mx-auto w-full px-6 pb-10 flex justify-between items-end text-xs text-secondary/60"
+            >
+              <div>
+                <p>Dubai,</p>
+                <p>United Arab Emirates</p>
+              </div>
+              <a
+                href="https://www.linkedin.com/in/mdafjalkhan29/"
+                target="_blank"
+                rel="noreferrer"
+                data-cursor="Open"
+                className="hover:text-primary transition-colors flex items-center gap-1"
+              >
+                LinkedIn <i className="bx bx-link-external" />
+              </a>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <main className="max-w-7xl mx-auto px-4 sm:px-6">
+
+        {/* ── HERO ───────────────────────────────────────────────────────────── */}
         <motion.section
           id="home"
-          className="min-h-[80vh] flex flex-col md:flex-row items-center justify-between gap-12"
+          className="min-h-screen flex flex-col justify-center pt-24 sm:pt-32 pb-16 sm:pb-20 relative"
           initial="hidden"
-          animate="visible"
-          variants={staggerContainer}
+          animate={!showPreloader ? "visible" : "hidden"}
+          variants={stagger}
         >
-          <motion.div className="flex-1 space-y-8 z-10" variants={fadeInUp}>
-            <motion.div style={{ fontWeight: subtitleWeight }} className="text-primary font-display text-xl tracking-widest uppercase">
-              Product Designer &middot; AI-SaaS Architect
+          {/* Floating orbs with breathing animation */}
+          <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none">
+            <div className="orb-breathing absolute top-[-5%] left-[-10%] w-[600px] h-[600px] rounded-full bg-primary/5 blur-[130px]" />
+            <div className="orb-breathing-reverse absolute bottom-[10%] right-[-10%] w-[400px] h-[400px] rounded-full bg-amber-900/5 blur-[100px]" />
+          </div>
+
+          <motion.div style={{ y: heroY, opacity: heroOpacity }} className="relative">
+            {/* Background Logo Watermark */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9, rotate: -5, x: "-50%", y: "-50%" }}
+              animate={{ opacity: 0.06, scale: 1, rotate: 0, x: "-50%", y: "-50%" }}
+              transition={{ duration: 1.5, ease: "easeOut", delay: 0.2 }}
+              className="absolute left-1/2 top-1/2 w-[500px] h-[500px] md:w-[800px] md:h-[800px] -z-10 pointer-events-none"
+            >
+              <img
+                src="/images/logo-outline.svg"
+                alt=""
+                className="w-full h-full object-contain dark:invert"
+              />
             </motion.div>
 
-            {/* Variable Font Animation based on scroll */}
+            <motion.p variants={fadeInUp} className="text-xs uppercase tracking-[0.3em] text-secondary mb-10">
+              Based in Dubai, UAE
+            </motion.p>
+
+            {/* Word-by-word reveal heading */}
             <motion.h1
-              style={{ fontWeight: titleWeight }}
-              className="text-5xl md:text-7xl lg:text-8xl font-display leading-[1.1] text-foreground"
+              variants={wordContainer}
+              className="text-4xl sm:text-5xl md:text-7xl lg:text-[6rem] font-display font-bold leading-[1.05] tracking-tight mb-8 sm:mb-10 max-w-4xl"
             >
-              Architecting<br />
-              <span className="text-gradient">Digital</span><br />
-              Ecosystems.
+              {['I', 'design', 'products'].map((word, i) => (
+                <span key={i} className="inline-block overflow-hidden mr-[0.3em]">
+                  <motion.span variants={wordReveal} className="inline-block">
+                    {word}
+                  </motion.span>
+                </span>
+              ))}
+              <br />
+              {['built', 'for'].map((word, i) => (
+                <span key={i} className="inline-block overflow-hidden mr-[0.3em]">
+                  <motion.span variants={wordReveal} className="inline-block">
+                    {word}
+                  </motion.span>
+                </span>
+              ))}
+              <span className="inline-block overflow-hidden mr-[0.3em]">
+                <motion.span variants={wordReveal} className="inline-block">
+                  <span className="text-gradient">impact</span>,
+                </motion.span>
+              </span>
+              <br />
+              <span className="whitespace-nowrap inline-block">
+                {['designed', 'to'].map((word, i) => (
+                  <span key={i} className="inline-block overflow-hidden mr-[0.3em]">
+                    <motion.span variants={wordReveal} className="inline-block">
+                      {word}
+                    </motion.span>
+                  </span>
+                ))}
+                <span className="inline-block overflow-hidden">
+                  <motion.span variants={wordReveal} className="inline-block">
+                    <span className="text-gradient">scale</span>.
+                  </motion.span>
+                </span>
+              </span>
             </motion.h1>
 
-            <p className="text-lg text-gray-400 max-w-xl font-sans leading-relaxed">
-              Leading the digital transformation of enterprise ecosystems and pioneering Agentic AI integrations for high-performance scale.
-            </p>
+            <motion.p variants={fadeInUp} className="text-sm uppercase tracking-[0.2em] text-secondary">
+              Product Designer at{' '}
+              <span className="text-foreground font-semibold">Danway EME</span>
+              {' '}·{' '}
+              UX/UI Engineer at{' '}
+              <span className="text-foreground font-semibold">Rasoi Pay</span>
+            </motion.p>
 
-            <div className="flex flex-wrap gap-4 pt-4">
-              <a href="#contact" onClick={(e) => { e.preventDefault(); scrollToSection('contact'); }} className="px-8 py-4 bg-primary text-white font-medium rounded-full hover:bg-indigo-500 transition-all shadow-[0_0_20px_rgba(79,70,229,0.3)] hover:shadow-[0_0_30px_rgba(79,70,229,0.5)]">
-                Consult for your Project
+            <motion.div variants={fadeInUp} className="flex gap-6 mt-12">
+              <a href="https://www.linkedin.com/in/mdafjalkhan29/" target="_blank" rel="noreferrer" data-cursor="Open" className="inline-flex items-center gap-2 text-xs uppercase tracking-widest text-secondary hover:text-primary transition-colors">
+                LinkedIn <i className="bx bx-link-external text-base" />
               </a>
-              <a href="#work" onClick={(e) => { e.preventDefault(); scrollToSection('work'); }} className="px-8 py-4 bg-surface backdrop-blur-md border border-[rgba(255,255,255,0.1)] text-white font-medium rounded-full hover:bg-[rgba(255,255,255,0.05)] transition-all">
-                View Work
+              <a href="#contact" data-cursor="" onClick={(e) => { e.preventDefault(); scrollToSection('contact') }} className="inline-flex items-center gap-2 text-xs uppercase tracking-widest text-secondary hover:text-primary transition-colors">
+                Let&apos;s talk <i className="bx bx-right-arrow-alt text-base" />
               </a>
-            </div>
-
-            <div className="flex gap-6 pt-8">
-              <a href="https://www.linkedin.com/in/mdafjalkhan29/" target="_blank" rel="noreferrer" className="text-gray-400 hover:text-white transition-colors text-2xl"><i className='bx bxl-linkedin'></i></a>
-              <a href="https://github.com/wildzee" target="_blank" rel="noreferrer" className="text-gray-400 hover:text-white transition-colors text-2xl"><i className='bx bxl-github'></i></a>
-              <a href="https://x.com/wild__zee" target="_blank" rel="noreferrer" className="text-gray-400 hover:text-white transition-colors text-2xl"><i className='bx bxl-twitter'></i></a>
-            </div>
-          </motion.div>
-
-          <motion.div className="flex-1 relative w-full max-w-md mx-auto aspect-square" variants={fadeInUp}>
-            <div className="absolute inset-0 bg-gradient-to-tr from-primary/20 to-secondary/20 rounded-full blur-3xl mix-blend-screen -z-10"></div>
-            <div className="relative w-full h-full rounded-[2rem] overflow-hidden border border-[rgba(255,255,255,0.1)] glass-card">
-              <Image src="/images/perfil.png" alt="Profile" fill className="object-cover opacity-90 saturate-50 hover:saturate-100 transition-all duration-700" priority />
-            </div>
+            </motion.div>
           </motion.div>
         </motion.section>
 
-        {/* About Section */}
+        {/* ── WORKS ──────────────────────────────────────────────────────────── */}
         <motion.section
-          id="about"
-          className="scroll-mt-32"
+          id="work"
+          className="pt-16 sm:pt-20 pb-24 sm:pb-32 scroll-mt-20"
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
-          variants={staggerContainer}
+          viewport={{ once: false, margin: '-80px' }}
+          variants={stagger}
         >
-          <motion.h2 variants={fadeInUp} className="text-sm font-bold tracking-widest text-primary uppercase mb-12">01. About Strategy</motion.h2>
+          <motion.p variants={fadeInUp} className="text-xs uppercase tracking-[0.3em] text-secondary mb-2">
+            Selected Works
+          </motion.p>
+          <motion.p variants={fadeInUp} className="text-xs text-secondary/50 mb-16">
+            {`'21 — '25`}
+          </motion.p>
 
-          <div className="grid md:grid-cols-2 gap-16 items-start">
-            <motion.div variants={fadeInUp} className="relative aspect-[4/5] rounded-[2rem] overflow-hidden glass-card group">
-              <Image src="/images/about.jpg" alt="About" fill className="object-cover saturate-0 group-hover:saturate-100 transition-all duration-500" />
-            </motion.div>
-
-            <motion.div variants={fadeInUp} className="space-y-8">
-              <h3 className="text-3xl md:text-5xl font-display font-medium leading-tight">Bridging complex logic with high-conversion experiences.</h3>
-
-              <div className="space-y-6 text-gray-400 text-lg leading-relaxed mix-blend-lighten">
-                <p>
-                  I am a Product Architect currently leading the digital transformation of enterprise ecosystems at a prestigious engineering firm, migrating legacy industrial workflows into automated, high-performance dashboards.
-                </p>
-                <p>
-                  As the Founder of Rasoi Pay, I&apos;ve pioneered the integration of Agentic AI in the B2B SaaS space, optimizing user retention and order-flow efficiency. I don&apos;t just design interfaces; I build ROI-driven products that scale.
-                </p>
-              </div>
-            </motion.div>
-          </div>
-        </motion.section>
-
-        {/* Skills Section */}
-        <motion.section
-          id="skills"
-          className="scroll-mt-32"
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
-          variants={staggerContainer}
-        >
-          <motion.h2 variants={fadeInUp} className="text-sm font-bold tracking-widest text-primary uppercase mb-12">02. Core Expertise</motion.h2>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            {[
-              { title: "Product Strategy", items: "Service Design, Design Systems Governance, CRO, Heuristic Evaluation, Stakeholder Management", icon: "bx-bulb" },
-              { title: "Design & UX", items: "Atomic Design Systems, Advanced Prototyping, Journey Mapping, Accessibility (WCAG 2.2), Interaction", icon: "bx-layout" },
-              { title: "Technical Stack", items: "Next.js, Firebase, Agentic AI Integration, Framer Motion, Tailwind CSS, Front-end Architecture", icon: "bx-code-alt" }
-            ].map((skill, index) => (
-              <motion.div
-                key={index}
-                variants={fadeInUp}
-                className="glass-card p-10 rounded-[2rem] hover:-translate-y-2 transition-transform duration-300"
-              >
-                <i className={`bx ${skill.icon} text-4xl text-primary mb-6 block`}></i>
-                <h3 className="text-2xl font-display font-medium mb-4">{skill.title}</h3>
-                <p className="text-gray-400 leading-relaxed">{skill.items}</p>
+          <div>
+            {projects.map((project, i) => (
+              <motion.div key={i} variants={fadeInUp}>
+                {project.public ? (
+                  <Link
+                    href={project.href!}
+                    data-cursor="View"
+                    className="work-row group"
+                  >
+                    <div className="flex items-center gap-2">
+                      <span className={`text-[10px] font-bold uppercase tracking-widest ${project.status === 'SHIPPED' ? 'text-emerald-400' : 'text-secondary'}`}>
+                        {project.status === 'SHIPPED' ? (
+                          <><span className="inline-block w-1.5 h-1.5 rounded-full bg-emerald-400 mr-1.5 align-middle" />SHIPPED</>
+                        ) : (
+                          <><i className="bx bx-lock-alt mr-1" />NDA</>
+                        )}
+                      </span>
+                    </div>
+                    <div>
+                      <h3 className="text-lg md:text-xl font-display font-medium text-foreground group-hover:text-primary transition-colors">{project.title}</h3>
+                    </div>
+                    <div className="work-meta">
+                      <p className="text-sm text-secondary">{project.role}</p>
+                      <p className="text-xs text-secondary/50 mt-0.5">{project.description}</p>
+                    </div>
+                    <div className="work-arrow">
+                      <i className="bx bx-right-arrow-alt" />
+                    </div>
+                  </Link>
+                ) : (
+                  <div className="work-row group opacity-60">
+                    <div className="flex items-center gap-2">
+                      <span className="text-[10px] font-bold uppercase tracking-widest text-secondary">
+                        <i className="bx bx-lock-alt mr-1" />NDA
+                      </span>
+                    </div>
+                    <div>
+                      <h3 className="text-lg md:text-xl font-display font-medium text-foreground">{project.title}</h3>
+                    </div>
+                    <div className="work-meta">
+                      <p className="text-sm text-secondary">{project.role}</p>
+                      <p className="text-xs text-secondary/50 mt-0.5">{project.description}</p>
+                    </div>
+                    <div className="text-secondary/30 text-sm">—</div>
+                  </div>
+                )}
               </motion.div>
             ))}
           </div>
         </motion.section>
 
-        {/* Work Section */}
+        {/* ── ABOUT ──────────────────────────────────────────────────────────── */}
         <motion.section
-          id="work"
-          className="scroll-mt-32"
+          id="about"
+          className="pt-20 sm:pt-32 pb-32 sm:pb-40 scroll-mt-20"
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
-          variants={staggerContainer}
+          viewport={{ once: false, margin: '-80px' }}
+          variants={stagger}
         >
-          <motion.h2 variants={fadeInUp} className="text-sm font-bold tracking-widest text-primary uppercase mb-12">03. Selected Works</motion.h2>
-
-          <div className="grid md:grid-cols-2 gap-8">
-            <motion.div variants={fadeInUp} className="glass-card rounded-[2rem] overflow-hidden group flex flex-col cursor-pointer">
-              <div className="relative h-64 md:h-80 overflow-hidden bg-gray-900 border-b border-[rgba(255,255,255,0.05)]">
-                <Image src="/Rasoi_Pay/rasoipay_mochup.jpg" alt="Rasoi Pay" fill className="object-cover opacity-80 group-hover:scale-105 group-hover:opacity-100 transition-all duration-700" />
-              </div>
-              <div className="p-8 flex flex-col flex-grow">
-                <h3 className="text-2xl font-display font-medium mb-3 group-hover:text-primary transition-colors">Rasoi Pay</h3>
-                <h4 className="text-sm font-bold tracking-widest text-secondary uppercase mb-4">Founder & Product Lead</h4>
-                <p className="text-gray-400 mb-8 leading-relaxed">An AI-powered B2B SaaS platform for restaurants, integrating Agentic AI for menu optimization.</p>
-                <Link href="/case-studies/rasoipay" className="mt-auto inline-flex items-center text-primary font-medium group-hover:gap-2 transition-all">
-                  View Case Study <i className='bx bx-right-arrow-alt text-xl ml-1'></i>
-                </Link>
+          <div className="grid md:grid-cols-[minmax(200px,_1fr)_minmax(300px,_1.4fr)] gap-8 md:gap-24 items-start">
+            {/* LEFT — Sticky heading */}
+            <motion.div variants={fadeInUp} className="md:sticky md:top-32 self-start">
+              <div className="border-t pt-10" style={{ borderColor: 'var(--border)' }}>
+                <h2 className="text-5xl sm:text-7xl md:text-[8rem] lg:text-[9rem] font-display font-medium leading-[0.9] tracking-tight">
+                  About
+                </h2>
               </div>
             </motion.div>
 
-            <motion.div variants={fadeInUp} className="glass-card rounded-[2rem] overflow-hidden group flex flex-col cursor-pointer">
-              <div className="relative h-64 md:h-80 overflow-hidden bg-gradient-to-br from-[#1a1c29] to-[#0f111a] border-b border-[rgba(255,255,255,0.05)] flex items-center justify-center">
-                <div className="text-gray-500 font-display tracking-widest font-bold text-xl uppercase z-10">Restricted</div>
-                <div className="absolute inset-0 bg-black/40 backdrop-blur-sm z-0"></div>
+            {/* RIGHT — Content */}
+            <motion.div variants={fadeInUp} className="space-y-16 sm:space-y-24">
+              {/* Bio */}
+              <div className="space-y-6 sm:space-y-8 text-lg sm:text-xl md:text-2xl leading-[1.65] text-secondary">
+                <motion.p
+                  initial={{ opacity: 0.3 }}
+                  whileInView={{ opacity: 1 }}
+                  viewport={{ once: false, margin: '-20%' }}
+                  transition={{ duration: 0.8, ease: 'easeOut' }}
+                >
+                  I&apos;m Afjal — a Strategic Product Designer and Founder based in Dubai, UAE. I specialize in architecting AI-driven SaaS solutions from 0 to 1, transforming complex business logic into{' '}
+                  <span className="text-primary font-medium">high-conversion user experiences</span>{' '}
+                  for B2B and B2C platforms.
+                </motion.p>
+                <motion.p
+                  initial={{ opacity: 0.3 }}
+                  whileInView={{ opacity: 1 }}
+                  viewport={{ once: false, margin: '-20%' }}
+                  transition={{ duration: 0.8, ease: 'easeOut' }}
+                >
+                  Currently at{' '}
+                  <span className="text-primary font-medium">Danway EME</span>{' '}
+                  leading the digitization of workforce management for a multi-million dollar industrial firm — transitioning 3,000+ field employees from paper-based tracking to a real-time analytics suite.
+                </motion.p>
+                <motion.p
+                  initial={{ opacity: 0.3 }}
+                  whileInView={{ opacity: 1 }}
+                  viewport={{ once: false, margin: '-20%' }}
+                  transition={{ duration: 0.8, ease: 'easeOut' }}
+                >
+                  I also co-founded{' '}
+                  <span className="text-primary font-medium">Rasoi Pay</span>, scaling a production-ready QR-ordering SaaS from concept to live — boosting average order value by 22% and achieving &lt;50ms menu load times. Expert in{' '}
+                  <span className="text-primary font-medium">Agentic AI</span>, scalable design systems, and full-stack UX/UI methodologies.
+                </motion.p>
+                <motion.p
+                  initial={{ opacity: 0.3 }}
+                  whileInView={{ opacity: 1 }}
+                  viewport={{ once: false, margin: '-20%' }}
+                  transition={{ duration: 0.8, ease: 'easeOut' }}
+                >
+                  In my downtime, I explore new destinations, shoot film, and push pixels on side projects.
+                </motion.p>
               </div>
-              <div className="p-8 flex flex-col flex-grow">
-                <h3 className="text-2xl font-display font-medium mb-3">Danway EME</h3>
-                <h4 className="text-sm font-bold tracking-widest text-secondary uppercase mb-4">Lead Product Designer</h4>
-                <p className="text-gray-400 mb-8 leading-relaxed">Proprietary workforce tracking and labor-cost analytics dashboard for 5,000+ employees.</p>
-                <span className="mt-auto inline-flex items-center text-gray-500 font-medium">
-                  Confidential Project <i className='bx bx-lock-alt text-xl ml-1'></i>
-                </span>
+
+              {/* Experience */}
+              <div>
+                <p className="text-xs uppercase tracking-[0.3em] text-secondary mb-8">Experience</p>
+                <div className="divide-y" style={{ borderColor: 'var(--border)' }}>
+                  {[
+                    {
+                      company: 'Danway EME',
+                      role: 'Product Designer',
+                      period: 'June 2025 — Present · Dubai, UAE',
+                      description: 'Digitizing legacy workforce management for a multi-million dollar industrial firm. Engineered a proprietary automated dashboard prototype, reducing administrative man-hours by 35%. Conducted ethnographic user research with 3,000+ field employees to design a high-contrast, mobile-first UI for high-pressure industrial environments. Delivered a real-time analytics suite providing instant visibility into manpower allocation and labor cost-coding.'
+                    },
+                    {
+                      company: 'Rasoi Pay',
+                      role: 'UX/UI Engineer',
+                      period: 'April 2025 — Present · Remote, India',
+                      description: 'Disrupting the F&B market with a QR-ordering ecosystem. Scaled a production-ready SaaS platform (rasoipay.com) from concept to live — automating personalized menu recommendations and boosting average order value (AOV) by 22%. Owned the entire product lifecycle: UX research, Figma prototyping, and full-stack deployment using Next.js/Firebase. Optimized technical architecture to achieve <50ms menu load times, securing 5+ pilot partnerships.'
+                    },
+                    {
+                      company: 'Webzspot Technologies',
+                      role: 'Senior UX/UI Designer',
+                      period: 'May 2023 — Feb 2024 · Remote, India',
+                      description: 'Led the end-to-end redesign of the agency\'s corporate identity and client portals, driving a 50% increase in lead generation. Established a modular Figma design system that decreased front-end development time by 30%. Collaborated with cross-functional teams to deliver pixel-perfect, WCAG-compliant responsive prototypes for 12+ international clients.'
+                    },
+                    {
+                      company: 'Independent Creative Strategist',
+                      role: 'Digital Growth & Content Lead',
+                      period: 'Jan 2021 — May 2023 · Global / Remote',
+                      description: 'Engineered a digital brand strategy that generated over 400,000 organic engagements across YouTube and streaming platforms. Utilized audience retention analytics and A/B testing on content thumbnails to maximize user engagement and conversion.'
+                    },
+                  ].map((exp, i) => (
+                    <div key={i} className="group">
+                      <button
+                        className="w-full flex items-start justify-between py-6 text-left"
+                        data-cursor=""
+                        onClick={() => setExpandedExp(expandedExp === i ? null : i)}
+                      >
+                        <div>
+                          <p className="text-xl font-display font-medium text-foreground group-hover:text-primary transition-colors">{exp.company}</p>
+                          <p className="text-base text-secondary/70 mt-1">{exp.role}</p>
+                          <p className="text-sm text-secondary/40 mt-1.5">{exp.period}</p>
+                        </div>
+                        <span
+                          className="text-2xl text-secondary/30 group-hover:text-primary transition-all mt-1 select-none inline-block"
+                          style={{
+                            transform: expandedExp === i ? 'rotate(45deg)' : 'rotate(0deg)',
+                            transition: 'transform 0.3s ease'
+                          }}
+                        >+</span>
+                      </button>
+                      <AnimatePresence>
+                        {expandedExp === i && (
+                          <motion.div
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: 'auto', opacity: 1 }}
+                            exit={{ height: 0, opacity: 0 }}
+                            transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                            className="overflow-hidden"
+                          >
+                            <p className="text-base leading-relaxed text-secondary/70 pb-6 pr-12">
+                              {exp.description}
+                            </p>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
+                  ))}
+                </div>
               </div>
+
+              {/* Download CV */}
+              <div className="flex justify-end">
+                <a
+                  href="/resume/MdAfjalKhan_Resume_2026.pdf"
+                  target="_blank"
+                  rel="noreferrer"
+                  data-cursor="Open"
+                  className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-secondary hover:text-primary transition-colors"
+                >
+                  <i className="bx bx-download text-base" /> Download full CV
+                </a>
+              </div>
+            </motion.div>
+          </div>
+
+          {/* ── PHOTO ─────────────────────────────────────────────────────── */}
+          <div className="grid md:grid-cols-[minmax(200px,_1fr)_minmax(300px,_1.4fr)] gap-12 md:gap-24 items-start mt-24">
+            <div />
+            <motion.div
+              initial={{ opacity: 0, y: 60, scale: 0.97 }}
+              whileInView={{ opacity: 1, y: 0, scale: 1 }}
+              viewport={{ once: false, margin: '-100px' }}
+              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            >
+              <img
+                src="/images/about.jpg"
+                alt="Md Afjal Khan"
+                className="w-full rounded-sm transition-all duration-700 hover:grayscale-0 hover:contrast-100"
+                style={{ filter: 'grayscale(60%) contrast(1.1) brightness(0.95)' }}
+                onMouseEnter={(e) => (e.currentTarget.style.filter = 'grayscale(0%) contrast(1) brightness(1)')}
+                onMouseLeave={(e) => (e.currentTarget.style.filter = 'grayscale(60%) contrast(1.1) brightness(0.95)')}
+              />
+              <p className="text-sm text-secondary/50 mt-4 italic">What I look like on a good day</p>
+            </motion.div>
+          </div>
+
+          {/* ── WHAT I'M KNOWN FOR (split layout) ───────────────────────── */}
+          <div className="grid md:grid-cols-[minmax(200px,_1fr)_minmax(300px,_1.4fr)] gap-12 md:gap-24 items-start mt-32">
+            <div className="md:sticky md:top-32 self-start">
+              <div className="border-t pt-10" style={{ borderColor: 'var(--border)' }}>
+                <p className="text-sm text-secondary">What I&apos;m known for</p>
+              </div>
+            </div>
+
+            {/* RIGHT — Large skill text with stagger */}
+            <motion.div
+              className="space-y-1"
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: false, margin: '-50px' }}
+              variants={skillStagger}
+            >
+              {[
+                'Product Strategy',
+                'Agentic AI Integration',
+                'Design Systems',
+                'UX Research',
+                'High Fidelity Prototyping',
+                'Motion Design',
+                'Next.js Development',
+                'CRO & Analytics',
+                'WCAG Accessibility',
+                'Visual Design',
+              ].map((skill, i) => (
+                <motion.h3 key={i} variants={skillReveal} className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-display font-medium leading-[1.15] text-foreground/90 hover:text-primary transition-colors">
+                  {skill}
+                </motion.h3>
+              ))}
             </motion.div>
           </div>
         </motion.section>
 
-        {/* Contact form and Resume */}
+        {/* ── CONTACT ────────────────────────────────────────────────────────── */}
         <motion.section
           id="contact"
-          className="scroll-mt-32"
+          className="pb-24 sm:pb-40 scroll-mt-20"
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
-          variants={fadeInUp}
+          viewport={{ once: false, margin: '-80px' }}
+          variants={stagger}
         >
-          <div className="glass-card rounded-[3rem] p-10 md:p-20 text-center relative overflow-hidden group">
-            <div className="absolute inset-0 bg-gradient-to-b from-primary/10 to-transparent -z-10 opacity-50 group-hover:opacity-100 transition-opacity duration-1000"></div>
-
-            {/* Interaction Variable Font simulation class */}
-            <div className="overflow-hidden py-4">
-              <h2 className="text-5xl md:text-8xl font-display mb-6 tracking-tight hover-variable-font variable-font-light cursor-default text-foreground inline-block">
-                let&apos;s talk
+          <motion.div variants={fadeInUp} className="mb-16">
+            <p className="text-xs uppercase tracking-[0.3em] text-secondary mb-10">Contact</p>
+            <div className="flex flex-col gap-2">
+              <h2
+                className="text-3xl sm:text-4xl md:text-5xl font-display font-medium leading-[1.2] hover:text-white transition-colors w-fit"
+                data-cursor="👋"
+              >
+                Let talk
+              </h2>
+              <h2
+                className="text-3xl sm:text-4xl md:text-5xl font-display font-medium leading-[1.2] hover:text-white transition-colors w-fit"
+                data-cursor="👋"
+              >
+                Drop me a line <i className="material-icons align-top text-primary text-[0.8em] font-bold">arrow_outward</i>
               </h2>
             </div>
+          </motion.div>
 
-            <p className="text-gray-400 text-lg md:text-xl max-w-2xl mx-auto mb-12">
-              Ready to architect your next high-performance digital product? Download my resume or drop a message below.
-            </p>
-
-            <div className="flex flex-col md:flex-row justify-center gap-6 mb-16" id="resume">
-              <a href="/resume/MdAfjalKhan_Resume_2026.pdf" target="_blank" rel="noreferrer" className="px-8 py-4 bg-surface backdrop-blur-md border border-[rgba(255,255,255,0.1)] text-white font-medium rounded-full hover:bg-[rgba(255,255,255,0.05)] transition-all flex items-center justify-center gap-2 group-hover:border-[rgba(255,255,255,0.2)]">
-                <i className='bx bx-download text-xl'></i> Download Resume
-              </a>
-            </div>
-
-            <form className="max-w-xl mx-auto space-y-6 text-left" onSubmit={async (e) => {
-              e.preventDefault()
+          <motion.form
+            variants={fadeInUp}
+            className="max-w-full sm:max-w-lg space-y-5"
+            action={async (formData: FormData) => {
+              setFormStatus('sending')
               try {
-                await emailjs.send('service_g9tmvkw', 'template_npjrat5', formData)
-                alert('Thank you for your message! I will get back to you soon.')
+                // Dynamically import to ensure server action boundary is respected safely
+                const { submitContactForm } = await import('./actions')
+                await submitContactForm(formData)
+                setFormStatus('sent')
                 setFormData({ name: '', email: '', message: '' })
-              } catch (error) {
-                console.error('Failed to send email:', error)
-                alert('Failed to send message. Please try again.')
+              } catch (e) {
+                setFormStatus('error')
               }
-            }}>
-              <input type="text" placeholder="Name" required
-                className="w-full bg-black/50 border border-[rgba(255,255,255,0.1)] rounded-xl p-4 text-white focus:outline-none focus:border-primary transition-colors font-sans"
-                value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-              />
-              <input type="email" placeholder="Business Email" required
-                className="w-full bg-black/50 border border-[rgba(255,255,255,0.1)] rounded-xl p-4 text-white focus:outline-none focus:border-primary transition-colors font-sans"
-                value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-              />
-              <textarea placeholder="Tell me about your project/challenges" required rows={5}
-                className="w-full bg-black/50 border border-[rgba(255,255,255,0.1)] rounded-xl p-4 text-white focus:outline-none focus:border-primary transition-colors resize-none font-sans"
-                value={formData.message} onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-              ></textarea>
-              <button type="submit" className="w-full px-8 py-4 bg-primary text-white font-medium rounded-xl hover:bg-indigo-500 transition-all shadow-[0_0_20px_rgba(79,70,229,0.2)] font-sans">
-                Send Message
-              </button>
-            </form>
-
-          </div>
+            }}
+          >
+            <input
+              type="text"
+              name="name"
+              placeholder="Name"
+              required
+              data-cursor=""
+              className="w-full bg-transparent border-b border-white/10 py-4 text-foreground placeholder:text-secondary/40 focus:outline-none focus:border-primary transition-colors font-sans text-sm"
+              value={formData.name}
+              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+            />
+            <input
+              type="email"
+              name="email"
+              placeholder="Email"
+              required
+              data-cursor=""
+              className="w-full bg-transparent border-b border-white/10 py-4 text-foreground placeholder:text-secondary/40 focus:outline-none focus:border-primary transition-colors font-sans text-sm"
+              value={formData.email}
+              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+            />
+            <textarea
+              name="message"
+              placeholder="Your message"
+              required
+              rows={4}
+              data-cursor=""
+              className="w-full bg-transparent border-b border-white/10 py-4 text-foreground placeholder:text-secondary/40 focus:outline-none focus:border-primary transition-colors resize-none font-sans text-sm"
+              value={formData.message}
+              onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+            />
+            <button
+              type="submit"
+              data-cursor=""
+              disabled={formStatus === 'sending'}
+              className="px-8 py-3 bg-primary text-background font-semibold rounded-full text-sm tracking-wide hover:bg-[#52e696] transition-all disabled:opacity-50"
+            >
+              {formStatus === 'sending' ? 'Sending…' : formStatus === 'sent' ? '✓ Sent!' : 'Send message'}
+            </button>
+            {formStatus === 'error' && (
+              <p className="text-red-400 text-sm">Something went wrong. Please try again.</p>
+            )}
+          </motion.form>
         </motion.section>
 
       </main>
 
-      {/* Footer */}
-      <footer className="mt-40 border-t border-[rgba(255,255,255,0.05)] pt-12 text-center text-gray-500 text-sm pb-8 font-sans">
-        <p className="font-display tracking-widest uppercase mb-4 text-gray-400">Md Afjal Khan</p>
-        <p>© {new Date().getFullYear()}. All rights reserved.</p>
+      {/* ── FOOTER ─────────────────────────────────────────────────────────────── */}
+      <footer className="border-t border-white/[0.04] py-8">
+        <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-secondary/40">
+          <img
+            src={isDark ? "/images/logos/logo-white.svg" : "/images/logos/logo-black.svg"}
+            alt="Md Afjal Khan"
+            className="h-10 w-auto opacity-50 grayscale hover:grayscale-0 hover:opacity-100 transition-all cursor-pointer"
+            onClick={() => scrollToSection('home')}
+          />
+          <div className="flex gap-6">
+            <a href="https://www.linkedin.com/in/mdafjalkhan29/" target="_blank" rel="noreferrer" data-cursor="Open" className="hover:text-primary transition-colors uppercase tracking-widest">LinkedIn</a>
+            <a href="https://github.com/wildzee" target="_blank" rel="noreferrer" data-cursor="Open" className="hover:text-primary transition-colors uppercase tracking-widest">GitHub</a>
+            <a href="https://x.com/wild__zee" target="_blank" rel="noreferrer" data-cursor="Open" className="hover:text-primary transition-colors uppercase tracking-widest">X</a>
+          </div>
+          <span>Made with plenty of coffee · © {new Date().getFullYear()}</span>
+        </div>
       </footer>
     </div>
   )

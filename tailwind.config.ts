@@ -1,6 +1,7 @@
 import type { Config } from "tailwindcss";
 
 export default {
+  darkMode: 'class',
   content: [
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
@@ -9,16 +10,16 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ["var(--font-inter)", "sans-serif"],
-        display: ["var(--font-syne)", "sans-serif"],
+        sans: ["Space Grotesk", "sans-serif"],
+        display: ["Syne", "sans-serif"],
       },
       colors: {
-        background: "#050505",
-        foreground: "#f5f5f5",
-        primary: "#4F46E5",
-        secondary: "#A855F7",
-        surface: "rgba(255, 255, 255, 0.03)",
-        "surface-hover": "rgba(255, 255, 255, 0.08)",
+        background: "var(--background)",
+        foreground: "var(--foreground)",
+        primary: "var(--primary)",
+        secondary: "var(--secondary)",
+        surface: "var(--surface)",
+        "surface-hover": "var(--surface-hover)",
       },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",

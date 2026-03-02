@@ -2,7 +2,15 @@
 
 A modern, professional portfolio website showcasing senior-level product design and AI-SaaS architecture expertise. Built with Next.js 15, TypeScript, and custom CSS.
 
-## 🚀 Recent Updates (February 2026)
+## 🚀 Recent Updates (March 2026)
+
+### Premium Case Studies Showcase
+- **Rasoi Pay Complete Redesign**: Built a full-bleed premium case study page documenting the B2B SaaS architecture, featuring a 2-column desktop screenshot gallery and immersive scroll animations.
+- **Iqra App Showcase**: Upgraded the Iqra product design case study with a horizontal-scrolling phone mockup gallery and refined typography.
+- **Custom Cursor Integration**: Implemented a global custom inverted cursor component across the portfolio for a premium, interactive feel.
+- **UI & Animation Improvements**: Added Boxicons, Framer Motion staggered reveal animations, and sophisticated layout grids.
+
+## 🚀 Previous Updates (February 2026)
 
 ### Danway EME Case Study Enhancement
 - **Strategic Positioning**: Reframed as "Workforce Intelligence Platform - Internal Digital Transformation Initiative"
