@@ -64,7 +64,7 @@ export default function IqraCaseStudy() {
     {
       number: '01',
       title: 'Discovery & Research',
-      description: `Conducted in-depth user interviews with Roman Hindi/Urdu speakers across multiple regions to understand their pain points with existing Quran apps. Mapped existing journeys to identify accessibility gaps and authenticity concerns.`,
+      description: `Conducted in-depth user interviews with Roman Hindi speakers across multiple regions to understand their pain points with existing Quran apps. Mapped existing journeys to identify accessibility gaps and authenticity concerns.`,
       tags: ['User Interviews', 'Competitive Audit', 'Journey Mapping'],
     },
     {
@@ -96,7 +96,7 @@ export default function IqraCaseStudy() {
   const features = [
     {
       icon: 'bx bx-font',
-      title: 'Roman Urdu Transliteration',
+      title: 'Roman Hindi Transliteration',
       description: 'First-class support for Roman script readers — the primary gap in the market that Iqra was built to solve.',
     },
     {
@@ -198,7 +198,7 @@ export default function IqraCaseStudy() {
               variants={fadeUp}
               className="text-5xl sm:text-6xl md:text-7xl lg:text-[5.5rem] font-display font-bold leading-[1.0] tracking-tight mb-6"
             >
-              Iqra — Roman Urdu
+              Iqra — Roman Hindi
               <br />
               <span className="text-gradient">Quran App</span>
             </motion.h1>
@@ -207,7 +207,7 @@ export default function IqraCaseStudy() {
               variants={fadeUp}
               className="text-lg sm:text-xl md:text-2xl text-secondary leading-relaxed max-w-2xl mb-10"
             >
-              Making the Quran accessible to 150M+ Roman Hindi/Urdu speakers who were underserved by every existing app on the market.
+              Making the Quran accessible to 150M+ Roman Hindi speakers who were underserved by every existing app on the market.
             </motion.p>
 
             <motion.div variants={fadeUp} className="flex flex-wrap gap-3">
@@ -293,13 +293,13 @@ export default function IqraCaseStudy() {
 
           <motion.div variants={fadeUp} className="space-y-6">
             <p className="text-xl md:text-2xl leading-[1.65] text-secondary">
-              Over <span className="text-foreground font-medium">150 million Muslims</span> speak Hindi or Urdu but cannot read Arabic or Devanagari script. Every existing Quran app on iOS and Android was either Arabic-first or lacked Roman script support entirely.
+              Over <span className="text-foreground font-medium">150 million Muslims</span> speak Hindi but cannot read Arabic or Devanagari script. Every existing Quran app on iOS and Android was either Arabic-first or lacked Roman script support entirely.
             </p>
             <p className="text-xl md:text-2xl leading-[1.65] text-secondary">
               Beyond the script barrier, users reported deep concerns about the <span className="text-foreground font-medium">authenticity of sources</span> — many apps failed to cite their Hadith and Duas from verified Salaf references, creating a trust gap for devout users.
             </p>
             <p className="text-xl md:text-2xl leading-[1.65] text-secondary">
-              The opportunity: build the <span className="text-primary font-medium">definitive Roman Urdu Quran app</span> — one that is accessible, deeply customizable, authenticated, and beautifully designed from first launch to daily use.
+              The opportunity: build the <span className="text-primary font-medium">definitive Roman Hindi Quran app</span> — one that is accessible, deeply customizable, authenticated, and beautifully designed from first launch to daily use.
             </p>
 
             {/* Problem callout */}
@@ -309,7 +309,7 @@ export default function IqraCaseStudy() {
             >
               <p className="text-sm uppercase tracking-widest text-primary mb-2 font-bold">The Core Insight</p>
               <p className="text-base text-secondary leading-relaxed">
-                Existing apps treated Roman Urdu as a secondary feature. We designed Iqra to treat it as the primary experience.
+                Existing apps treated Roman Hindi as a secondary feature. We designed Iqra to treat it as the primary experience.
               </p>
             </div>
           </motion.div>
@@ -482,7 +482,7 @@ export default function IqraCaseStudy() {
               {
                 metric: '50,000+',
                 label: 'Active Users',
-                description: 'Significant market penetration validating product-market fit within the Roman Urdu Quran reader segment — a category with virtually no competition at launch.',
+                description: 'Significant market penetration validating product-market fit within the Roman Hindi Quran reader segment — a category with virtually no competition at launch.',
               },
               {
                 metric: '4.9★',

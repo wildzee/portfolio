@@ -3,6 +3,8 @@ import { headers } from 'next/headers'
 import 'material-icons/iconfont/material-icons.css'
 import './globals.css'
 
+import PageTransition from './components/PageTransition'
+
 export const metadata: Metadata = {
   title: 'Afjal Khan - Product Designer',
   description: 'UI/UX Designer Portfolio',
@@ -38,7 +40,7 @@ export default async function RootLayout({
         />
       </head>
       <body className="bg-background text-foreground font-sans antialiased selection:bg-primary selection:text-white">
-        {children}
+        <PageTransition>{children}</PageTransition>
       </body>
     </html>
   )

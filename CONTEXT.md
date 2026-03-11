@@ -79,6 +79,8 @@ This is a professional portfolio website for Md Afjal Khan, a Senior Product Des
 - **Framework**: Next.js 15 with App Router
 - **Language**: TypeScript
 - **Styling**: Custom CSS with CSS Variables
+- **Motion Engine**: Framer Motion (Optimized for 60fps)
+- **UI Interaction**: Custom Magnetic Cursor with glassmorphism and precise `caretPositionFromPoint` detection.
 - **Icons**: Boxicons
 - **Email**: EmailJS integration
 - **Deployment**: Vercel
@@ -102,6 +104,20 @@ This is a professional portfolio website for Md Afjal Khan, a Senior Product Des
 - **Typography**: Poppins font family
 - **Layout**: CSS Grid and Flexbox
 - **Responsive**: Mobile-first approach
+
+## Recent Updates (March 2026)
+
+### Premium Motion System Upgrade
+Implemented a world-class motion design system inspired by "Antigravity" principles: Swiss precision, brutalist energy, and organic transitions.
+- **Universal Page Transitions**: Seamless, app-like routing using `template.tsx` and custom easing (`easePremium`, `easeBrutal`).
+- **Tactile Magnetic Components**: Physics-based `<Magnetic>` wrapper for interactive elements (buttons, nav links) utilizing `useSpring`.
+- **Custom Glassmorphism Cursor**: Enhanced interaction feedback with backdrop-filter blur and precise text caret detection.
+- **Scroll-Driven Typography**: 
+  - `KineticText`: Split-word typography reveal with stagger.
+  - `TextReveal`: Robust block-level scroll reveal for long-form bio sections.
+  - `ScrollHighlightText`: Apple-style horizontal skill light-up tied to scroll depth.
+- **Parallax Experience**: Depth-of-field image scroll drift via `useScroll` and `useTransform`.
+- **Production Audit**: Zero-error build optimization and TypeScript validation.
 
 ## Recent Updates (February 2026)
 

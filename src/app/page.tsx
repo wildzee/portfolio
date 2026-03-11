@@ -6,6 +6,11 @@ import { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 import emailjs from '@emailjs/browser'
 import { motion, useScroll, useTransform, useInView, useSpring, Variants, AnimatePresence } from 'framer-motion'
 import CustomCursor from './components/CustomCursor'
+import Magnetic from './components/Magnetic'
+import KineticText from './components/KineticText'
+import ParallaxImage from './components/ParallaxImage'
+import ScrollHighlightText from './components/ScrollHighlightText'
+import TextReveal from './components/TextReveal'
 
 function CountUp({ target, duration = 2 }: { target: number; duration?: number }) {
   const ref = useRef<HTMLSpanElement>(null)
@@ -48,13 +53,13 @@ function Preloader({ onComplete, isDark }: { onComplete: () => void; isDark: boo
       className="fixed inset-0 z-[100] flex flex-col items-center justify-center overflow-hidden"
       style={{ background: bg }}
       initial={{ opacity: 1 }}
-      exit={{ opacity: 0, y: -20, transition: { duration: 0.9, ease: [0.76, 0, 0.24, 1] } }}
+      exit={{ opacity: 0, y: -20, transition: { duration: 0.6, ease: [0.85, 0, 0.15, 1] } }}
     >
       {/* Logo */}
       <motion.div
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
+        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
         className="mb-8"
       >
         <img src={logoSrc} alt="Md Afjal Khan" className="w-14 h-14" />
@@ -64,7 +69,7 @@ function Preloader({ onComplete, isDark }: { onComplete: () => void; isDark: boo
       <motion.p
         initial={{ opacity: 0, y: 6 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.3 }}
+        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
         className="text-[10px] tracking-[0.4em] uppercase mb-10 font-sans"
         style={{ color: textColor }}
       >
@@ -78,7 +83,7 @@ function Preloader({ onComplete, isDark }: { onComplete: () => void; isDark: boo
           style={{ background: '#3CDA64' }}
           initial={{ width: '0%' }}
           animate={{ width: '100%' }}
-          transition={{ duration: 2.2, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
+          transition={{ duration: 1.2, ease: [0.76, 0, 0.24, 1], delay: 0.1 }}
         />
       </div>
     </motion.div>
@@ -141,31 +146,34 @@ export default function Home() {
     setShowMenu(false)
   }
 
+  const easePremium: [number, number, number, number] = [0.16, 1, 0.3, 1]
+  const easeBrutal: [number, number, number, number] = [0.85, 0, 0.15, 1]
+
   const fadeInUp: Variants = {
-    hidden: { opacity: 0, y: 30 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: 'easeOut' } },
+    hidden: { opacity: 0, y: 40 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: easePremium } },
   }
   const stagger: Variants = {
     hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { staggerChildren: 0.15 } },
+    visible: { opacity: 1, transition: { staggerChildren: 0.08 } },
   }
   // Word-by-word reveal for hero
   const wordContainer: Variants = {
     hidden: {},
-    visible: { transition: { staggerChildren: 0.08, delayChildren: 0.3 } },
+    visible: { transition: { staggerChildren: 0.04, delayChildren: 0.2 } },
   }
   const wordReveal: Variants = {
     hidden: { y: '100%', opacity: 0 },
-    visible: { y: '0%', opacity: 1, transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] } },
+    visible: { y: '0%', opacity: 1, transition: { duration: 0.6, ease: easePremium } },
   }
   // Skill reveal stagger
   const skillStagger: Variants = {
     hidden: {},
-    visible: { transition: { staggerChildren: 0.06, delayChildren: 0.1 } },
+    visible: { transition: { staggerChildren: 0.04, delayChildren: 0.1 } },
   }
   const skillReveal: Variants = {
-    hidden: { opacity: 0, x: -30 },
-    visible: { opacity: 1, x: 0, transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] } },
+    hidden: { opacity: 0, x: -20 },
+    visible: { opacity: 1, x: 0, transition: { duration: 0.5, ease: easePremium } },
   }
 
   const navItems = [
@@ -231,36 +239,42 @@ export default function Home() {
           </a>
 
           <div className="flex items-center gap-4">
-            <a
-              href="#contact"
-              data-cursor=""
-              onClick={(e) => { e.preventDefault(); scrollToSection('contact') }}
-              className="hidden sm:flex items-center gap-2 px-4 py-2 border rounded-md text-xs uppercase tracking-widest hover:border-foreground transition-colors"
-              style={{ borderColor: 'var(--border)' }}
-            >
-              <i className="bx bx-phone" /> Book a call
-            </a>
+            <Magnetic>
+              <a
+                href="#contact"
+                data-cursor=""
+                onClick={(e) => { e.preventDefault(); scrollToSection('contact') }}
+                className="hidden sm:flex items-center gap-2 px-4 py-2 border rounded-md text-xs uppercase tracking-widest hover:border-foreground transition-colors"
+                style={{ borderColor: 'var(--border)' }}
+              >
+                <i className="bx bx-phone" /> Book a call
+              </a>
+            </Magnetic>
             {/* Theme Toggle */}
-            <button
-              data-cursor=""
-              onClick={() => setIsDark(!isDark)}
-              className="w-9 h-9 flex items-center justify-center rounded-full border text-lg hover:text-primary transition-all"
-              style={{ borderColor: 'var(--border)' }}
-              aria-label="Toggle theme"
-            >
-              {isDark ? (
-                <i className="bx bx-sun" />
-              ) : (
-                <i className="bx bx-moon" />
-              )}
-            </button>
-            <button
-              className="text-3xl hover:opacity-70 transition-opacity"
-              data-cursor=""
-              onClick={() => setShowMenu(true)}
-            >
-              <i className="bx bx-menu" />
-            </button>
+            <Magnetic pullRadius={40}>
+              <button
+                data-cursor=""
+                onClick={() => setIsDark(!isDark)}
+                className="w-9 h-9 flex items-center justify-center rounded-full border text-lg hover:text-primary transition-all"
+                style={{ borderColor: 'var(--border)' }}
+                aria-label="Toggle theme"
+              >
+                {isDark ? (
+                  <i className="bx bx-sun" />
+                ) : (
+                  <i className="bx bx-moon" />
+                )}
+              </button>
+            </Magnetic>
+            <Magnetic pullRadius={40}>
+              <button
+                className="text-3xl hover:opacity-70 transition-opacity flex items-center justify-center p-2"
+                data-cursor=""
+                onClick={() => setShowMenu(true)}
+              >
+                <i className="bx bx-menu" />
+              </button>
+            </Magnetic>
           </div>
         </nav>
       </header>
@@ -272,7 +286,7 @@ export default function Home() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.3, ease: easePremium }}
             className="fixed inset-0 z-[100] bg-background flex flex-col"
           >
             {/* Menu Header */}
@@ -288,21 +302,25 @@ export default function Home() {
                 </a>
 
                 <div className="flex items-center gap-6">
-                  <a
-                    href="#contact"
-                    data-cursor=""
-                    onClick={(e) => { e.preventDefault(); setShowMenu(false); scrollToSection('contact') }}
-                    className="hidden sm:flex items-center gap-2 px-4 py-2 border border-white/20 rounded-md text-xs uppercase tracking-widest hover:border-white transition-colors"
-                  >
-                    <i className="bx bx-phone" /> Book a call
-                  </a>
-                  <button
-                    className="text-3xl hover:opacity-70 transition-opacity"
-                    data-cursor=""
-                    onClick={() => setShowMenu(false)}
-                  >
-                    <i className="bx bx-x" />
-                  </button>
+                  <Magnetic>
+                    <a
+                      href="#contact"
+                      data-cursor=""
+                      onClick={(e) => { e.preventDefault(); setShowMenu(false); scrollToSection('contact') }}
+                      className="hidden sm:flex items-center gap-2 px-4 py-2 border border-white/20 rounded-md text-xs uppercase tracking-widest hover:border-white transition-colors"
+                    >
+                      <i className="bx bx-phone" /> Book a call
+                    </a>
+                  </Magnetic>
+                  <Magnetic pullRadius={40}>
+                    <button
+                      className="text-3xl hover:opacity-70 transition-opacity flex items-center justify-center p-2"
+                      data-cursor=""
+                      onClick={() => setShowMenu(false)}
+                    >
+                      <i className="bx bx-x" />
+                    </button>
+                  </Magnetic>
                 </div>
               </nav>
             </header>
@@ -315,8 +333,8 @@ export default function Home() {
                     key={item.id}
                     initial={{ opacity: 0, y: 40 }}
                     animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -20 }}
-                    transition={{ duration: 0.4, delay: i * 0.05, ease: [0.16, 1, 0.3, 1] }}
+                    exit={{ opacity: 0, y: 15 }}
+                    transition={{ duration: 0.4, delay: i * 0.04, ease: easePremium }}
                     className="group relative"
                   >
                     {/* Hover dot indicator (Dousan style) */}
@@ -546,44 +564,18 @@ export default function Home() {
             <motion.div variants={fadeInUp} className="space-y-16 sm:space-y-24">
               {/* Bio */}
               <div className="space-y-6 sm:space-y-8 text-lg sm:text-xl md:text-2xl leading-[1.65] text-secondary">
-                <motion.p
-                  initial={{ opacity: 0.3 }}
-                  whileInView={{ opacity: 1 }}
-                  viewport={{ once: false, margin: '-20%' }}
-                  transition={{ duration: 0.8, ease: 'easeOut' }}
-                >
-                  I&apos;m Afjal — a Strategic Product Designer and Founder based in Dubai, UAE. I specialize in architecting AI-driven SaaS solutions from 0 to 1, transforming complex business logic into{' '}
-                  <span className="text-primary font-medium">high-conversion user experiences</span>{' '}
-                  for B2B and B2C platforms.
-                </motion.p>
-                <motion.p
-                  initial={{ opacity: 0.3 }}
-                  whileInView={{ opacity: 1 }}
-                  viewport={{ once: false, margin: '-20%' }}
-                  transition={{ duration: 0.8, ease: 'easeOut' }}
-                >
-                  Currently at{' '}
-                  <span className="text-primary font-medium">Danway EME</span>{' '}
-                  leading the digitization of workforce management for a multi-million dollar industrial firm — transitioning 3,000+ field employees from paper-based tracking to a real-time analytics suite.
-                </motion.p>
-                <motion.p
-                  initial={{ opacity: 0.3 }}
-                  whileInView={{ opacity: 1 }}
-                  viewport={{ once: false, margin: '-20%' }}
-                  transition={{ duration: 0.8, ease: 'easeOut' }}
-                >
-                  I also co-founded{' '}
-                  <span className="text-primary font-medium">Rasoi Pay</span>, scaling a production-ready QR-ordering SaaS from concept to live — boosting average order value by 22% and achieving &lt;50ms menu load times. Expert in{' '}
-                  <span className="text-primary font-medium">Agentic AI</span>, scalable design systems, and full-stack UX/UI methodologies.
-                </motion.p>
-                <motion.p
-                  initial={{ opacity: 0.3 }}
-                  whileInView={{ opacity: 1 }}
-                  viewport={{ once: false, margin: '-20%' }}
-                  transition={{ duration: 0.8, ease: 'easeOut' }}
-                >
+                <TextReveal delay={0}>
+                  I&apos;m Afjal — a Strategic Product Designer and Founder based in Dubai, UAE. I specialize in architecting AI-driven SaaS solutions from 0 to 1, transforming complex business logic into <span className="text-primary font-medium">high-conversion user experiences</span> for B2B and B2C platforms.
+                </TextReveal>
+                <TextReveal delay={0.1}>
+                  Currently at <span className="text-primary font-medium">Danway EME</span> leading the digitization of workforce management for a multi-million dollar industrial firm — transitioning 3,000+ field employees from paper-based tracking to a real-time analytics suite.
+                </TextReveal>
+                <TextReveal delay={0.2}>
+                  I also co-founded <span className="text-primary font-medium">Rasoi Pay</span>, scaling a production-ready QR-ordering SaaS from concept to live — boosting average order value by 22% and achieving &lt;50ms menu load times. Expert in <span className="text-primary font-medium">Agentic AI</span>, scalable design systems, and full-stack UX/UI methodologies.
+                </TextReveal>
+                <TextReveal delay={0.3}>
                   In my downtime, I explore new destinations, shoot film, and push pixels on side projects.
-                </motion.p>
+                </TextReveal>
               </div>
 
               {/* Experience */}
@@ -673,22 +665,14 @@ export default function Home() {
           {/* ── PHOTO ─────────────────────────────────────────────────────── */}
           <div className="grid md:grid-cols-[minmax(200px,_1fr)_minmax(300px,_1.4fr)] gap-12 md:gap-24 items-start mt-24">
             <div />
-            <motion.div
-              initial={{ opacity: 0, y: 60, scale: 0.97 }}
-              whileInView={{ opacity: 1, y: 0, scale: 1 }}
-              viewport={{ once: false, margin: '-100px' }}
-              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            >
-              <img
+            <div>
+              <ParallaxImage
                 src="/images/about.jpg"
                 alt="Md Afjal Khan"
-                className="w-full rounded-sm transition-all duration-700 hover:grayscale-0 hover:contrast-100"
-                style={{ filter: 'grayscale(60%) contrast(1.1) brightness(0.95)' }}
-                onMouseEnter={(e) => (e.currentTarget.style.filter = 'grayscale(0%) contrast(1) brightness(1)')}
-                onMouseLeave={(e) => (e.currentTarget.style.filter = 'grayscale(60%) contrast(1.1) brightness(0.95)')}
+                className="w-full rounded-sm"
               />
               <p className="text-sm text-secondary/50 mt-4 italic">What I look like on a good day</p>
-            </motion.div>
+            </div>
           </div>
 
           {/* ── WHAT I'M KNOWN FOR (split layout) ───────────────────────── */}
@@ -699,14 +683,8 @@ export default function Home() {
               </div>
             </div>
 
-            {/* RIGHT — Large skill text with stagger */}
-            <motion.div
-              className="space-y-1"
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: false, margin: '-50px' }}
-              variants={skillStagger}
-            >
+            {/* RIGHT — Large skill text with scroll highlight */}
+            <div className="space-y-4 pb-32 pt-10">
               {[
                 'Product Strategy',
                 'Agentic AI Integration',
@@ -719,11 +697,9 @@ export default function Home() {
                 'WCAG Accessibility',
                 'Visual Design',
               ].map((skill, i) => (
-                <motion.h3 key={i} variants={skillReveal} className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-display font-medium leading-[1.15] text-foreground/90 hover:text-primary transition-colors">
-                  {skill}
-                </motion.h3>
+                <ScrollHighlightText key={i}>{skill}</ScrollHighlightText>
               ))}
-            </motion.div>
+            </div>
           </div>
         </motion.section>
 
@@ -741,13 +717,11 @@ export default function Home() {
             <div className="flex flex-col gap-2">
               <h2
                 className="text-3xl sm:text-4xl md:text-5xl font-display font-medium leading-[1.2] hover:text-white transition-colors w-fit"
-                data-cursor="👋"
               >
                 Let talk
               </h2>
               <h2
                 className="text-3xl sm:text-4xl md:text-5xl font-display font-medium leading-[1.2] hover:text-white transition-colors w-fit"
-                data-cursor="👋"
               >
                 Drop me a line <i className="material-icons align-top text-primary text-[0.8em] font-bold">arrow_outward</i>
               </h2>
