@@ -1,7 +1,7 @@
 'use client'
 
 import { useRef } from 'react'
-import { motion, useScroll, useTransform, useSpring } from 'framer-motion'
+import { motion, useScroll, useTransform } from 'framer-motion'
 
 interface ScrollingMarqueeProps {
     items: string[]
@@ -9,17 +9,11 @@ interface ScrollingMarqueeProps {
     baseVelocity?: number
 }
 
-export default function ScrollingMarquee({ items, direction = 'left', baseVelocity = -2 }: ScrollingMarqueeProps) {
+export default function ScrollingMarquee({ items, direction = 'left' }: ScrollingMarqueeProps) {
     const containerRef = useRef<HTMLDivElement>(null)
 
     // Track scroll within the window
     const { scrollYProgress } = useScroll()
-
-    // Create a spring mapped to scroll velocity for a "pull" effect when scrolling fast
-    const scrollVelocity = useSpring(scrollYProgress, {
-        stiffness: 400,
-        damping: 90,
-    })
 
     // We want the marquee to move horizontally based on scroll progress.
     // We map the main scroll progress to a horizontal translation.

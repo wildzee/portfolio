@@ -545,7 +545,7 @@ export default function RasoiPayCaseStudy() {
                 Operational speed that scales
               </h2>
               <p className="text-lg text-secondary leading-relaxed">
-                By deeply aligning technical architecture with real-world restaurant operations, Rasoi Pay has successfully modernized its pilot partners' workflows. Table turnover is faster, menus can pivot dynamically without print costs, and AI predictions empower owners with unprecedented foresight.
+                By deeply aligning technical architecture with real-world restaurant operations, Rasoi Pay has successfully modernized its pilot partners&apos; workflows. Table turnover is faster, menus can pivot dynamically without print costs, and AI predictions empower owners with unprecedented foresight.
               </p>
             </motion.div>
 

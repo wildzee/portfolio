@@ -1,40 +1,14 @@
 'use client'
 
-import Image from 'next/image'
 import Link from 'next/link'
-import { useState, useEffect, useRef, useCallback, useMemo } from 'react'
+import { useState, useEffect } from 'react'
 import emailjs from '@emailjs/browser'
-import { motion, useScroll, useTransform, useInView, useSpring, Variants, AnimatePresence } from 'framer-motion'
+import { motion, useScroll, useTransform, Variants, AnimatePresence } from 'framer-motion'
 import CustomCursor from './components/CustomCursor'
 import Magnetic from './components/Magnetic'
-import KineticText from './components/KineticText'
 import ParallaxImage from './components/ParallaxImage'
 import ScrollHighlightText from './components/ScrollHighlightText'
 import TextReveal from './components/TextReveal'
-
-function CountUp({ target, duration = 2 }: { target: number; duration?: number }) {
-  const ref = useRef<HTMLSpanElement>(null)
-  const isInView = useInView(ref, { once: true, margin: '-50px' })
-  const [count, setCount] = useState(0)
-
-  useEffect(() => {
-    if (!isInView) return
-    let start = 0
-    const increment = target / (duration * 60)
-    const timer = () => {
-      start += increment
-      if (start >= target) {
-        setCount(target)
-        return
-      }
-      setCount(Math.floor(start))
-      requestAnimationFrame(timer)
-    }
-    requestAnimationFrame(timer)
-  }, [isInView, target, duration])
-
-  return <span ref={ref}>{count.toLocaleString()}</span>
-}
 
 // ─── Preloader Component ───────────────────────────────────────────────────────
 function Preloader({ onComplete, isDark }: { onComplete: () => void; isDark: boolean }) {
@@ -94,7 +68,6 @@ function Preloader({ onComplete, isDark }: { onComplete: () => void; isDark: boo
 export default function Home() {
   const [mounted, setMounted] = useState(false)
   const [showPreloader, setShowPreloader] = useState(true)
-  const [activeSection, setActiveSection] = useState('home')
   const [showMenu, setShowMenu] = useState(false)
   const [formData, setFormData] = useState({ name: '', email: '', message: '' })
   const [formStatus, setFormStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle')
@@ -124,21 +97,6 @@ export default function Home() {
     localStorage.setItem('theme', isDark ? 'dark' : 'light')
   }, [isDark, mounted])
 
-  // Intersection Observer for auto-updating active nav
-  useEffect(() => {
-    if (!mounted) return
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) setActiveSection(entry.target.id)
-        })
-      },
-      { rootMargin: '-40% 0px -55% 0px' }
-    )
-    document.querySelectorAll('section[id]').forEach((s) => observer.observe(s))
-    return () => observer.disconnect()
-  }, [mounted])
-
   if (!mounted) return null
 
   const scrollToSection = (sectionId: string) => {
@@ -147,7 +105,6 @@ export default function Home() {
   }
 
   const easePremium: [number, number, number, number] = [0.16, 1, 0.3, 1]
-  const easeBrutal: [number, number, number, number] = [0.85, 0, 0.15, 1]
 
   const fadeInUp: Variants = {
     hidden: { opacity: 0, y: 40 },
@@ -165,15 +122,6 @@ export default function Home() {
   const wordReveal: Variants = {
     hidden: { y: '100%', opacity: 0 },
     visible: { y: '0%', opacity: 1, transition: { duration: 0.6, ease: easePremium } },
-  }
-  // Skill reveal stagger
-  const skillStagger: Variants = {
-    hidden: {},
-    visible: { transition: { staggerChildren: 0.04, delayChildren: 0.1 } },
-  }
-  const skillReveal: Variants = {
-    hidden: { opacity: 0, x: -20 },
-    visible: { opacity: 1, x: 0, transition: { duration: 0.5, ease: easePremium } },
   }
 
   const navItems = [
@@ -739,7 +687,7 @@ export default function Home() {
                 await submitContactForm(formData)
                 setFormStatus('sent')
                 setFormData({ name: '', email: '', message: '' })
-              } catch (e) {
+              } catch {
                 setFormStatus('error')
               }
             }}

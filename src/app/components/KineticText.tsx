@@ -76,6 +76,7 @@ export default function KineticText({ children, className = '', as: Component = 
         )
     })
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const MotionComponent = motion(Component as any)
 
     return (

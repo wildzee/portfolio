@@ -17,7 +17,7 @@ export function middleware(request: NextRequest) {
     // 2. Generate a random nonce for the Content Security Policy
     // This acts as a single-use token to guarantee that only scripts/styles authorized 
     // by this server run, completely neutralizing XSS attacks using inline vectors.
-    const nonce = Buffer.from(crypto.randomUUID()).toString('base64')
+    const nonce = btoa(crypto.randomUUID())
 
     // 3. Construct a strictly-scoped Content Security Policy (No 'unsafe-inline', No 'unsafe-eval')
     // We authorize EmailJS API connections and Stripe iframes explicitly.

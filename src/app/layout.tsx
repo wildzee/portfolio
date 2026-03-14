@@ -16,8 +16,7 @@ export default async function RootLayout({
   children: React.ReactNode
 }) {
   // Retrieve the generated nonce securely passed down from middleware.ts
-  const headersList = await headers()
-  const nonce = headersList.get('x-nonce') || undefined
+  await headers()
 
   return (
     <html lang="en" className="scroll-smooth" suppressHydrationWarning>

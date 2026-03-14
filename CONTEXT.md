@@ -111,13 +111,16 @@ This is a professional portfolio website for Md Afjal Khan, a Senior Product Des
 Implemented a world-class motion design system inspired by "Antigravity" principles: Swiss precision, brutalist energy, and organic transitions.
 - **Universal Page Transitions**: Seamless, app-like routing using `template.tsx` and custom easing (`easePremium`, `easeBrutal`).
 - **Tactile Magnetic Components**: Physics-based `<Magnetic>` wrapper for interactive elements (buttons, nav links) utilizing `useSpring`.
-- **Custom Glassmorphism Cursor**: Enhanced interaction feedback with backdrop-filter blur and precise text caret detection.
 - **Scroll-Driven Typography**: 
   - `KineticText`: Split-word typography reveal with stagger.
   - `TextReveal`: Robust block-level scroll reveal for long-form bio sections.
   - `ScrollHighlightText`: Apple-style horizontal skill light-up tied to scroll depth.
 - **Parallax Experience**: Depth-of-field image scroll drift via `useScroll` and `useTransform`.
-- **Production Audit**: Zero-error build optimization and TypeScript validation.
+- **Vercel Deployment & Build Optimization**:
+  - **Dependency Resolution**: Resolved peer dependency conflicts with React 19 and corrected Next.js version typo.
+  - **Configuration Consolidation**: Merged `next.config.mjs` into `next.config.ts` for unified build settings.
+  - **Edge Runtime Compatibility**: Refactored middleware to use standard Web APIs (`btoa`) for stable Vercel Edge deployments.
+  - **ESLint/Type Audit**: 100% build pass rate achieved through systematic cleanup of unused variables and entities.
 
 ## Recent Updates (February 2026)
 
