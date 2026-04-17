@@ -160,6 +160,24 @@
     --grain-opacity: 0.03;
     --orb-opacity: 0.04;
     --selection-bg: rgba(22, 163, 74, 0.15);
+
+    /* ── Type Scale ── */
+    --text-display: clamp(4rem, 10vw, 9rem);
+    --text-h1: clamp(2.5rem, 6vw, 5.5rem);
+    --text-h2: clamp(1.75rem, 4vw, 3rem);
+    --text-h3: clamp(1.25rem, 2.5vw, 1.75rem);
+    --text-body-lg: clamp(1.125rem, 2vw, 1.5rem);
+
+    /* ── Section Spacing ── */
+    --section-y-sm: 5rem;
+    --section-y-lg: 8rem;
+  }
+
+  /* ── Focus rings (WCAG AA) ── */
+  *:focus-visible {
+    outline: 2px solid hsl(var(--primary) / 1);
+    outline-offset: 3px;
+    border-radius: 4px;
   }
 
   /* ── Dark Mode ─────────────────────────────────────────────────────── */
@@ -287,6 +305,12 @@
 
   90% {
     transform: translate(-10%, 10%);
+  }
+}
+
+@media (max-width: 640px) {
+  .grain-overlay {
+    opacity: 0.015;
   }
 }
 
@@ -429,4 +453,16 @@
   background: linear-gradient(90deg, transparent, #3ddc84, #6aeaa4, transparent);
   background-size: 200% 100%;
   animation: gradient-slide 4s linear infinite;
+}
+
+/* ── Dark mode fallback for no-JS / prefers-color-scheme ── */
+@media (prefers-color-scheme: dark) {
+  :root:not(.light) {
+    --background: #0a0a0a;
+    --foreground: #ffffff;
+    --primary: #3ddc84;
+    --secondary: #888888;
+    --border: rgba(255, 255, 255, 0.06);
+    --glass-bg: rgba(10, 10, 10, 0.8);
+  }
 }
