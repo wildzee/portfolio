@@ -5,6 +5,7 @@ import Image from 'next/image'
 import { motion, useScroll, useTransform, type Variants } from 'framer-motion'
 import { useRef, useState, useEffect } from 'react'
 import CustomCursor from '../../components/CustomCursor'
+import ProcessStep from '@/app/components/ProcessStep'
 
 const easeExpressive = [0.16, 1, 0.3, 1] as const
 
@@ -52,8 +53,6 @@ export default function RasoiPayCaseStudy() {
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ['start start', 'end start'] })
   const heroY = useTransform(scrollYProgress, [0, 1], [0, 120])
   const heroOpacity = useTransform(scrollYProgress, [0, 0.6], [1, 0])
-
-  const [expandedStep, setExpandedStep] = useState<number | null>(0)
 
   const metrics = [
     { value: 22, suffix: '%', label: 'Boost in AOV' },
@@ -404,7 +403,7 @@ export default function RasoiPayCaseStudy() {
             {[
               { src: '/Rasoi_Pay/rp_desktop_2.png', label: 'Advance Analytics' },
               { src: '/Rasoi_Pay/rp_desktop_3.png', label: 'Dashboard' },
-              { src: '/Rasoi_Pay/rp_desktop_4.png', label: 'Oder Management' },
+              { src: '/Rasoi_Pay/rp_desktop_4.png', label: 'Order Management' },
               { src: '/Rasoi_Pay/rp_desktop_5.png', label: 'Landing page' },
             ].map((screen, i) => (
               <motion.div
@@ -480,49 +479,7 @@ export default function RasoiPayCaseStudy() {
 
           <div className="space-y-4">
             {processSteps.map((step, i) => (
-              <motion.div
-                key={i}
-                variants={fadeUp}
-                className={`border-b transition-colors duration-300 ${expandedStep === i ? 'border-primary/50' : ''}`}
-                style={{ borderColor: expandedStep === i ? 'rgba(var(--primary-rgb), 0.5)' : 'var(--border)' }}
-              >
-                <button
-                  onClick={() => setExpandedStep(expandedStep === i ? null : i)}
-                  className="w-full py-6 flex items-center justify-between group"
-                >
-                  <div className="flex items-center gap-6 sm:gap-12 text-left">
-                    <span className={`font-display text-sm sm:text-base tracking-widest transition-colors ${expandedStep === i ? 'text-primary' : 'text-secondary group-hover:text-foreground'}`}>
-                      {step.number}
-                    </span>
-                    <h3 className={`text-xl sm:text-2xl font-display font-medium transition-colors ${expandedStep === i ? 'text-foreground' : 'text-secondary group-hover:text-foreground'}`}>
-                      {step.title}
-                    </h3>
-                  </div>
-                  <div className="relative w-4 h-4 text-secondary group-hover:text-foreground transition-colors shrink-0">
-                    <span className={`absolute inset-0 flex items-center justify-center transition-transform duration-300 ${expandedStep === i ? 'rotate-180 opacity-0' : 'rotate-0 opacity-100'}`}>+</span>
-                    <span className={`absolute inset-0 flex items-center justify-center transition-transform duration-300 ${expandedStep === i ? 'rotate-0 opacity-100' : '-rotate-180 opacity-0'}`}>−</span>
-                  </div>
-                </button>
-                <div
-                  className="grid transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]"
-                  style={{ gridTemplateRows: expandedStep === i ? '1fr' : '0fr' }}
-                >
-                  <div className="overflow-hidden">
-                    <div className="pb-8 pt-2 pl-10 sm:pl-16">
-                      <p className="text-base sm:text-lg text-secondary leading-relaxed max-w-2xl mb-6">
-                        {step.description}
-                      </p>
-                      <div className="flex flex-wrap gap-2">
-                        {step.tags.map(tag => (
-                          <span key={tag} className="text-[10px] uppercase tracking-widest px-3 py-1.5 rounded-full bg-secondary/10 text-secondary">
-                            {tag}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </motion.div>
+              <ProcessStep key={i} step={step} />
             ))}
           </div>
         </motion.section>
@@ -598,17 +555,19 @@ export default function RasoiPayCaseStudy() {
           </motion.div>
         </div>
 
-        {/* Portfolio Nav */}
         <div className="border-t flex" style={{ borderColor: 'var(--border)' }}>
           <Link
             href="/case-studies/iqra"
             className="flex-1 p-8 sm:p-12 hover:bg-secondary/5 transition-colors group flex flex-col"
           >
-            <span className="text-xs uppercase tracking-widest text-secondary mb-2 group-hover:text-primary transition-colors">Previous Case Study</span>
+            <span className="text-xs uppercase tracking-widest text-secondary mb-2 group-hover:text-primary transition-colors">← Previous</span>
             <span className="text-xl sm:text-3xl font-display font-medium text-foreground">Iqra App</span>
           </Link>
-          <div className="w-[1px] bg-border" style={{ backgroundColor: 'var(--border)' }} />
-          <div className="flex-1 p-8 sm:p-12" />
+          <div className="w-[1px]" style={{ backgroundColor: 'var(--border)' }} />
+          <div className="flex-1 p-8 sm:p-12 flex flex-col items-end justify-center opacity-40">
+            <span className="text-xs uppercase tracking-widest text-secondary mb-2">Next →</span>
+            <span className="text-xl sm:text-3xl font-display font-medium text-foreground/40">—</span>
+          </div>
         </div>
       </footer>
     </div>

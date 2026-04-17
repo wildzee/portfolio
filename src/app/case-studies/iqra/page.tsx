@@ -5,6 +5,7 @@ import Image from 'next/image'
 import { motion, useScroll, useTransform, type Variants } from 'framer-motion'
 import { useRef, useState, useEffect } from 'react'
 import CustomCursor from '../../components/CustomCursor'
+import ProcessStep from '@/app/components/ProcessStep'
 
 const easeExpressive = [0.16, 1, 0.3, 1] as const
 
@@ -554,83 +555,25 @@ export default function IqraCaseStudy() {
         </div>
       </section>
 
-      {/* ── FOOTER NAV ── */}
-      <footer
-        className="border-t py-10"
-        style={{ borderColor: 'var(--border)' }}
-      >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-secondary/40">
+      <footer className="border-t py-0" style={{ borderColor: 'var(--border)' }}>
+        <div className="flex">
           <Link
             href="/"
-            className="hover:text-primary transition-colors uppercase tracking-widest"
+            className="flex-1 p-8 sm:p-12 hover:bg-secondary/5 transition-colors group flex flex-col"
           >
-            ← Back to Portfolio
+            <span className="text-xs uppercase tracking-widest text-secondary mb-2 group-hover:text-primary transition-colors">← Previous</span>
+            <span className="text-xl sm:text-3xl font-display font-medium text-foreground">Portfolio</span>
           </Link>
-          <span>Md Afjal Khan · Case Study</span>
+          <div className="w-[1px]" style={{ backgroundColor: 'var(--border)' }} />
           <Link
             href="/case-studies/rasoipay"
-            className="hover:text-primary transition-colors uppercase tracking-widest flex items-center gap-1"
+            className="flex-1 p-8 sm:p-12 hover:bg-secondary/5 transition-colors group flex flex-col items-end"
           >
-            Next: Rasoi Pay <i className="bx bx-right-arrow-alt" />
+            <span className="text-xs uppercase tracking-widest text-secondary mb-2 group-hover:text-primary transition-colors">Next →</span>
+            <span className="text-xl sm:text-3xl font-display font-medium text-foreground">Rasoi Pay</span>
           </Link>
         </div>
       </footer>
     </div>
-  )
-}
-
-// ── Expandable Process Step ──────────────────────────────────────────────────
-function ProcessStep({ step }: { step: { number: string; title: string; description: string; tags: string[] } }) {
-  const [open, setOpen] = useState(false)
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-30px' }}
-      transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-      className="group"
-    >
-      <button
-        className="w-full flex items-start justify-between py-6 sm:py-8 text-left gap-4"
-        onClick={() => setOpen(!open)}
-      >
-        <div className="flex items-start gap-6 sm:gap-10">
-          <span className="text-xs font-mono text-secondary/40 mt-1 w-6 shrink-0">{step.number}</span>
-          <div>
-            <h3 className="text-xl sm:text-2xl font-display font-medium text-foreground group-hover:text-primary transition-colors">
-              {step.title}
-            </h3>
-            <div className="flex flex-wrap gap-2 mt-3">
-              {step.tags.map((tag) => (
-                <span key={tag} className="text-[10px] uppercase tracking-widest text-secondary/50 border px-2 py-0.5 rounded-sm" style={{ borderColor: 'var(--border)' }}>
-                  {tag}
-                </span>
-              ))}
-            </div>
-          </div>
-        </div>
-        <span
-          className="text-xl text-secondary/30 group-hover:text-primary transition-all mt-1 shrink-0"
-          style={{ transform: open ? 'rotate(45deg)' : 'rotate(0deg)', transition: 'transform 0.3s ease' }}
-        >
-          +
-        </span>
-      </button>
-
-      {open && (
-        <motion.div
-          initial={{ height: 0, opacity: 0 }}
-          animate={{ height: 'auto', opacity: 1 }}
-          exit={{ height: 0, opacity: 0 }}
-          transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-          className="overflow-hidden"
-        >
-          <p className="text-base sm:text-lg leading-relaxed text-secondary/80 pb-8 pl-12 sm:pl-16 pr-8">
-            {step.description}
-          </p>
-        </motion.div>
-      )}
-    </motion.div>
   )
 }

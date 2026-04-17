@@ -9,6 +9,8 @@ import Magnetic from './components/Magnetic'
 import ParallaxImage from './components/ParallaxImage'
 import ScrollHighlightText from './components/ScrollHighlightText'
 import TextReveal from './components/TextReveal'
+import SplitLines from './components/SplitLines'
+import ImageFollowCursor from './components/ImageFollowCursor'
 
 // ─── Preloader Component ───────────────────────────────────────────────────────
 function Preloader({ onComplete, isDark }: { onComplete: () => void; isDark: boolean }) {
@@ -73,12 +75,17 @@ export default function Home() {
   const [formStatus, setFormStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle')
   const [isDark, setIsDark] = useState(true)
   const [expandedExp, setExpandedExp] = useState<number | null>(null)
+  const [cursorImage, setCursorImage] = useState<string>('')
+  const [cursorVisible, setCursorVisible] = useState(false)
 
   // Scroll + Parallax
   const { scrollYProgress } = useScroll()
   const progressWidth = useTransform(scrollYProgress, [0, 1], ['0%', '100%'])
-  const heroY = useTransform(scrollYProgress, [0, 0.15], [0, 150])
-  const heroOpacity = useTransform(scrollYProgress, [0, 0.12], [1, 0])
+  const heroY = useTransform(scrollYProgress, [0, 0.15], [0, 100])
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.18], [1, 0])
+  const heroScale = useTransform(scrollYProgress, [0, 0.18], [1, 0.88])
+  const heroCtaY = useTransform(scrollYProgress, [0, 0.18], [0, -20])
+  const orbScale = useTransform(scrollYProgress, [0, 0.2], [1, 1.2])
 
   useEffect(() => {
     // Read saved theme preference or default to dark
@@ -114,6 +121,14 @@ export default function Home() {
     hidden: { opacity: 0 },
     visible: { opacity: 1, transition: { staggerChildren: 0.08 } },
   }
+  const workRowVariant = {
+    hidden: { opacity: 0, x: -24 },
+    visible: (i: number) => ({
+      opacity: 1,
+      x: 0,
+      transition: { duration: 0.6, ease: easePremium, delay: i * 0.08 },
+    }),
+  }
   // Word-by-word reveal for hero
   const wordContainer: Variants = {
     hidden: {},
@@ -138,6 +153,7 @@ export default function Home() {
       description: 'B2B SaaS for restaurant management',
       href: '/case-studies/rasoipay',
       public: true,
+      image: '/Rasoi_Pay/rp_desktop_1.png',
     },
     {
       status: 'SHIPPED',
@@ -146,6 +162,7 @@ export default function Home() {
       description: 'Mobile product, 50,000+ active users',
       href: '/case-studies/iqra',
       public: true,
+      image: '/Iqra/Iqra_mockup.png',
     },
     {
       status: 'CONFIDENTIAL',
@@ -154,6 +171,7 @@ export default function Home() {
       description: 'Enterprise workforce & labor-cost dashboard',
       href: null,
       public: false,
+      image: '',
     },
   ]
 
@@ -192,7 +210,7 @@ export default function Home() {
                 href="#contact"
                 data-cursor=""
                 onClick={(e) => { e.preventDefault(); scrollToSection('contact') }}
-                className="hidden sm:flex items-center gap-2 px-4 py-2 border rounded-md text-xs uppercase tracking-widest hover:border-foreground transition-colors"
+                className="hidden md:flex items-center gap-2 px-4 py-2 border rounded-md text-xs uppercase tracking-widest hover:border-foreground transition-colors"
                 style={{ borderColor: 'var(--border)' }}
               >
                 <i className="bx bx-phone" /> Book a call
@@ -299,6 +317,21 @@ export default function Home() {
                   </motion.li>
                 ))}
               </ul>
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.35, ease: [0.16, 1, 0.3, 1], duration: 0.5 }}
+                className="mt-8"
+              >
+                <a
+                  href="#contact"
+                  onClick={(e) => { e.preventDefault(); setShowMenu(false); scrollToSection('contact') }}
+                  className="inline-flex items-center gap-2 px-6 py-3 border rounded-full text-sm uppercase tracking-widest hover:border-primary hover:text-primary transition-colors"
+                  style={{ borderColor: 'var(--border)' }}
+                >
+                  <i className="bx bx-phone" /> Book a call
+                </a>
+              </motion.div>
             </div>
 
             {/* Menu Footer */}
@@ -337,10 +370,10 @@ export default function Home() {
           variants={stagger}
         >
           {/* Floating orbs with breathing animation */}
-          <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none">
+          <motion.div style={{ scale: orbScale }} className="absolute inset-0 -z-10 overflow-hidden pointer-events-none">
             <div className="orb-breathing absolute top-[-5%] left-[-10%] w-[600px] h-[600px] rounded-full bg-primary/5 blur-[130px]" />
             <div className="orb-breathing-reverse absolute bottom-[10%] right-[-10%] w-[400px] h-[400px] rounded-full bg-amber-900/5 blur-[100px]" />
-          </div>
+          </motion.div>
 
           <motion.div style={{ y: heroY, opacity: heroOpacity }} className="relative">
             {/* Background Logo Watermark */}
@@ -362,46 +395,48 @@ export default function Home() {
             </motion.p>
 
             {/* Word-by-word reveal heading */}
-            <motion.h1
-              variants={wordContainer}
-              className="text-4xl sm:text-5xl md:text-7xl lg:text-[6rem] font-display font-bold leading-[1.05] tracking-tight mb-8 sm:mb-10 max-w-4xl"
-            >
-              {['I', 'design', 'products'].map((word, i) => (
-                <span key={i} className="inline-block overflow-hidden mr-[0.3em]">
-                  <motion.span variants={wordReveal} className="inline-block">
-                    {word}
-                  </motion.span>
-                </span>
-              ))}
-              <br />
-              {['built', 'for'].map((word, i) => (
-                <span key={i} className="inline-block overflow-hidden mr-[0.3em]">
-                  <motion.span variants={wordReveal} className="inline-block">
-                    {word}
-                  </motion.span>
-                </span>
-              ))}
-              <span className="inline-block overflow-hidden mr-[0.3em]">
-                <motion.span variants={wordReveal} className="inline-block">
-                  <span className="text-gradient">impact</span>,
-                </motion.span>
-              </span>
-              <br />
-              <span className="whitespace-nowrap inline-block">
-                {['designed', 'to'].map((word, i) => (
+            <motion.div style={{ scale: heroScale }}>
+              <motion.h1
+                variants={wordContainer}
+                className="text-4xl sm:text-5xl md:text-7xl lg:text-[6rem] font-display font-bold leading-[1.05] tracking-tight mb-8 sm:mb-10 max-w-4xl"
+              >
+                {['I', 'design', 'products'].map((word, i) => (
                   <span key={i} className="inline-block overflow-hidden mr-[0.3em]">
                     <motion.span variants={wordReveal} className="inline-block">
                       {word}
                     </motion.span>
                   </span>
                 ))}
-                <span className="inline-block overflow-hidden">
+                <br />
+                {['built', 'for'].map((word, i) => (
+                  <span key={i} className="inline-block overflow-hidden mr-[0.3em]">
+                    <motion.span variants={wordReveal} className="inline-block">
+                      {word}
+                    </motion.span>
+                  </span>
+                ))}
+                <span className="inline-block overflow-hidden mr-[0.3em]">
                   <motion.span variants={wordReveal} className="inline-block">
-                    <span className="text-gradient">scale</span>.
+                    <span className="text-gradient">impact</span>,
                   </motion.span>
                 </span>
-              </span>
-            </motion.h1>
+                <br />
+                <span className="whitespace-nowrap inline-block">
+                  {['designed', 'to'].map((word, i) => (
+                    <span key={i} className="inline-block overflow-hidden mr-[0.3em]">
+                      <motion.span variants={wordReveal} className="inline-block">
+                        {word}
+                      </motion.span>
+                    </span>
+                  ))}
+                  <span className="inline-block overflow-hidden">
+                    <motion.span variants={wordReveal} className="inline-block">
+                      <span className="text-gradient">scale</span>.
+                    </motion.span>
+                  </span>
+                </span>
+              </motion.h1>
+            </motion.div>
 
             <motion.p variants={fadeInUp} className="text-sm uppercase tracking-[0.2em] text-secondary">
               Product Designer at{' '}
@@ -411,7 +446,7 @@ export default function Home() {
               <span className="text-foreground font-semibold">Rasoi Pay</span>
             </motion.p>
 
-            <motion.div variants={fadeInUp} className="flex gap-6 mt-12">
+            <motion.div variants={fadeInUp} style={{ y: heroCtaY }} className="flex gap-6 mt-12">
               <a href="https://www.linkedin.com/in/mdafjalkhan29/" target="_blank" rel="noreferrer" data-cursor="Open" className="inline-flex items-center gap-2 text-xs uppercase tracking-widest text-secondary hover:text-primary transition-colors">
                 LinkedIn <i className="bx bx-link-external text-base" />
               </a>
@@ -440,12 +475,21 @@ export default function Home() {
 
           <div>
             {projects.map((project, i) => (
-              <motion.div key={i} variants={fadeInUp}>
+              <motion.div
+                key={i}
+                custom={i}
+                variants={workRowVariant}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, margin: '-40px' }}
+              >
                 {project.public ? (
                   <Link
                     href={project.href!}
                     data-cursor="View"
                     className="work-row group"
+                    onMouseEnter={() => { setCursorImage(project.image || ''); setCursorVisible(!!project.image) }}
+                    onMouseLeave={() => setCursorVisible(false)}
                   >
                     <div className="flex items-center gap-2">
                       <span className={`text-[10px] font-bold uppercase tracking-widest ${project.status === 'SHIPPED' ? 'text-emerald-400' : 'text-secondary'}`}>
@@ -463,8 +507,11 @@ export default function Home() {
                       <p className="text-sm text-secondary">{project.role}</p>
                       <p className="text-xs text-secondary/50 mt-0.5">{project.description}</p>
                     </div>
-                    <div className="work-arrow">
+                    <div className="work-arrow hidden sm:block">
                       <i className="bx bx-right-arrow-alt" />
+                    </div>
+                    <div className="sm:hidden text-secondary/50 text-sm">
+                      →
                     </div>
                   </Link>
                 ) : (
@@ -502,9 +549,15 @@ export default function Home() {
             {/* LEFT — Sticky heading */}
             <motion.div variants={fadeInUp} className="md:sticky md:top-32 self-start">
               <div className="border-t pt-10" style={{ borderColor: 'var(--border)' }}>
-                <h2 className="text-5xl sm:text-7xl md:text-[8rem] lg:text-[9rem] font-display font-medium leading-[0.9] tracking-tight">
+                <motion.h2
+                  className="text-5xl sm:text-7xl md:text-[8rem] lg:text-[9rem] font-display font-medium leading-[0.9] tracking-tight"
+                  initial={{ clipPath: 'inset(0 100% 0 0)' }}
+                  whileInView={{ clipPath: 'inset(0 0% 0 0)' }}
+                  viewport={{ once: true, margin: '-60px' }}
+                  transition={{ duration: 1.0, ease: [0.77, 0, 0.175, 1] }}
+                >
                   About
-                </h2>
+                </motion.h2>
               </div>
             </motion.div>
 
@@ -512,18 +565,18 @@ export default function Home() {
             <motion.div variants={fadeInUp} className="space-y-16 sm:space-y-24">
               {/* Bio */}
               <div className="space-y-6 sm:space-y-8 text-lg sm:text-xl md:text-2xl leading-[1.65] text-secondary">
-                <TextReveal delay={0}>
+                <SplitLines delay={0} className="text-lg sm:text-xl md:text-2xl leading-[1.65] text-secondary">
                   I&apos;m Afjal — a Strategic Product Designer and Founder based in Dubai, UAE. I specialize in architecting AI-driven SaaS solutions from 0 to 1, transforming complex business logic into <span className="text-primary font-medium">high-conversion user experiences</span> for B2B and B2C platforms.
-                </TextReveal>
-                <TextReveal delay={0.1}>
+                </SplitLines>
+                <SplitLines delay={0.1} className="text-lg sm:text-xl md:text-2xl leading-[1.65] text-secondary">
                   Currently at <span className="text-primary font-medium">Danway EME</span> leading the digitization of workforce management for a multi-million dollar industrial firm — transitioning 3,000+ field employees from paper-based tracking to a real-time analytics suite.
-                </TextReveal>
-                <TextReveal delay={0.2}>
+                </SplitLines>
+                <SplitLines delay={0.2} className="text-lg sm:text-xl md:text-2xl leading-[1.65] text-secondary">
                   I also co-founded <span className="text-primary font-medium">Rasoi Pay</span>, scaling a production-ready QR-ordering SaaS from concept to live — boosting average order value by 22% and achieving &lt;50ms menu load times. Expert in <span className="text-primary font-medium">Agentic AI</span>, scalable design systems, and full-stack UX/UI methodologies.
-                </TextReveal>
-                <TextReveal delay={0.3}>
+                </SplitLines>
+                <SplitLines delay={0.3} className="text-lg sm:text-xl md:text-2xl leading-[1.65] text-secondary">
                   In my downtime, I explore new destinations, shoot film, and push pixels on side projects.
-                </TextReveal>
+                </SplitLines>
               </div>
 
               {/* Experience */}
@@ -567,13 +620,13 @@ export default function Home() {
                           <p className="text-base text-secondary/70 mt-1">{exp.role}</p>
                           <p className="text-sm text-secondary/40 mt-1.5">{exp.period}</p>
                         </div>
-                        <span
-                          className="text-2xl text-secondary/30 group-hover:text-primary transition-all mt-1 select-none inline-block"
-                          style={{
-                            transform: expandedExp === i ? 'rotate(45deg)' : 'rotate(0deg)',
-                            transition: 'transform 0.3s ease'
-                          }}
-                        >+</span>
+                        <motion.span
+                          animate={{ rotate: expandedExp === i ? 45 : 0 }}
+                          transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+                          className="text-xl text-secondary group-hover:text-primary transition-colors flex-shrink-0"
+                        >
+                          +
+                        </motion.span>
                       </button>
                       <AnimatePresence>
                         {expandedExp === i && (
@@ -662,18 +715,23 @@ export default function Home() {
         >
           <motion.div variants={fadeInUp} className="mb-16">
             <p className="text-xs uppercase tracking-[0.3em] text-secondary mb-10">Contact</p>
-            <div className="flex flex-col gap-2">
-              <h2
-                className="text-3xl sm:text-4xl md:text-5xl font-display font-medium leading-[1.2] hover:text-white transition-colors w-fit"
-              >
-                Let talk
+            <motion.div
+              initial={{ opacity: 0, scale: 0.92 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true, margin: '-60px' }}
+              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+              className="space-y-4"
+            >
+              <h2 className="text-4xl sm:text-5xl md:text-6xl font-display font-medium leading-[1.1] tracking-tight">
+                Let&apos;s work together
               </h2>
-              <h2
-                className="text-3xl sm:text-4xl md:text-5xl font-display font-medium leading-[1.2] hover:text-white transition-colors w-fit"
+              <a
+                href="mailto:mdafjalkhan29@gmail.com"
+                className="block text-lg sm:text-xl text-secondary hover:text-primary transition-colors font-sans"
               >
-                Drop me a line <i className="material-icons align-top text-primary text-[0.8em] font-bold">arrow_outward</i>
-              </h2>
-            </div>
+                mdafjalkhan29@gmail.com <i className="bx bx-link-external text-base align-middle" />
+              </a>
+            </motion.div>
           </motion.div>
 
           <motion.form
@@ -722,20 +780,28 @@ export default function Home() {
               value={formData.message}
               onChange={(e) => setFormData({ ...formData, message: e.target.value })}
             />
-            <button
-              type="submit"
-              data-cursor=""
-              disabled={formStatus === 'sending'}
-              className="px-8 py-3 bg-primary text-background font-semibold rounded-full text-sm tracking-wide hover:bg-[#52e696] transition-all disabled:opacity-50"
+            <motion.div
+              initial={{ scale: 0.95, opacity: 0 }}
+              whileInView={{ scale: 1, opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
             >
-              {formStatus === 'sending' ? 'Sending…' : formStatus === 'sent' ? '✓ Sent!' : 'Send message'}
-            </button>
+              <button
+                type="submit"
+                data-cursor=""
+                disabled={formStatus === 'sending'}
+                className="px-8 py-3 bg-primary text-background font-semibold rounded-full text-sm tracking-wide hover:bg-[#52e696] transition-all disabled:opacity-50"
+              >
+                {formStatus === 'sending' ? 'Sending…' : formStatus === 'sent' ? '✓ Sent!' : 'Send message'}
+              </button>
+            </motion.div>
             {formStatus === 'error' && (
               <p className="text-red-400 text-sm">Something went wrong. Please try again.</p>
             )}
           </motion.form>
         </motion.section>
 
+        <ImageFollowCursor src={cursorImage} visible={cursorVisible} />
       </main>
 
       {/* ── FOOTER ─────────────────────────────────────────────────────────────── */}
