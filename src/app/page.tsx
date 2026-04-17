@@ -9,6 +9,7 @@ import Magnetic from './components/Magnetic'
 import ParallaxImage from './components/ParallaxImage'
 import ScrollHighlightText from './components/ScrollHighlightText'
 import TextReveal from './components/TextReveal'
+import SplitLines from './components/SplitLines'
 import ImageFollowCursor from './components/ImageFollowCursor'
 
 // ─── Preloader Component ───────────────────────────────────────────────────────
@@ -530,9 +531,15 @@ export default function Home() {
             {/* LEFT — Sticky heading */}
             <motion.div variants={fadeInUp} className="md:sticky md:top-32 self-start">
               <div className="border-t pt-10" style={{ borderColor: 'var(--border)' }}>
-                <h2 className="text-5xl sm:text-7xl md:text-[8rem] lg:text-[9rem] font-display font-medium leading-[0.9] tracking-tight">
+                <motion.h2
+                  className="text-5xl sm:text-7xl md:text-[8rem] lg:text-[9rem] font-display font-medium leading-[0.9] tracking-tight"
+                  initial={{ clipPath: 'inset(0 100% 0 0)' }}
+                  whileInView={{ clipPath: 'inset(0 0% 0 0)' }}
+                  viewport={{ once: true, margin: '-60px' }}
+                  transition={{ duration: 1.0, ease: [0.77, 0, 0.175, 1] }}
+                >
                   About
-                </h2>
+                </motion.h2>
               </div>
             </motion.div>
 
@@ -540,18 +547,18 @@ export default function Home() {
             <motion.div variants={fadeInUp} className="space-y-16 sm:space-y-24">
               {/* Bio */}
               <div className="space-y-6 sm:space-y-8 text-lg sm:text-xl md:text-2xl leading-[1.65] text-secondary">
-                <TextReveal delay={0}>
+                <SplitLines delay={0} className="text-lg sm:text-xl md:text-2xl leading-[1.65] text-secondary">
                   I&apos;m Afjal — a Strategic Product Designer and Founder based in Dubai, UAE. I specialize in architecting AI-driven SaaS solutions from 0 to 1, transforming complex business logic into <span className="text-primary font-medium">high-conversion user experiences</span> for B2B and B2C platforms.
-                </TextReveal>
-                <TextReveal delay={0.1}>
+                </SplitLines>
+                <SplitLines delay={0.1} className="text-lg sm:text-xl md:text-2xl leading-[1.65] text-secondary">
                   Currently at <span className="text-primary font-medium">Danway EME</span> leading the digitization of workforce management for a multi-million dollar industrial firm — transitioning 3,000+ field employees from paper-based tracking to a real-time analytics suite.
-                </TextReveal>
-                <TextReveal delay={0.2}>
+                </SplitLines>
+                <SplitLines delay={0.2} className="text-lg sm:text-xl md:text-2xl leading-[1.65] text-secondary">
                   I also co-founded <span className="text-primary font-medium">Rasoi Pay</span>, scaling a production-ready QR-ordering SaaS from concept to live — boosting average order value by 22% and achieving &lt;50ms menu load times. Expert in <span className="text-primary font-medium">Agentic AI</span>, scalable design systems, and full-stack UX/UI methodologies.
-                </TextReveal>
-                <TextReveal delay={0.3}>
+                </SplitLines>
+                <SplitLines delay={0.3} className="text-lg sm:text-xl md:text-2xl leading-[1.65] text-secondary">
                   In my downtime, I explore new destinations, shoot film, and push pixels on side projects.
-                </TextReveal>
+                </SplitLines>
               </div>
 
               {/* Experience */}
@@ -595,13 +602,13 @@ export default function Home() {
                           <p className="text-base text-secondary/70 mt-1">{exp.role}</p>
                           <p className="text-sm text-secondary/40 mt-1.5">{exp.period}</p>
                         </div>
-                        <span
-                          className="text-2xl text-secondary/30 group-hover:text-primary transition-all mt-1 select-none inline-block"
-                          style={{
-                            transform: expandedExp === i ? 'rotate(45deg)' : 'rotate(0deg)',
-                            transition: 'transform 0.3s ease'
-                          }}
-                        >+</span>
+                        <motion.span
+                          animate={{ rotate: expandedExp === i ? 45 : 0 }}
+                          transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+                          className="text-xl text-secondary group-hover:text-primary transition-colors flex-shrink-0"
+                        >
+                          +
+                        </motion.span>
                       </button>
                       <AnimatePresence>
                         {expandedExp === i && (
