@@ -36,12 +36,14 @@ export default function ImageFollowCursor({ src, visible }: Props) {
         className="relative"
         style={{ transform: 'translate(20px, -60%)' }}
       >
-        <img
-          src={src}
-          alt=""
-          className="w-48 h-32 object-cover rounded-xl shadow-2xl"
-          style={{ display: 'block' }}
-        />
+        {src && (
+          <img
+            src={src}
+            alt=""
+            className="w-48 h-32 object-cover rounded-xl shadow-2xl"
+            style={{ display: 'block' }}
+          />
+        )}
       </div>
     </motion.div>
   )

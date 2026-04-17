@@ -76,12 +76,13 @@ This is a professional portfolio website for Md Afjal Khan, a Senior Product Des
 ## Portfolio Website Structure
 
 ### Technology
-- **Framework**: Next.js 15 with App Router
+- **Framework**: Next.js 15 with App Router + Turbopack
 - **Language**: TypeScript
-- **Styling**: Custom CSS with CSS Variables
-- **Motion Engine**: Framer Motion (Optimized for 60fps)
-- **UI Interaction**: Custom Magnetic Cursor with glassmorphism and precise `caretPositionFromPoint` detection.
-- **Icons**: Boxicons
+- **Styling**: Tailwind CSS + Custom CSS Variables
+- **Motion Engine**: Framer Motion 12 (scroll-driven, spring physics, 60fps)
+- **Motion Tokens**: `src/lib/motion.ts` — centralised easing/spring/duration constants
+- **UI Interaction**: Custom Magnetic Cursor, ImageFollowCursor, SplitLines, ProcessStep
+- **Icons**: Boxicons + Material Icons
 - **Email**: EmailJS integration
 - **Deployment**: Vercel
 
@@ -100,8 +101,8 @@ This is a professional portfolio website for Md Afjal Khan, a Senior Product Des
    - `/case-studies/iqra` - Iqra App case study
 
 ### Design System
-- **Primary Color**: #4f9cf9 (Blue)
-- **Typography**: Poppins font family
+- **Primary Color**: #3CDA64 (Green)
+- **Typography**: Syne (display) + system sans
 - **Layout**: CSS Grid and Flexbox
 - **Responsive**: Mobile-first approach
 
@@ -200,32 +201,9 @@ Implemented a world-class motion design system inspired by "Antigravity" princip
 
 ## Portfolio URLs
 
-- **Portfolio Website**: [To be deployed]
+- **Portfolio Website**: https://portfolio-mdafjalkhan.vercel.app
 - **Danway Demo**: https://danway-963f6ywqn-mdafjalkhan29-gmailcoms-projects.vercel.app
 - **Rasoi Pay**: https://rasoipay.com/
-
-## File Structure
-
-```
-portfolio-AfjalKhan/
-├── src/
-│   ├── app/
-│   │   ├── case-studies/
-│   │   │   ├── rasoipay/page.tsx
-│   │   │   ├── danway/page.tsx
-│   │   │   └── iqra/page.tsx
-│   │   ├── globals.css
-│   │   ├── layout.tsx
-│   │   └── page.tsx
-├── public/
-│   ├── images/
-│   ├── Rasoi_Pay/
-│   ├── Iqra/
-│   └── resume/
-│       └── MdAfjalKhan_Resume_2026.pdf
-├── README.md
-└── CONTEXT.md (this file)
-```
 
 ## Development Commands
 
@@ -250,9 +228,47 @@ Required for EmailJS contact form:
 - `NEXT_PUBLIC_EMAILJS_TEMPLATE_ID`
 - `NEXT_PUBLIC_EMAILJS_PUBLIC_KEY`
 
+## File Structure (current)
+
+```
+portfolio/
+├── src/
+│   ├── app/
+│   │   ├── case-studies/
+│   │   │   ├── rasoipay/page.tsx
+│   │   │   ├── danway/page.tsx
+│   │   │   └── iqra/page.tsx
+│   │   ├── components/
+│   │   │   ├── CustomCursor.tsx
+│   │   │   ├── ImageFollowCursor.tsx   ← new
+│   │   │   ├── KineticText.tsx
+│   │   │   ├── Magnetic.tsx
+│   │   │   ├── ParallaxImage.tsx
+│   │   │   ├── ProcessStep.tsx         ← new (shared)
+│   │   │   ├── ScrollHighlightText.tsx
+│   │   │   ├── ScrollingMarquee.tsx
+│   │   │   ├── SplitLines.tsx          ← new
+│   │   │   └── TextReveal.tsx
+│   │   ├── globals.css
+│   │   ├── layout.tsx
+│   │   └── page.tsx
+│   └── lib/
+│       └── motion.ts                   ← new (motion tokens)
+├── public/
+│   ├── images/
+│   ├── Rasoi_Pay/
+│   ├── Iqra/
+│   └── resume/
+│       └── MdAfjalKhan_Resume_2026.pdf
+├── CONTEXT.md
+└── README.md
+```
+
 ## Status
 
 ✅ Production Ready - Senior-level professional portfolio with enterprise case studies
 ✅ All case studies updated with strategic positioning
 ✅ Resume updated to Product Architect version
 ✅ Live demos integrated and functional
+✅ Scroll animations + Framer-style motion system live (April 2026)
+✅ 12 UI/UX fixes shipped — mobile CTA, focus rings, type scale, dark mode fallback
