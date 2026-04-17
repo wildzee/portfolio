@@ -77,8 +77,11 @@ export default function Home() {
   // Scroll + Parallax
   const { scrollYProgress } = useScroll()
   const progressWidth = useTransform(scrollYProgress, [0, 1], ['0%', '100%'])
-  const heroY = useTransform(scrollYProgress, [0, 0.15], [0, 150])
-  const heroOpacity = useTransform(scrollYProgress, [0, 0.12], [1, 0])
+  const heroY = useTransform(scrollYProgress, [0, 0.15], [0, 100])
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.18], [1, 0])
+  const heroScale = useTransform(scrollYProgress, [0, 0.18], [1, 0.88])
+  const heroCtaY = useTransform(scrollYProgress, [0, 0.18], [0, -20])
+  const orbScale = useTransform(scrollYProgress, [0, 0.2], [1, 1.2])
 
   useEffect(() => {
     // Read saved theme preference or default to dark
@@ -337,10 +340,10 @@ export default function Home() {
           variants={stagger}
         >
           {/* Floating orbs with breathing animation */}
-          <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none">
+          <motion.div style={{ scale: orbScale }} className="absolute inset-0 -z-10 overflow-hidden pointer-events-none">
             <div className="orb-breathing absolute top-[-5%] left-[-10%] w-[600px] h-[600px] rounded-full bg-primary/5 blur-[130px]" />
             <div className="orb-breathing-reverse absolute bottom-[10%] right-[-10%] w-[400px] h-[400px] rounded-full bg-amber-900/5 blur-[100px]" />
-          </div>
+          </motion.div>
 
           <motion.div style={{ y: heroY, opacity: heroOpacity }} className="relative">
             {/* Background Logo Watermark */}
@@ -362,46 +365,48 @@ export default function Home() {
             </motion.p>
 
             {/* Word-by-word reveal heading */}
-            <motion.h1
-              variants={wordContainer}
-              className="text-4xl sm:text-5xl md:text-7xl lg:text-[6rem] font-display font-bold leading-[1.05] tracking-tight mb-8 sm:mb-10 max-w-4xl"
-            >
-              {['I', 'design', 'products'].map((word, i) => (
-                <span key={i} className="inline-block overflow-hidden mr-[0.3em]">
-                  <motion.span variants={wordReveal} className="inline-block">
-                    {word}
-                  </motion.span>
-                </span>
-              ))}
-              <br />
-              {['built', 'for'].map((word, i) => (
-                <span key={i} className="inline-block overflow-hidden mr-[0.3em]">
-                  <motion.span variants={wordReveal} className="inline-block">
-                    {word}
-                  </motion.span>
-                </span>
-              ))}
-              <span className="inline-block overflow-hidden mr-[0.3em]">
-                <motion.span variants={wordReveal} className="inline-block">
-                  <span className="text-gradient">impact</span>,
-                </motion.span>
-              </span>
-              <br />
-              <span className="whitespace-nowrap inline-block">
-                {['designed', 'to'].map((word, i) => (
+            <motion.div style={{ scale: heroScale }}>
+              <motion.h1
+                variants={wordContainer}
+                className="text-4xl sm:text-5xl md:text-7xl lg:text-[6rem] font-display font-bold leading-[1.05] tracking-tight mb-8 sm:mb-10 max-w-4xl"
+              >
+                {['I', 'design', 'products'].map((word, i) => (
                   <span key={i} className="inline-block overflow-hidden mr-[0.3em]">
                     <motion.span variants={wordReveal} className="inline-block">
                       {word}
                     </motion.span>
                   </span>
                 ))}
-                <span className="inline-block overflow-hidden">
+                <br />
+                {['built', 'for'].map((word, i) => (
+                  <span key={i} className="inline-block overflow-hidden mr-[0.3em]">
+                    <motion.span variants={wordReveal} className="inline-block">
+                      {word}
+                    </motion.span>
+                  </span>
+                ))}
+                <span className="inline-block overflow-hidden mr-[0.3em]">
                   <motion.span variants={wordReveal} className="inline-block">
-                    <span className="text-gradient">scale</span>.
+                    <span className="text-gradient">impact</span>,
                   </motion.span>
                 </span>
-              </span>
-            </motion.h1>
+                <br />
+                <span className="whitespace-nowrap inline-block">
+                  {['designed', 'to'].map((word, i) => (
+                    <span key={i} className="inline-block overflow-hidden mr-[0.3em]">
+                      <motion.span variants={wordReveal} className="inline-block">
+                        {word}
+                      </motion.span>
+                    </span>
+                  ))}
+                  <span className="inline-block overflow-hidden">
+                    <motion.span variants={wordReveal} className="inline-block">
+                      <span className="text-gradient">scale</span>.
+                    </motion.span>
+                  </span>
+                </span>
+              </motion.h1>
+            </motion.div>
 
             <motion.p variants={fadeInUp} className="text-sm uppercase tracking-[0.2em] text-secondary">
               Product Designer at{' '}
@@ -411,7 +416,7 @@ export default function Home() {
               <span className="text-foreground font-semibold">Rasoi Pay</span>
             </motion.p>
 
-            <motion.div variants={fadeInUp} className="flex gap-6 mt-12">
+            <motion.div variants={fadeInUp} style={{ y: heroCtaY }} className="flex gap-6 mt-12">
               <a href="https://www.linkedin.com/in/mdafjalkhan29/" target="_blank" rel="noreferrer" data-cursor="Open" className="inline-flex items-center gap-2 text-xs uppercase tracking-widest text-secondary hover:text-primary transition-colors">
                 LinkedIn <i className="bx bx-link-external text-base" />
               </a>
