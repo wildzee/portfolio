@@ -403,7 +403,7 @@ export default function RasoiPayCaseStudy() {
             {[
               { src: '/Rasoi_Pay/rp_desktop_2.png', label: 'Advance Analytics' },
               { src: '/Rasoi_Pay/rp_desktop_3.png', label: 'Dashboard' },
-              { src: '/Rasoi_Pay/rp_desktop_4.png', label: 'Oder Management' },
+              { src: '/Rasoi_Pay/rp_desktop_4.png', label: 'Order Management' },
               { src: '/Rasoi_Pay/rp_desktop_5.png', label: 'Landing page' },
             ].map((screen, i) => (
               <motion.div

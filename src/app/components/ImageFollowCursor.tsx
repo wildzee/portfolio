@@ -2,6 +2,7 @@
 
 import { motion, useMotionValue, useSpring } from 'framer-motion'
 import { useEffect } from 'react'
+import { easePremium } from '@/lib/motion'
 
 interface Props {
   src: string
@@ -29,7 +30,7 @@ export default function ImageFollowCursor({ src, visible }: Props) {
       className="pointer-events-none fixed z-50 top-0 left-0"
       style={{ x, y }}
       animate={{ opacity: visible ? 1 : 0, scale: visible ? 1 : 0.85 }}
-      transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
+      transition={{ duration: 0.2, ease: easePremium }}
     >
       <div
         className="relative"
