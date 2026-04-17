@@ -9,6 +9,7 @@ import Magnetic from './components/Magnetic'
 import ParallaxImage from './components/ParallaxImage'
 import ScrollHighlightText from './components/ScrollHighlightText'
 import TextReveal from './components/TextReveal'
+import ImageFollowCursor from './components/ImageFollowCursor'
 
 // ─── Preloader Component ───────────────────────────────────────────────────────
 function Preloader({ onComplete, isDark }: { onComplete: () => void; isDark: boolean }) {
@@ -73,6 +74,8 @@ export default function Home() {
   const [formStatus, setFormStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle')
   const [isDark, setIsDark] = useState(true)
   const [expandedExp, setExpandedExp] = useState<number | null>(null)
+  const [cursorImage, setCursorImage] = useState<string>('')
+  const [cursorVisible, setCursorVisible] = useState(false)
 
   // Scroll + Parallax
   const { scrollYProgress } = useScroll()
@@ -117,6 +120,14 @@ export default function Home() {
     hidden: { opacity: 0 },
     visible: { opacity: 1, transition: { staggerChildren: 0.08 } },
   }
+  const workRowVariant = {
+    hidden: { opacity: 0, x: -24 },
+    visible: (i: number) => ({
+      opacity: 1,
+      x: 0,
+      transition: { duration: 0.6, ease: easePremium, delay: i * 0.08 },
+    }),
+  }
   // Word-by-word reveal for hero
   const wordContainer: Variants = {
     hidden: {},
@@ -141,6 +152,7 @@ export default function Home() {
       description: 'B2B SaaS for restaurant management',
       href: '/case-studies/rasoipay',
       public: true,
+      image: '/Rasoi_Pay/rp_desktop_1.png',
     },
     {
       status: 'SHIPPED',
@@ -149,6 +161,7 @@ export default function Home() {
       description: 'Mobile product, 50,000+ active users',
       href: '/case-studies/iqra',
       public: true,
+      image: '/Iqra/Iqra_mockup.png',
     },
     {
       status: 'CONFIDENTIAL',
@@ -157,6 +170,7 @@ export default function Home() {
       description: 'Enterprise workforce & labor-cost dashboard',
       href: null,
       public: false,
+      image: '',
     },
   ]
 
@@ -445,12 +459,21 @@ export default function Home() {
 
           <div>
             {projects.map((project, i) => (
-              <motion.div key={i} variants={fadeInUp}>
+              <motion.div
+                key={i}
+                custom={i}
+                variants={workRowVariant}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, margin: '-40px' }}
+              >
                 {project.public ? (
                   <Link
                     href={project.href!}
                     data-cursor="View"
                     className="work-row group"
+                    onMouseEnter={() => { setCursorImage(project.image || ''); setCursorVisible(!!project.image) }}
+                    onMouseLeave={() => setCursorVisible(false)}
                   >
                     <div className="flex items-center gap-2">
                       <span className={`text-[10px] font-bold uppercase tracking-widest ${project.status === 'SHIPPED' ? 'text-emerald-400' : 'text-secondary'}`}>
@@ -741,6 +764,7 @@ export default function Home() {
           </motion.form>
         </motion.section>
 
+        <ImageFollowCursor src={cursorImage} visible={cursorVisible} />
       </main>
 
       {/* ── FOOTER ─────────────────────────────────────────────────────────────── */}
