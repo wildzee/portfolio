@@ -105,6 +105,38 @@ This is a professional portfolio website for Md Afjal Khan, a Senior Product Des
 - **Layout**: CSS Grid and Flexbox
 - **Responsive**: Mobile-first approach
 
+## Recent Updates (April 2026)
+
+### Motion & UI/UX Upgrade (feature/motion-uiux)
+Elevated portfolio to "$10k Framer-style" quality with scroll-driven animations and 12 targeted UI/UX fixes.
+
+**New Components:**
+- `src/lib/motion.ts` — Centralised motion tokens (easing, springs, durations) — single source of truth
+- `src/app/components/ImageFollowCursor.tsx` — Project thumbnail that spring-follows cursor on Works hover
+- `src/app/components/SplitLines.tsx` — Line-by-line scroll clip-reveal wrapper
+- `src/app/components/ProcessStep.tsx` — Shared accordion step (replaces inline implementations in both case studies)
+
+**Scroll Animations (homepage):**
+- Hero heading scales 1→0.88 + fades as you scroll past it; CTA floats up; orbs scale out
+- Works rows slide in from left with stagger as they enter viewport
+- Image-under-cursor preview on Works hover (signature Framer effect)
+- "About" heading clips in left-to-right; bio paragraphs reveal upward line by line
+- Experience `+` icon rotates on click, turns green on hover
+- Contact section: "Let's work together" heading scales in on scroll entry
+
+**UI/UX Fixes:**
+- Fixed "Let talk" typo → "Let's work together"
+- "Book a Call" CTA moved into hamburger menu (was hidden on mobile)
+- Work rows show `→` chevron on mobile (affordance was missing)
+- Type scale tokens added to globals.css (clamp-based, 5-stop scale)
+- Section spacing tokens added (`--section-y-sm`, `--section-y-lg`)
+- Focus rings added (`*:focus-visible`) — WCAG AA compliant
+- Grain overlay opacity reduced 50% on mobile for legibility
+- Dark mode `@media (prefers-color-scheme: dark)` CSS fallback added
+- ProcessStep unified across Rasoi Pay + Iqra case studies
+- Case study prev/next navigation standardised (both pages consistent)
+- "Oder Management" typo fixed → "Order Management" in Rasoi Pay gallery
+
 ## Recent Updates (March 2026)
 
 ### Premium Motion System Upgrade
