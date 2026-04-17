@@ -697,18 +697,23 @@ export default function Home() {
         >
           <motion.div variants={fadeInUp} className="mb-16">
             <p className="text-xs uppercase tracking-[0.3em] text-secondary mb-10">Contact</p>
-            <div className="flex flex-col gap-2">
-              <h2
-                className="text-3xl sm:text-4xl md:text-5xl font-display font-medium leading-[1.2] hover:text-white transition-colors w-fit"
-              >
-                Let talk
+            <motion.div
+              initial={{ opacity: 0, scale: 0.92 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true, margin: '-60px' }}
+              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+              className="space-y-4"
+            >
+              <h2 className="text-4xl sm:text-5xl md:text-6xl font-display font-medium leading-[1.1] tracking-tight">
+                Let&apos;s work together
               </h2>
-              <h2
-                className="text-3xl sm:text-4xl md:text-5xl font-display font-medium leading-[1.2] hover:text-white transition-colors w-fit"
+              <a
+                href="mailto:mdafjalkhan29@gmail.com"
+                className="block text-lg sm:text-xl text-secondary hover:text-primary transition-colors font-sans"
               >
-                Drop me a line <i className="material-icons align-top text-primary text-[0.8em] font-bold">arrow_outward</i>
-              </h2>
-            </div>
+                mdafjalkhan29@gmail.com <i className="bx bx-link-external text-base align-middle" />
+              </a>
+            </motion.div>
           </motion.div>
 
           <motion.form
@@ -757,14 +762,21 @@ export default function Home() {
               value={formData.message}
               onChange={(e) => setFormData({ ...formData, message: e.target.value })}
             />
-            <button
-              type="submit"
-              data-cursor=""
-              disabled={formStatus === 'sending'}
-              className="px-8 py-3 bg-primary text-background font-semibold rounded-full text-sm tracking-wide hover:bg-[#52e696] transition-all disabled:opacity-50"
+            <motion.div
+              initial={{ scale: 0.95, opacity: 0 }}
+              whileInView={{ scale: 1, opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
             >
-              {formStatus === 'sending' ? 'Sending…' : formStatus === 'sent' ? '✓ Sent!' : 'Send message'}
-            </button>
+              <button
+                type="submit"
+                data-cursor=""
+                disabled={formStatus === 'sending'}
+                className="px-8 py-3 bg-primary text-background font-semibold rounded-full text-sm tracking-wide hover:bg-[#52e696] transition-all disabled:opacity-50"
+              >
+                {formStatus === 'sending' ? 'Sending…' : formStatus === 'sent' ? '✓ Sent!' : 'Send message'}
+              </button>
+            </motion.div>
             {formStatus === 'error' && (
               <p className="text-red-400 text-sm">Something went wrong. Please try again.</p>
             )}
