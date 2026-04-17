@@ -210,7 +210,7 @@ export default function Home() {
                 href="#contact"
                 data-cursor=""
                 onClick={(e) => { e.preventDefault(); scrollToSection('contact') }}
-                className="hidden sm:flex items-center gap-2 px-4 py-2 border rounded-md text-xs uppercase tracking-widest hover:border-foreground transition-colors"
+                className="hidden md:flex items-center gap-2 px-4 py-2 border rounded-md text-xs uppercase tracking-widest hover:border-foreground transition-colors"
                 style={{ borderColor: 'var(--border)' }}
               >
                 <i className="bx bx-phone" /> Book a call
@@ -317,6 +317,21 @@ export default function Home() {
                   </motion.li>
                 ))}
               </ul>
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.35, ease: [0.16, 1, 0.3, 1], duration: 0.5 }}
+                className="mt-8"
+              >
+                <a
+                  href="#contact"
+                  onClick={(e) => { e.preventDefault(); setShowMenu(false); scrollToSection('contact') }}
+                  className="inline-flex items-center gap-2 px-6 py-3 border rounded-full text-sm uppercase tracking-widest hover:border-primary hover:text-primary transition-colors"
+                  style={{ borderColor: 'var(--border)' }}
+                >
+                  <i className="bx bx-phone" /> Book a call
+                </a>
+              </motion.div>
             </div>
 
             {/* Menu Footer */}
@@ -492,8 +507,11 @@ export default function Home() {
                       <p className="text-sm text-secondary">{project.role}</p>
                       <p className="text-xs text-secondary/50 mt-0.5">{project.description}</p>
                     </div>
-                    <div className="work-arrow">
+                    <div className="work-arrow hidden sm:block">
                       <i className="bx bx-right-arrow-alt" />
+                    </div>
+                    <div className="sm:hidden text-secondary/50 text-sm">
+                      →
                     </div>
                   </Link>
                 ) : (
