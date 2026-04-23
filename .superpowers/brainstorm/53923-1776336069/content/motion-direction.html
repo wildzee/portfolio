@@ -1,0 +1,94 @@
+<style>
+  .cards { grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
+  .card { cursor: pointer; }
+  .preview {
+    height: 220px;
+    border-radius: 12px;
+    overflow: hidden;
+    position: relative;
+    background: #0a0a0a;
+    margin-bottom: 1rem;
+  }
+  .preview .type {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Georgia', serif;
+    color: #fafafa;
+    letter-spacing: -0.02em;
+  }
+
+  /* A - Editorial / calm */
+  .preview-a .type { font-size: 48px; font-style: italic; font-weight: 300; animation: slow-rise 4s ease-out infinite; }
+  @keyframes slow-rise { 0%, 100% { transform: translateY(6px); opacity: 0.7; } 50% { transform: translateY(-6px); opacity: 1; } }
+
+  /* B - Kinetic / bold */
+  .preview-b .type { font-size: 64px; font-weight: 900; letter-spacing: -0.04em; text-transform: uppercase; animation: slam 2.2s cubic-bezier(0.16, 1, 0.3, 1) infinite; }
+  @keyframes slam { 0% { transform: translateX(-120%) skewX(-20deg); } 30%, 90% { transform: translateX(0) skewX(0); } 100% { transform: translateX(120%) skewX(20deg); } }
+
+  /* C - Cinematic */
+  .preview-c { background: linear-gradient(135deg, #111, #1a1a1a); }
+  .preview-c .type { font-size: 44px; font-weight: 200; letter-spacing: 0.08em; text-transform: uppercase; }
+  .preview-c .mask { position: absolute; inset: 0; background: #0a0a0a; animation: curtain 5s cubic-bezier(0.77,0,0.175,1) infinite; }
+  @keyframes curtain { 0% { transform: translateX(0); } 40% { transform: translateX(100%); } 60% { transform: translateX(100%); } 100% { transform: translateX(0); } }
+
+  /* D - Spatial / 3D */
+  .preview-d { background: radial-gradient(circle at 50% 50%, #2a1a4a 0%, #0a0a0a 60%); }
+  .preview-d .orb {
+    position: absolute;
+    width: 140px; height: 140px;
+    border-radius: 50%;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(circle at 30% 30%, #c8a8ff, #6d47d4 50%, #1a0a3a 90%);
+    filter: blur(2px);
+    animation: spatial 6s ease-in-out infinite;
+  }
+  @keyframes spatial { 0%, 100% { transform: translate(-50%, -50%) scale(1); } 50% { transform: translate(-50%, -50%) scale(1.15) rotate(180deg); } }
+  .preview-d .type { font-size: 28px; font-weight: 400; z-index: 2; position: relative; }
+
+  .refs { font-size: 12px; color: #888; margin-top: 0.5rem; font-family: monospace; }
+</style>
+
+<h2>Which motion feel matches your taste?</h2>
+<p class="subtitle">Your site already has black/minimal bones. These are four directions a $10k portfolio typically lands on — pick the one that feels right for your brand. Hover to preview.</p>
+
+<div class="cards">
+  <div class="card" data-choice="editorial" onclick="toggleSelect(this)">
+    <div class="preview preview-a"><div class="type">Selected Works</div></div>
+    <div class="card-body">
+      <h3>A · Editorial & Calm</h3>
+      <p>Slow, elegant, confident. Mask-clip image reveals, gentle parallax, serif-italic flourishes. Nothing screams — everything breathes.</p>
+      <div class="refs">refs: Makereign, Studio Freight, Rauno</div>
+    </div>
+  </div>
+
+  <div class="card" data-choice="kinetic" onclick="toggleSelect(this)">
+    <div class="preview preview-b"><div class="type">WORK</div></div>
+    <div class="card-body">
+      <h3>B · Kinetic & Bold</h3>
+      <p>Typography slams into place. Marquees, skewed transitions, snappy springs. Awwwards SOTD energy — you notice every movement.</p>
+      <div class="refs">refs: Resn, Active Theory, Pangram Pangram</div>
+    </div>
+  </div>
+
+  <div class="card" data-choice="cinematic" onclick="toggleSelect(this)">
+    <div class="preview preview-c"><div class="mask"></div><div class="type">CASE 01</div></div>
+    <div class="card-body">
+      <h3>C · Cinematic & Luxurious</h3>
+      <p>Curtain transitions between pages, full-bleed hero reveals, scroll-bound storytelling. Feels like a product launch film.</p>
+      <div class="refs">refs: Apple product pages, Linear, Vercel Ship</div>
+    </div>
+  </div>
+
+  <div class="card" data-choice="spatial" onclick="toggleSelect(this)">
+    <div class="preview preview-d"><div class="orb"></div><div class="type">spatial</div></div>
+    <div class="card-body">
+      <h3>D · Spatial & Atmospheric</h3>
+      <p>Depth, cursor-reactive shaders, floating orbs, WebGL flourishes. More technically ambitious — fits designers who also code motion.</p>
+      <div class="refs">refs: Lusion, Immersive Garden, Bruno Simon</div>
+    </div>
+  </div>
+</div>
