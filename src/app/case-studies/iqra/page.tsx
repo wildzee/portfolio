@@ -6,6 +6,7 @@ import { motion, useScroll, useTransform, type Variants } from 'framer-motion'
 import { useRef, useState, useEffect } from 'react'
 import CustomCursor from '../../components/CustomCursor'
 import ProcessStep from '@/app/components/ProcessStep'
+import ThemeToggle from '../../components/ThemeToggle'
 
 const easeExpressive = [0.16, 1, 0.3, 1] as const
 
@@ -144,19 +145,21 @@ export default function IqraCaseStudy() {
 
       {/* ── STICKY NAV ── */}
       <header
-        className="fixed top-0 left-0 w-full z-50 backdrop-blur-md border-b transition-all"
-        style={{ backgroundColor: 'var(--glass-bg)', borderColor: 'var(--border)' }}
+        className="fixed top-0 left-0 w-full z-50 transition-all duration-300"
+        style={{ backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)', backgroundColor: 'rgba(0,0,0,0)' }}
       >
-        <nav className="max-w-7xl mx-auto px-4 sm:px-6 h-16 sm:h-20 flex justify-between items-center">
+        <nav className="w-full px-[5vw] h-16 sm:h-20 flex justify-between items-center">
           <Link
             href="/"
+            data-cursor=""
             className="flex items-center gap-2 text-sm text-secondary hover:text-foreground transition-colors"
           >
             <i className="bx bx-arrow-back text-base" />
             <span className="tracking-widest uppercase text-xs font-medium">Back</span>
           </Link>
           <span className="text-sm font-display font-medium tracking-widest uppercase">Iqra App</span>
-          <div className="flex gap-3">
+          <div className="flex items-center gap-3">
+            <ThemeToggle />
             <a
               href="https://play.google.com/store/apps/details?id=com.quran.iqra"
               target="_blank"
@@ -180,7 +183,7 @@ export default function IqraCaseStudy() {
 
         <motion.div
           style={{ y: heroY, opacity: heroOpacity }}
-          className="max-w-7xl mx-auto px-4 sm:px-6 w-full"
+          className="w-full px-[5vw] w-full"
         >
           <motion.div
             initial="hidden"
@@ -227,11 +230,11 @@ export default function IqraCaseStudy() {
       </section>
 
       {/* ── HERO IMAGE ── */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 pb-24">
+      <section className="w-full px-[5vw] pb-24">
         <motion.div
           initial={{ opacity: 0, y: 60, scale: 0.98 }}
           whileInView={{ opacity: 1, y: 0, scale: 1 }}
-          viewport={{ once: true, margin: '-80px' }}
+          viewport={{ once: false, margin: '-80px' }}
           transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
           className="relative rounded-2xl overflow-hidden border"
           style={{ borderColor: 'var(--border)' }}
@@ -250,14 +253,14 @@ export default function IqraCaseStudy() {
 
       {/* ── METRICS ── */}
       <section className="border-y py-16 sm:py-20" style={{ borderColor: 'var(--border)' }}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+        <div className="w-full px-[5vw]">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-y-12 gap-x-6">
             {metrics.map((m, i) => (
               <motion.div
                 key={i}
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: '-50px' }}
+                viewport={{ once: false, margin: '-50px' }}
                 transition={{ duration: 0.6, delay: i * 0.1, ease: [0.16, 1, 0.3, 1] }}
                 className="text-center"
               >
@@ -275,14 +278,14 @@ export default function IqraCaseStudy() {
         </div>
       </section>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6">
+      <main className="w-full px-[5vw]">
 
         {/* ── THE PROBLEM ── */}
         <motion.section
           className="py-24 sm:py-32 grid md:grid-cols-[1fr_1.5fr] gap-12 md:gap-24 items-start"
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, margin: '-80px' }}
+          viewport={{ once: false, margin: '-80px' }}
           variants={stagger}
         >
           <motion.div variants={fadeUp} className="md:sticky md:top-32 self-start">
@@ -324,7 +327,7 @@ export default function IqraCaseStudy() {
           className="py-24 sm:py-32 grid md:grid-cols-[1fr_1.5fr] gap-12 md:gap-24 items-start"
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, margin: '-80px' }}
+          viewport={{ once: false, margin: '-80px' }}
           variants={stagger}
         >
           <motion.div variants={fadeUp} className="md:sticky md:top-32 self-start">
@@ -357,7 +360,7 @@ export default function IqraCaseStudy() {
           className="py-24 sm:py-32"
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, margin: '-80px' }}
+          viewport={{ once: false, margin: '-80px' }}
           variants={stagger}
         >
           <motion.div variants={fadeUp} className="mb-16">
@@ -389,7 +392,7 @@ export default function IqraCaseStudy() {
         <motion.section
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-80px' }}
+          viewport={{ once: false, margin: '-80px' }}
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           className="pb-24"
         >
@@ -443,7 +446,7 @@ export default function IqraCaseStudy() {
           className="py-24 sm:py-32"
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, margin: '-80px' }}
+          viewport={{ once: false, margin: '-80px' }}
           variants={stagger}
         >
           <motion.div variants={fadeUp} className="mb-16">
@@ -468,7 +471,7 @@ export default function IqraCaseStudy() {
           className="py-24 sm:py-32 grid md:grid-cols-[1fr_1.5fr] gap-12 md:gap-24 items-start"
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, margin: '-80px' }}
+          viewport={{ once: false, margin: '-80px' }}
           variants={stagger}
         >
           <motion.div variants={fadeUp} className="md:sticky md:top-32 self-start">
@@ -520,11 +523,11 @@ export default function IqraCaseStudy() {
         className="border-t py-20 sm:py-28"
         style={{ borderColor: 'var(--border)' }}
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+        <div className="w-full px-[5vw]">
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-80px' }}
+            viewport={{ once: false, margin: '-80px' }}
             transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
             className="flex flex-col md:flex-row items-start md:items-center justify-between gap-8"
           >

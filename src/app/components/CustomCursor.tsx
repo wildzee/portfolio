@@ -2,6 +2,8 @@
 
 import { useRef, useState, useEffect } from 'react'
 
+const LERP = 0.2
+
 export default function CustomCursor() {
     const cursorRef = useRef<HTMLDivElement>(null)
     const circleRef = useRef<HTMLDivElement>(null)
@@ -10,6 +12,7 @@ export default function CustomCursor() {
     const [dynamicSize, setDynamicSize] = useState({ width: 40, height: 40 })
     const [visible, setVisible] = useState(false)
     const posRef = useRef({ x: -100, y: -100 })
+    const curPosRef = useRef({ x: -100, y: -100 })
     const rafRef = useRef<number>(0)
 
     useEffect(() => {
@@ -18,8 +21,12 @@ export default function CustomCursor() {
             setVisible(true)
         }
         const tick = () => {
+            const cp = curPosRef.current
+            const { x, y } = posRef.current
+            cp.x += (x - cp.x) * LERP
+            cp.y += (y - cp.y) * LERP
             if (cursorRef.current) {
-                cursorRef.current.style.transform = `translate(${posRef.current.x}px, ${posRef.current.y}px)`
+                cursorRef.current.style.transform = `translate(${cp.x}px, ${cp.y}px)`
             }
             rafRef.current = requestAnimationFrame(tick)
         }
@@ -48,33 +55,29 @@ export default function CustomCursor() {
             setLabel('')
             const computedStyle = window.getComputedStyle(target)
 
-            // Re-apply explicit text check, but check for tag types to handle user-select elements better 
             const isTextTag = ['P', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'SPAN', 'LI', 'LABEL'].includes(target.tagName)
             const hasTextCursorCss = computedStyle.cursor === 'text'
 
-            // To prevent large padding/margins from triggering the line cursor, verify if the mouse is actually over physical text characters
-            let isOverText = false;
+            let isOverText = false
 
             if (isTextTag || hasTextCursorCss) {
-                // caretPositionFromPoint snaps to nearest text node even in whitespace.
-                // Use Range.getClientRects() to verify mouse is inside actual rendered character boxes.
-                let textNode: Node | null = null;
+                let textNode: Node | null = null
                 if (document.caretPositionFromPoint) {
-                    const pos = document.caretPositionFromPoint(e.clientX, e.clientY);
-                    if (pos?.offsetNode?.nodeType === Node.TEXT_NODE) textNode = pos.offsetNode;
+                    const pos = document.caretPositionFromPoint(e.clientX, e.clientY)
+                    if (pos?.offsetNode?.nodeType === Node.TEXT_NODE) textNode = pos.offsetNode
                 } else if (document.caretRangeFromPoint) {
-                    const r = document.caretRangeFromPoint(e.clientX, e.clientY);
-                    if (r?.startContainer?.nodeType === Node.TEXT_NODE) textNode = r.startContainer;
+                    const r = document.caretRangeFromPoint(e.clientX, e.clientY)
+                    if (r?.startContainer?.nodeType === Node.TEXT_NODE) textNode = r.startContainer
                 }
 
                 if (textNode) {
-                    const range = document.createRange();
-                    range.selectNodeContents(textNode);
-                    const rects = Array.from(range.getClientRects());
+                    const range = document.createRange()
+                    range.selectNodeContents(textNode)
+                    const rects = Array.from(range.getClientRects())
                     isOverText = rects.some(rect =>
                         e.clientX >= rect.left && e.clientX <= rect.right &&
                         e.clientY >= rect.top && e.clientY <= rect.bottom
-                    );
+                    )
                 }
             }
 
@@ -90,7 +93,6 @@ export default function CustomCursor() {
         }
 
         const onMouseOut = (e: MouseEvent) => {
-            // Revert back when mouse leaves aggressively
             if (!e.relatedTarget) {
                 setCursorType('default')
                 setDynamicSize({ width: 40, height: 40 })

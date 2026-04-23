@@ -8,14 +8,12 @@ import CustomCursor from './components/CustomCursor'
 import Magnetic from './components/Magnetic'
 import ParallaxImage from './components/ParallaxImage'
 import ScrollHighlightText from './components/ScrollHighlightText'
-import TextReveal from './components/TextReveal'
 import SplitLines from './components/SplitLines'
-import ImageFollowCursor from './components/ImageFollowCursor'
 
 // ─── Preloader Component ───────────────────────────────────────────────────────
 function Preloader({ onComplete, isDark }: { onComplete: () => void; isDark: boolean }) {
   useEffect(() => {
-    const timer = setTimeout(onComplete, 2800)
+    const timer = setTimeout(onComplete, 1500)
     return () => clearTimeout(timer)
   }, [onComplete])
 
@@ -29,7 +27,7 @@ function Preloader({ onComplete, isDark }: { onComplete: () => void; isDark: boo
       className="fixed inset-0 z-[100] flex flex-col items-center justify-center overflow-hidden"
       style={{ background: bg }}
       initial={{ opacity: 1 }}
-      exit={{ opacity: 0, y: -20, transition: { duration: 0.6, ease: [0.85, 0, 0.15, 1] } }}
+      exit={{ y: '-100%', transition: { duration: 0.85, ease: [0.76, 0, 0.24, 1] } }}
     >
       {/* Logo */}
       <motion.div
@@ -69,14 +67,12 @@ function Preloader({ onComplete, isDark }: { onComplete: () => void; isDark: boo
 // ─── Main Page ─────────────────────────────────────────────────────────────────
 export default function Home() {
   const [mounted, setMounted] = useState(false)
-  const [showPreloader, setShowPreloader] = useState(true)
+  const [showPreloader, setShowPreloader] = useState(false)
   const [showMenu, setShowMenu] = useState(false)
   const [formData, setFormData] = useState({ name: '', email: '', message: '' })
   const [formStatus, setFormStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle')
   const [isDark, setIsDark] = useState(true)
   const [expandedExp, setExpandedExp] = useState<number | null>(null)
-  const [cursorImage, setCursorImage] = useState<string>('')
-  const [cursorVisible, setCursorVisible] = useState(false)
 
   // Scroll + Parallax
   const { scrollYProgress } = useScroll()
@@ -93,6 +89,13 @@ export default function Home() {
     const prefersDark = saved ? saved === 'dark' : true
     setIsDark(prefersDark)
     document.documentElement.classList.toggle('dark', prefersDark)
+
+    // Only show preloader on first visit per session
+    if (!sessionStorage.getItem('preloader-shown')) {
+      sessionStorage.setItem('preloader-shown', '1')
+      setShowPreloader(true)
+    }
+
     setMounted(true)
     emailjs.init('msBwFZssq8MrNjXhP')
   }, [])
@@ -183,8 +186,6 @@ export default function Home() {
 
       <CustomCursor />
 
-      {/* Grain Texture */}
-      <div className="grain-overlay" />
 
       {/* Scroll Progress Bar */}
       <motion.div
@@ -193,8 +194,8 @@ export default function Home() {
       />
 
       {/* ── NAV ──────────────────────────────────────────────────────────────── */}
-      <header className="fixed top-0 left-0 w-full z-50 backdrop-blur-md border-b transition-all duration-300" style={{ backgroundColor: 'var(--glass-bg)', borderColor: 'var(--border)' }}>
-        <nav className="max-w-7xl mx-auto px-4 sm:px-6 h-16 sm:h-20 flex justify-between items-center">
+      <header className="fixed top-0 left-0 w-full z-50 transition-all duration-300" style={{ backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)', backgroundColor: 'rgba(0,0,0,0)' }}>
+        <nav className="w-full px-[5vw] h-16 sm:h-20 flex justify-between items-center">
           <a
             href="#"
             data-cursor=""
@@ -257,7 +258,7 @@ export default function Home() {
           >
             {/* Menu Header */}
             <header className="w-full">
-              <nav className="max-w-7xl mx-auto px-6 h-24 flex justify-between items-center text-foreground">
+              <nav className="w-full px-[5vw] h-24 flex justify-between items-center text-foreground">
                 <a
                   href="#"
                   data-cursor=""
@@ -292,7 +293,7 @@ export default function Home() {
             </header>
 
             {/* Menu Links */}
-            <div className="flex-grow flex items-center justify-center md:justify-end max-w-7xl mx-auto w-full px-6 pb-20 md:pr-32">
+            <div className="flex-grow flex items-center justify-center md:justify-end max-w-[1440px] mx-auto w-full px-6 pb-20 md:pr-32">
               <ul className="flex flex-col gap-2 text-center md:text-left items-center md:items-start" style={{ width: 'fit-content' }}>
                 {[{ id: 'home', label: 'Home' }, ...navItems].map((item, i) => (
                   <motion.li
@@ -339,7 +340,7 @@ export default function Home() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.3 }}
-              className="max-w-7xl mx-auto w-full px-6 pb-10 flex justify-between items-end text-xs text-secondary/60"
+              className="max-w-[1440px] mx-auto w-full px-6 pb-10 flex justify-between items-end text-xs text-secondary/60"
             >
               <div>
                 <p>Dubai,</p>
@@ -359,7 +360,7 @@ export default function Home() {
         )}
       </AnimatePresence>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6">
+      <main className="w-full px-[5vw]">
 
         {/* ── HERO ───────────────────────────────────────────────────────────── */}
         <motion.section
@@ -488,8 +489,6 @@ export default function Home() {
                     href={project.href!}
                     data-cursor="View"
                     className="work-row group"
-                    onMouseEnter={() => { setCursorImage(project.image || ''); setCursorVisible(!!project.image) }}
-                    onMouseLeave={() => setCursorVisible(false)}
                   >
                     <div className="flex items-center gap-2">
                       <span className={`text-[10px] font-bold uppercase tracking-widest ${project.status === 'SHIPPED' ? 'text-emerald-400' : 'text-secondary'}`}>
@@ -548,9 +547,10 @@ export default function Home() {
           <div className="grid md:grid-cols-[minmax(200px,_1fr)_minmax(300px,_1.4fr)] gap-8 md:gap-24 items-start">
             {/* LEFT — Sticky heading */}
             <motion.div variants={fadeInUp} className="md:sticky md:top-32 self-start">
-              <div className="border-t pt-10" style={{ borderColor: 'var(--border)' }}>
+              <div className="border-t pt-8" style={{ borderColor: 'var(--border)' }}>
                 <motion.h2
-                  className="text-5xl sm:text-7xl md:text-[8rem] lg:text-[9rem] font-display font-medium leading-[0.9] tracking-tight"
+                  className="font-display font-normal tracking-[-0.02em] leading-[1.1]"
+                  style={{ fontSize: 'clamp(40px, 6vw, 80px)' }}
                   initial={{ clipPath: 'inset(0 100% 0 0)' }}
                   whileInView={{ clipPath: 'inset(0 0% 0 0)' }}
                   viewport={{ once: true, margin: '-60px' }}
@@ -615,18 +615,14 @@ export default function Home() {
                         data-cursor=""
                         onClick={() => setExpandedExp(expandedExp === i ? null : i)}
                       >
-                        <div>
-                          <p className="text-xl font-display font-medium text-foreground group-hover:text-primary transition-colors">{exp.company}</p>
-                          <p className="text-base text-secondary/70 mt-1">{exp.role}</p>
-                          <p className="text-sm text-secondary/40 mt-1.5">{exp.period}</p>
+                        <div className="space-y-1">
+                          <p className="text-xl font-sans font-normal text-foreground">{exp.company}</p>
+                          <p className="text-base text-secondary italic">{exp.role}</p>
+                          <p className="text-xs text-secondary/40 tracking-wide mt-0.5">{exp.period}</p>
                         </div>
-                        <motion.span
-                          animate={{ rotate: expandedExp === i ? 45 : 0 }}
-                          transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-                          className="text-xl text-secondary group-hover:text-primary transition-colors flex-shrink-0"
-                        >
-                          +
-                        </motion.span>
+                        <span className="text-lg text-secondary/50 flex-shrink-0 mt-1 leading-none">
+                          {expandedExp === i ? '×' : '+'}
+                        </span>
                       </button>
                       <AnimatePresence>
                         {expandedExp === i && (
@@ -660,20 +656,17 @@ export default function Home() {
                   <i className="bx bx-download text-base" /> Download full CV
                 </a>
               </div>
-            </motion.div>
-          </div>
 
-          {/* ── PHOTO ─────────────────────────────────────────────────────── */}
-          <div className="grid md:grid-cols-[minmax(200px,_1fr)_minmax(300px,_1.4fr)] gap-12 md:gap-24 items-start mt-24">
-            <div />
-            <div>
+              {/* ── PHOTO — inside right column so sticky About tracks to here */}
+              <div className="mt-16 sm:mt-24">
               <ParallaxImage
                 src="/images/about.jpg"
                 alt="Md Afjal Khan"
                 className="w-full rounded-sm"
               />
               <p className="text-sm text-secondary/50 mt-4 italic">What I look like on a good day</p>
-            </div>
+              </div>
+            </motion.div>
           </div>
 
           {/* ── WHAT I'M KNOWN FOR (split layout) ───────────────────────── */}
@@ -715,23 +708,18 @@ export default function Home() {
         >
           <motion.div variants={fadeInUp} className="mb-16">
             <p className="text-xs uppercase tracking-[0.3em] text-secondary mb-10">Contact</p>
-            <motion.div
-              initial={{ opacity: 0, scale: 0.92 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true, margin: '-60px' }}
-              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-              className="space-y-4"
-            >
-              <h2 className="text-4xl sm:text-5xl md:text-6xl font-display font-medium leading-[1.1] tracking-tight">
-                Let&apos;s work together
-              </h2>
-              <a
-                href="mailto:mdafjalkhan29@gmail.com"
-                className="block text-lg sm:text-xl text-secondary hover:text-primary transition-colors font-sans"
+            <div className="flex flex-col gap-2">
+              <h2
+                className="text-3xl sm:text-4xl md:text-5xl font-display font-medium leading-[1.2] hover:text-primary transition-colors w-fit"
               >
-                mdafjalkhan29@gmail.com <i className="bx bx-link-external text-base align-middle" />
-              </a>
-            </motion.div>
+                Let talk
+              </h2>
+              <h2
+                className="text-3xl sm:text-4xl md:text-5xl font-display font-medium leading-[1.2] hover:text-primary transition-colors w-fit"
+              >
+                Drop me a line <i className="material-icons align-top text-primary text-[0.8em] font-bold">arrow_outward</i>
+              </h2>
+            </div>
           </motion.div>
 
           <motion.form
@@ -756,7 +744,7 @@ export default function Home() {
               placeholder="Name"
               required
               data-cursor=""
-              className="w-full bg-transparent border-b border-white/10 py-4 text-foreground placeholder:text-secondary/40 focus:outline-none focus:border-primary transition-colors font-sans text-sm"
+              className="w-full bg-transparent border-b border-foreground/10 py-4 text-foreground placeholder:text-secondary/40 focus:outline-none focus:border-primary transition-colors font-sans text-sm"
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
             />
@@ -766,7 +754,7 @@ export default function Home() {
               placeholder="Email"
               required
               data-cursor=""
-              className="w-full bg-transparent border-b border-white/10 py-4 text-foreground placeholder:text-secondary/40 focus:outline-none focus:border-primary transition-colors font-sans text-sm"
+              className="w-full bg-transparent border-b border-foreground/10 py-4 text-foreground placeholder:text-secondary/40 focus:outline-none focus:border-primary transition-colors font-sans text-sm"
               value={formData.email}
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
             />
@@ -776,7 +764,7 @@ export default function Home() {
               required
               rows={4}
               data-cursor=""
-              className="w-full bg-transparent border-b border-white/10 py-4 text-foreground placeholder:text-secondary/40 focus:outline-none focus:border-primary transition-colors resize-none font-sans text-sm"
+              className="w-full bg-transparent border-b border-foreground/10 py-4 text-foreground placeholder:text-secondary/40 focus:outline-none focus:border-primary transition-colors resize-none font-sans text-sm"
               value={formData.message}
               onChange={(e) => setFormData({ ...formData, message: e.target.value })}
             />
@@ -801,12 +789,11 @@ export default function Home() {
           </motion.form>
         </motion.section>
 
-        <ImageFollowCursor src={cursorImage} visible={cursorVisible} />
       </main>
 
       {/* ── FOOTER ─────────────────────────────────────────────────────────────── */}
       <footer className="border-t border-white/[0.04] py-8">
-        <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-secondary/40">
+        <div className="w-full px-[5vw] flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-secondary/40">
           <img
             src={isDark ? "/images/logos/logo-white.svg" : "/images/logos/logo-black.svg"}
             alt="Md Afjal Khan"

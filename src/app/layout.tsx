@@ -4,6 +4,7 @@ import 'material-icons/iconfont/material-icons.css'
 import './globals.css'
 
 import PageTransition from './components/PageTransition'
+import SmoothScroll from './components/SmoothScroll'
 
 export const metadata: Metadata = {
   title: 'Afjal Khan - Product Designer',
@@ -15,15 +16,11 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode
 }) {
-  // Retrieve the generated nonce securely passed down from middleware.ts
   await headers()
 
   return (
-    <html lang="en" className="scroll-smooth" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning>
       <head>
-        {/* Google Fonts dynamically generates stylesheets unique per request based on user agent (e.g. woff vs woff2).
-            Because the file content changes dynamically, Google Fonts API cannot support static SRI hashes.
-            Instead, we authorize them explicitly via the 'fonts.googleapis.com' CSP domain directive. */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <meta name="viewport" content="width=device-width, initial-scale=1, interactive-widget=resizes-content" />
@@ -39,7 +36,9 @@ export default async function RootLayout({
         />
       </head>
       <body className="bg-background text-foreground font-sans antialiased selection:bg-primary selection:text-white">
-        <PageTransition>{children}</PageTransition>
+        <SmoothScroll>
+          <PageTransition>{children}</PageTransition>
+        </SmoothScroll>
       </body>
     </html>
   )

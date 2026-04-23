@@ -34,12 +34,10 @@ export default function ParallaxImage({ src, alt, className = '', containerClass
                 className="w-full h-full"
             >
                 <motion.img
-                    style={{ y }}
+                    style={{ y, filter: 'grayscale(60%) contrast(1.1) brightness(0.95)' }}
                     src={src}
                     alt={alt}
                     className={`w-full h-full object-cover ${className}`}
-                    onMouseEnter={(e) => (e.currentTarget.style.filter = 'grayscale(0%) contrast(1) brightness(1)')}
-                    onMouseLeave={(e) => (e.currentTarget.style.filter = 'grayscale(60%) contrast(1.1) brightness(0.95)')}
                 />
             </motion.div>
         </div>
