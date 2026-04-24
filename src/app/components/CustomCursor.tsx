@@ -2,7 +2,7 @@
 
 import { useRef, useState, useEffect } from 'react'
 
-const LERP = 0.2
+const LERP = 0.35
 
 export default function CustomCursor() {
     const cursorRef = useRef<HTMLDivElement>(null)
@@ -14,17 +14,25 @@ export default function CustomCursor() {
     const posRef = useRef({ x: -100, y: -100 })
     const curPosRef = useRef({ x: -100, y: -100 })
     const rafRef = useRef<number>(0)
+    const lastMoveRef = useRef(0)
 
     useEffect(() => {
         const move = (e: MouseEvent) => {
             posRef.current = { x: e.clientX, y: e.clientY }
+            lastMoveRef.current = performance.now()
             setVisible(true)
         }
         const tick = () => {
             const cp = curPosRef.current
             const { x, y } = posRef.current
-            cp.x += (x - cp.x) * LERP
-            cp.y += (y - cp.y) * LERP
+            const idle = performance.now() - lastMoveRef.current > 16
+            if (idle) {
+                cp.x = x
+                cp.y = y
+            } else {
+                cp.x += (x - cp.x) * LERP
+                cp.y += (y - cp.y) * LERP
+            }
             if (cursorRef.current) {
                 cursorRef.current.style.transform = `translate(${cp.x}px, ${cp.y}px)`
             }

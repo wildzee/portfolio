@@ -10,35 +10,42 @@ interface ParallaxImageProps {
     containerClassName?: string
 }
 
+const ease: [number, number, number, number] = [0.76, 0, 0.24, 1]
+
 export default function ParallaxImage({ src, alt, className = '', containerClassName = '' }: ParallaxImageProps) {
     const ref = useRef<HTMLDivElement>(null)
 
-    // Parallax logic
     const { scrollYProgress } = useScroll({
         target: ref,
         offset: ['start end', 'end start'],
     })
-    // Move image up slightly as user scrolls down
     const y = useTransform(scrollYProgress, [0, 1], [30, -30])
 
-    // Reveal logic
-    const isInView = useInView(ref, { once: true, margin: '-20%' })
-    const easePremium: [number, number, number, number] = [0.16, 1, 0.3, 1]
+    const isInView = useInView(ref, { once: true, margin: '-10%' })
 
     return (
         <div ref={ref} className={`overflow-hidden ${containerClassName}`}>
+            {/* clip-path wipe: reveals upward */}
             <motion.div
-                initial={{ scale: 1.15, opacity: 0 }}
-                animate={isInView ? { scale: 1, opacity: 1 } : { scale: 1.15, opacity: 0 }}
-                transition={{ duration: 1.2, ease: easePremium }}
+                initial={{ clipPath: 'inset(0 0 100% 0)' }}
+                animate={isInView ? { clipPath: 'inset(0 0 0% 0)' } : { clipPath: 'inset(0 0 100% 0)' }}
+                transition={{ duration: 1.1, ease }}
                 className="w-full h-full"
             >
-                <motion.img
-                    style={{ y, filter: 'grayscale(60%) contrast(1.1) brightness(0.95)' }}
-                    src={src}
-                    alt={alt}
-                    className={`w-full h-full object-cover ${className}`}
-                />
+                {/* scale zoom-out as it reveals */}
+                <motion.div
+                    initial={{ scale: 1.12 }}
+                    animate={isInView ? { scale: 1 } : { scale: 1.12 }}
+                    transition={{ duration: 1.4, ease }}
+                    className="w-full h-full"
+                >
+                    <motion.img
+                        style={{ y, filter: 'grayscale(60%) contrast(1.1) brightness(0.95)' }}
+                        src={src}
+                        alt={alt}
+                        className={`w-full h-full object-cover ${className}`}
+                    />
+                </motion.div>
             </motion.div>
         </div>
     )
