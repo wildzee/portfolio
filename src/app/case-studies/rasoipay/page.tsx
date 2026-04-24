@@ -4,7 +4,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { motion, useScroll, useTransform, type Variants } from 'framer-motion'
 import { useRef, useState, useEffect } from 'react'
-import CustomCursor from '../../components/CustomCursor'
+import CursorBlurOriginal from '../../components/cursors/CursorBlurOriginal'
 import ProcessStep from '@/app/components/ProcessStep'
 import ThemeToggle from '../../components/ThemeToggle'
 
@@ -133,9 +133,7 @@ export default function RasoiPayCaseStudy() {
       className="min-h-screen text-foreground selection:bg-primary/20 selection:text-primary"
       style={{ backgroundColor: 'var(--background)', color: 'var(--foreground)' }}
     >
-      <CustomCursor />
-      {/* Grain Texture */}
-      <div className="grain-overlay" />
+      <CursorBlurOriginal />
 
       {/* ── SCROLL PROGRESS ── */}
       <motion.div

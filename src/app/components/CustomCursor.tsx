@@ -97,7 +97,7 @@ export default function CustomCursor() {
                 setDynamicSize({ width: 2, height: cursorHeight })
                 setCursorType('text')
             } else {
-                setDynamicSize({ width: 40, height: 40 })
+                setDynamicSize({ width: 30, height: 30 })
                 setCursorType('default')
             }
         }
@@ -105,7 +105,7 @@ export default function CustomCursor() {
         const onMouseOut = (e: MouseEvent) => {
             if (!e.relatedTarget) {
                 setCursorType('default')
-                setDynamicSize({ width: 40, height: 40 })
+                setDynamicSize({ width: 30, height: 30 })
                 setLabel('')
             }
         }

@@ -4,7 +4,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { useState, useEffect, useRef } from 'react'
 import { motion, useScroll, useTransform, useMotionTemplate, Variants, AnimatePresence } from 'framer-motion'
-import CustomCursor from './components/CustomCursor'
+import CursorBlurOriginal from './components/cursors/CursorBlurOriginal'
 import Magnetic from './components/Magnetic'
 import ParallaxImage from './components/ParallaxImage'
 import ScrollHighlightText from './components/ScrollHighlightText'
@@ -251,7 +251,7 @@ export default function Home() {
         {showPreloader && <Preloader key="preloader" isDark={isDark} onComplete={() => setShowPreloader(false)} />}
       </AnimatePresence>
 
-      <CustomCursor />
+      <CursorBlurOriginal />
 
 
       {/* Scroll Progress Bar */}
@@ -542,7 +542,7 @@ export default function Home() {
             {`'21 — '25`}
           </motion.p>
 
-          <div>
+          <div data-cursor-small>
             {projects.map((project, i) => (
               <motion.div
                 key={i}
@@ -650,7 +650,7 @@ export default function Home() {
               {/* Experience */}
               <div>
                 <p className="text-xs uppercase tracking-[0.3em] text-secondary mb-8">Experience</p>
-                <div className="divide-y" style={{ borderColor: 'var(--border)' }}>
+                <div className="divide-y" style={{ borderColor: 'var(--border)' }} data-cursor-small>
                   {[
                     {
                       company: 'Danway EME',
@@ -738,7 +738,7 @@ export default function Home() {
           </div>
 
           {/* ── WHAT I'M KNOWN FOR (split layout) ───────────────────────── */}
-          <div className="grid md:grid-cols-[minmax(200px,_1fr)_minmax(300px,_1.4fr)] gap-12 md:gap-24 items-start mt-32">
+          <div className="grid md:grid-cols-[minmax(200px,_1fr)_minmax(300px,_1.4fr)] gap-12 md:gap-24 items-start mt-32" data-cursor-ignore-text>
             <div className="md:sticky md:top-32 self-start">
               <div className="border-t pt-10" style={{ borderColor: 'var(--border)' }}>
                 <p className="text-sm text-secondary">What I&apos;m known for</p>

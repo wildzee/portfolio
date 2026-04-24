@@ -30,17 +30,27 @@ export default function ParallaxImage({ src, alt, className = '', containerClass
                 initial={{ clipPath: 'inset(0 0 100% 0)' }}
                 animate={isInView ? { clipPath: 'inset(0 0 0% 0)' } : { clipPath: 'inset(0 0 100% 0)' }}
                 transition={{ duration: 1.1, ease }}
-                className="w-full h-full"
+                className="w-full"
+                style={{ willChange: 'clip-path' }}
             >
                 {/* scale zoom-out as it reveals */}
                 <motion.div
                     initial={{ scale: 1.12 }}
                     animate={isInView ? { scale: 1 } : { scale: 1.12 }}
                     transition={{ duration: 1.4, ease }}
-                    className="w-full h-full"
+                    className="w-full"
+                    style={{ willChange: 'transform' }}
                 >
+                    {/* negative margin gives the parallax room so overflow-hidden never clips the edge */}
                     <motion.img
-                        style={{ y, filter: 'grayscale(60%) contrast(1.1) brightness(0.95)' }}
+                        style={{
+                            y,
+                            filter: 'grayscale(60%) contrast(1.1) brightness(0.95)',
+                            willChange: 'transform',
+                            backfaceVisibility: 'hidden',
+                            marginTop: '-40px',
+                            marginBottom: '-40px',
+                        }}
                         src={src}
                         alt={alt}
                         className={`w-full h-auto block ${className}`}
