@@ -1,7 +1,6 @@
 'use client'
 
 import React, { useRef } from 'react'
-import NextImage from 'next/image'
 import { motion, useScroll, useTransform, useInView } from 'framer-motion'
 
 interface ParallaxImageProps {
@@ -40,16 +39,12 @@ export default function ParallaxImage({ src, alt, className = '', containerClass
                     transition={{ duration: 1.4, ease }}
                     className="w-full h-full"
                 >
-                    <motion.div style={{ y }} className="w-full h-full">
-                        <NextImage
-                            src={src}
-                            alt={alt}
-                            fill
-                            sizes="(max-width: 768px) 100vw, 50vw"
-                            className={`object-cover ${className}`}
-                            style={{ filter: 'grayscale(60%) contrast(1.1) brightness(0.95)' }}
-                        />
-                    </motion.div>
+                    <motion.img
+                        style={{ y, filter: 'grayscale(60%) contrast(1.1) brightness(0.95)' }}
+                        src={src}
+                        alt={alt}
+                        className={`w-full h-auto block ${className}`}
+                    />
                 </motion.div>
             </motion.div>
         </div>
