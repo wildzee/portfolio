@@ -17,6 +17,8 @@ export default function CustomCursor() {
     const lastMoveRef = useRef(0)
 
     useEffect(() => {
+        if (window.matchMedia('(pointer: coarse)').matches) return
+
         const move = (e: MouseEvent) => {
             posRef.current = { x: e.clientX, y: e.clientY }
             lastMoveRef.current = performance.now()

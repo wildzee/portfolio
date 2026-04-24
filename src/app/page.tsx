@@ -109,7 +109,7 @@ function ImageMarquee() {
             <div
               key={i}
               className="relative overflow-hidden shrink-0 rounded-sm"
-              style={{ width: 'clamp(220px, 22vw, 360px)', height: 'clamp(300px, 38vw, 520px)' }}
+              style={{ width: 'clamp(160px, 38vw, 360px)', height: 'clamp(220px, 50vw, 520px)' }}
             >
               <Image
                 src={src}
@@ -360,7 +360,7 @@ export default function Home() {
             </header>
 
             {/* Menu Links */}
-            <div className="flex-grow flex items-center justify-center md:justify-end max-w-[1440px] mx-auto w-full px-6 pb-20 md:pr-32">
+            <div className="flex-grow flex items-center justify-center md:justify-end max-w-[1440px] mx-auto w-full px-6 pb-16 md:pb-20 md:pr-32">
               <ul className="flex flex-col gap-2 text-center md:text-left items-center md:items-start" style={{ width: 'fit-content' }}>
                 {[{ id: 'home', label: 'Home' }, ...navItems].map((item, i) => (
                   <motion.li
@@ -377,7 +377,7 @@ export default function Home() {
                     <a
                       href={`#${item.id}`}
                       data-cursor=""
-                      className="text-5xl md:text-7xl leading-[1.1] font-display font-medium text-foreground hover:text-white transition-colors inline-block"
+                      className="text-4xl sm:text-5xl md:text-7xl leading-[1.1] font-display font-medium text-foreground hover:text-white transition-colors inline-block"
                       onClick={(e) => { e.preventDefault(); scrollToSection(item.id) }}
                     >
                       {item.label}
@@ -439,8 +439,8 @@ export default function Home() {
         >
           {/* Floating orbs with breathing animation */}
           <motion.div style={{ scale: orbScale }} className="absolute inset-0 -z-10 overflow-hidden pointer-events-none">
-            <div className="orb-breathing absolute top-[-5%] left-[-10%] w-[600px] h-[600px] rounded-full bg-primary/5 blur-[130px]" />
-            <div className="orb-breathing-reverse absolute bottom-[10%] right-[-10%] w-[400px] h-[400px] rounded-full bg-amber-900/5 blur-[100px]" />
+            <div className="orb-breathing absolute top-[-5%] left-[-10%] w-[300px] h-[300px] sm:w-[450px] sm:h-[450px] md:w-[600px] md:h-[600px] rounded-full bg-primary/5 blur-[130px]" />
+            <div className="orb-breathing-reverse absolute bottom-[10%] right-[-10%] w-[200px] h-[200px] sm:w-[300px] sm:h-[300px] md:w-[400px] md:h-[400px] rounded-full bg-amber-900/5 blur-[100px]" />
           </motion.div>
 
           <motion.div style={{ y: heroY, opacity: heroOpacity }} className="relative">
@@ -449,7 +449,7 @@ export default function Home() {
               initial={{ opacity: 0, scale: 0.9, rotate: -5, x: "-50%", y: "-50%" }}
               animate={{ opacity: 1, scale: 1, rotate: 0, x: "-50%", y: "-50%" }}
               transition={{ duration: 1.5, ease: "easeOut", delay: 0.2 }}
-              className="absolute left-1/2 top-1/2 w-[500px] h-[500px] md:w-[800px] md:h-[800px] -z-10 pointer-events-none"
+              className="absolute left-1/2 top-1/2 w-[280px] h-[280px] sm:w-[420px] sm:h-[420px] md:w-[650px] md:h-[650px] lg:w-[800px] lg:h-[800px] -z-10 pointer-events-none"
               style={{ opacity: logoGlowOpacity, scale: logoGlowScale, filter: logoGlowFilter }}
             >
               <img
@@ -515,7 +515,7 @@ export default function Home() {
               <span className="text-foreground font-semibold">Rasoi Pay</span>
             </motion.p>
 
-            <motion.div variants={fadeInUp} style={{ y: heroCtaY }} className="flex gap-6 mt-12">
+            <motion.div variants={fadeInUp} style={{ y: heroCtaY }} className="flex gap-4 sm:gap-6 mt-10 sm:mt-12">
               <a href="https://www.linkedin.com/in/mdafjalkhan29/" target="_blank" rel="noreferrer" data-cursor="Open" className="inline-flex items-center gap-2 text-xs uppercase tracking-widest text-secondary hover:text-primary transition-colors">
                 LinkedIn <i className="bx bx-link-external text-base" />
               </a>
@@ -632,17 +632,17 @@ export default function Home() {
             {/* RIGHT — Content */}
             <motion.div variants={fadeInUp} className="space-y-16 sm:space-y-24">
               {/* Bio */}
-              <div className="space-y-6 sm:space-y-8 text-lg sm:text-xl md:text-2xl leading-[1.65] text-secondary">
-                <SplitLines delay={0} className="text-lg sm:text-xl md:text-2xl leading-[1.65] text-secondary">
+              <div className="space-y-5 sm:space-y-8 text-base sm:text-lg md:text-xl leading-[1.65] text-secondary">
+                <SplitLines delay={0} className="text-base sm:text-lg md:text-xl leading-[1.65] text-secondary">
                   I&apos;m Afjal — a Strategic Product Designer and Founder based in Dubai, UAE. I specialize in architecting AI-driven SaaS solutions from 0 to 1, transforming complex business logic into <span className="text-primary font-medium">high-conversion user experiences</span> for B2B and B2C platforms.
                 </SplitLines>
-                <SplitLines delay={0.1} className="text-lg sm:text-xl md:text-2xl leading-[1.65] text-secondary">
+                <SplitLines delay={0.1} className="text-base sm:text-lg md:text-xl leading-[1.65] text-secondary">
                   Currently at <span className="text-primary font-medium">Danway EME</span> leading the digitization of workforce management for a multi-million dollar industrial firm — transitioning 3,000+ field employees from paper-based tracking to a real-time analytics suite.
                 </SplitLines>
-                <SplitLines delay={0.2} className="text-lg sm:text-xl md:text-2xl leading-[1.65] text-secondary">
+                <SplitLines delay={0.2} className="text-base sm:text-lg md:text-xl leading-[1.65] text-secondary">
                   I also co-founded <span className="text-primary font-medium">Rasoi Pay</span>, scaling a production-ready QR-ordering SaaS from concept to live — boosting average order value by 22% and achieving &lt;50ms menu load times. Expert in <span className="text-primary font-medium">Agentic AI</span>, scalable design systems, and full-stack UX/UI methodologies.
                 </SplitLines>
-                <SplitLines delay={0.3} className="text-lg sm:text-xl md:text-2xl leading-[1.65] text-secondary">
+                <SplitLines delay={0.3} className="text-base sm:text-lg md:text-xl leading-[1.65] text-secondary">
                   In my downtime, I explore new destinations, shoot film, and push pixels on side projects.
                 </SplitLines>
               </div>
@@ -781,12 +781,12 @@ export default function Home() {
             <p className="text-xs uppercase tracking-[0.3em] text-secondary mb-10">Contact</p>
             <div className="flex flex-col gap-2">
               <h2
-                className="text-3xl sm:text-4xl md:text-5xl font-display font-medium leading-[1.2] hover:text-primary transition-colors w-fit"
+                className="text-2xl sm:text-3xl md:text-5xl font-display font-medium leading-[1.2] hover:text-primary transition-colors w-fit"
               >
                 Let talk
               </h2>
               <h2
-                className="text-3xl sm:text-4xl md:text-5xl font-display font-medium leading-[1.2] hover:text-primary transition-colors w-fit"
+                className="text-2xl sm:text-3xl md:text-5xl font-display font-medium leading-[1.2] hover:text-primary transition-colors w-fit"
               >
                 Drop me a line <i className="material-icons align-top text-primary text-[0.8em] font-bold">arrow_outward</i>
               </h2>
