@@ -45,11 +45,10 @@ export default function ParallaxImage({ src, alt, className = '', containerClass
                     <motion.img
                         style={{
                             y,
+                            scale: 1.08,
                             filter: 'grayscale(60%) contrast(1.1) brightness(0.95)',
                             willChange: 'transform',
                             backfaceVisibility: 'hidden',
-                            marginTop: '-40px',
-                            marginBottom: '-40px',
                         }}
                         src={src}
                         alt={alt}
