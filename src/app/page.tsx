@@ -1,8 +1,8 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { useState, useEffect } from 'react'
-import emailjs from '@emailjs/browser'
 import { motion, useScroll, useTransform, useMotionTemplate, Variants, AnimatePresence } from 'framer-motion'
 import CustomCursor from './components/CustomCursor'
 import Magnetic from './components/Magnetic'
@@ -105,7 +105,6 @@ export default function Home() {
     }
 
     setMounted(true)
-    emailjs.init('msBwFZssq8MrNjXhP')
   }, [])
 
   // Sync dark class and persist on change
@@ -706,6 +705,41 @@ export default function Home() {
           </div>
         </motion.section>
 
+        {/* ── EDITORIAL IMAGE MARQUEE ────────────────────────────────────────── */}
+        <section className="py-32 sm:py-40">
+        <div className="relative w-screen left-1/2 -translate-x-1/2 overflow-hidden">
+          <div className="flex gap-8 w-max animate-marquee">
+            {[
+              '/images/gallery/img1.jpg',
+              '/images/gallery/img2.jpg',
+              '/images/gallery/img3.jpg',
+              '/images/gallery/img4.jpg',
+              '/images/gallery/img5.jpg',
+              '/images/gallery/img1.jpg',
+              '/images/gallery/img2.jpg',
+              '/images/gallery/img3.jpg',
+              '/images/gallery/img4.jpg',
+              '/images/gallery/img5.jpg',
+            ].map((src, i) => (
+              <div
+                key={i}
+                className="relative overflow-hidden shrink-0 rounded-sm"
+                style={{ width: 'clamp(220px, 22vw, 360px)', height: 'clamp(300px, 38vw, 520px)' }}
+              >
+                <Image
+                  src={src}
+                  alt=""
+                  fill
+                  sizes="360px"
+                  className="object-cover"
+                  style={{ filter: 'grayscale(25%) contrast(1.05) brightness(0.9)' }}
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+        </section>
+
         {/* ── CONTACT ────────────────────────────────────────────────────────── */}
         <motion.section
           id="contact"
@@ -803,9 +837,10 @@ export default function Home() {
       {/* ── FOOTER ─────────────────────────────────────────────────────────────── */}
       <footer className="border-t border-white/[0.04] py-8">
         <div className="w-full px-[5vw] flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-secondary/40">
-          <img
+          <Image
             src={isDark ? "/images/logos/logo-white.svg" : "/images/logos/logo-black.svg"}
             alt="Md Afjal Khan"
+            width={40} height={40}
             className="h-10 w-auto opacity-50 grayscale hover:grayscale-0 hover:opacity-100 transition-all cursor-pointer"
             onClick={() => scrollToSection('home')}
           />
