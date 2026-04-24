@@ -728,7 +728,7 @@ export default function Home() {
               {/* ── PHOTO — inside right column so sticky About tracks to here */}
               <div className="mt-16 sm:mt-24">
               <ParallaxImage
-                src="/images/about.jpg"
+                src="/images/gallery/my-image.jpg"
                 alt="Md Afjal Khan"
                 className="w-full rounded-sm"
               />
