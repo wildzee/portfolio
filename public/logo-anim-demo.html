@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Logo Animation Options</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #0a0a0a; font-family: 'Inter', sans-serif; color: #fff; padding: 60px 40px; transition: background .3s, color .3s; }
+  body.light { background: #fafafa; color: #111; }
+  h1 { font-size: 11px; letter-spacing: .3em; text-transform: uppercase; color: #555; margin-bottom: 24px; }
+  .topbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 48px; }
+  .theme-btn {
+    font-size: 10px; letter-spacing: .2em; text-transform: uppercase;
+    background: none; border: 1px solid #333; color: #888;
+    border-radius: 4px; padding: 7px 16px; cursor: pointer; transition: all .2s;
+  }
+  body.light .theme-btn { border-color: #ccc; color: #666; }
+  .theme-btn:hover { border-color: #3CDA64; color: #3CDA64; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 32px; }
+  .card {
+    background: #111;
+    border: 1px solid #1e1e1e;
+    transition: background .3s, border-color .3s;
+  }
+  body.light .card {
+    background: #f0f0f0;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    padding: 40px 24px 28px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+  }
+  body.light .card-title { color: #111; }
+  body.light .card-label { color: #999; }
+  .card-label {
+    font-size: 10px;
+    letter-spacing: .25em;
+    text-transform: uppercase;
+    color: #444;
+    text-align: center;
+  }
+  .card-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: #e0e0e0;
+    text-align: center;
+    margin-top: -16px;
+  }
+  .logo-box {
+    width: 80px;
+    height: 80px;
+    cursor: pointer;
+  }
+  .logo-box svg { width: 100%; height: 100%; }
+  .replay-btn {
+    font-size: 10px;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: #3CDA64;
+    background: none;
+    border: 1px solid #3CDA64;
+    border-radius: 4px;
+    padding: 6px 14px;
+    cursor: pointer;
+    transition: background .2s;
+  }
+  .replay-btn:hover { background: #3CDA6422; }
+</style>
+</head>
+<body>
+<div class="topbar">
+  <h1>Logo Animation Options — Click replay to re-run</h1>
+  <button class="theme-btn" onclick="toggleTheme()">Switch to Light Mode</button>
+</div>
+
+<div class="grid">
+
+  <!-- 1. Draw On -->
+  <div class="card">
+    <div class="card-label">Option 1</div>
+    <div class="card-title">Draw On</div>
+    <div class="logo-box" id="box1">
+      <svg viewBox="0 0 462 462" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="462" height="462" rx="10" fill="#3CDA64"/>
+        <path id="path1"
+          d="M217.992 66.0088C244.654 66.5522 271.334 66.1748 298.007 66.1934C310.144 66.2018 312.85 68.8525 312.854 80.7178C312.868 117.317 312.835 153.917 312.854 190.517C312.867 214.453 324.162 225.631 348.346 225.655C373.627 225.681 398.908 225.641 424.189 225.67C435.004 225.682 437.934 228.533 437.939 239.127C437.965 286.845 437.97 334.564 437.938 382.282C437.93 392.895 434.801 396.027 424.37 396.036C396.074 396.062 367.777 396.112 339.481 396.027C303.792 395.921 273.357 365.481 273.268 329.89C273.223 312.053 273.301 294.216 273.249 276.38C273.219 266.075 268.774 259.443 260.153 256.516C252.007 253.749 244.321 256.157 238.041 263.98C204.678 305.54 171.33 347.113 138.181 388.843C134.022 394.078 129.481 396.23 122.798 396.162C94.2727 395.874 65.7429 396.028 37.2148 396.042C33.7125 396.044 30.2039 396.201 27.4385 393.47C24.1591 390.143 24.0421 386.935 24.0449 383.635C24.0689 355.374 24.1088 327.113 24.001 298.854C23.9841 294.442 25.2479 290.872 28.0146 287.416C84.3415 217.064 140.668 146.71 196.747 76.1611C202.475 68.9548 208.661 65.8187 217.992 66.0088Z"
+          fill="none" stroke="black" stroke-width="18"
+        />
+      </svg>
+    </div>
+    <button class="replay-btn" onclick="runDrawOn()">Replay</button>
+  </div>
+
+  <!-- 2. Assemble from parts -->
+  <div class="card">
+    <div class="card-label">Option 2</div>
+    <div class="card-title">Assemble</div>
+    <div class="logo-box" id="box2">
+      <svg viewBox="0 0 462 462" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect id="bg2" width="462" height="462" rx="10" fill="#3CDA64"/>
+        <path id="logo2"
+          d="M217.992 66.0088C244.654 66.5522 271.334 66.1748 298.007 66.1934C310.144 66.2018 312.85 68.8525 312.854 80.7178C312.868 117.317 312.835 153.917 312.854 190.517C312.867 214.453 324.162 225.631 348.346 225.655C373.627 225.681 398.908 225.641 424.189 225.67C435.004 225.682 437.934 228.533 437.939 239.127C437.965 286.845 437.97 334.564 437.938 382.282C437.93 392.895 434.801 396.027 424.37 396.036C396.074 396.062 367.777 396.112 339.481 396.027C303.792 395.921 273.357 365.481 273.268 329.89C273.223 312.053 273.301 294.216 273.249 276.38C273.219 266.075 268.774 259.443 260.153 256.516C252.007 253.749 244.321 256.157 238.041 263.98C204.678 305.54 171.33 347.113 138.181 388.843C134.022 394.078 129.481 396.23 122.798 396.162C94.2727 395.874 65.7429 396.028 37.2148 396.042C33.7125 396.044 30.2039 396.201 27.4385 393.47C24.1591 390.143 24.0421 386.935 24.0449 383.635C24.0689 355.374 24.1088 327.113 24.001 298.854C23.9841 294.442 25.2479 290.872 28.0146 287.416C84.3415 217.064 140.668 146.71 196.747 76.1611C202.475 68.9548 208.661 65.8187 217.992 66.0088Z"
+          fill="black"
+        />
+      </svg>
+    </div>
+    <button class="replay-btn" onclick="runAssemble()">Replay</button>
+  </div>
+
+  <!-- 3. Glitch Flicker -->
+  <div class="card">
+    <div class="card-label">Option 3</div>
+    <div class="card-title">Glitch Flicker</div>
+    <div class="logo-box" id="box3">
+      <svg viewBox="0 0 462 462" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="462" height="462" rx="10" fill="#3CDA64"/>
+        <path id="logo3"
+          d="M217.992 66.0088C244.654 66.5522 271.334 66.1748 298.007 66.1934C310.144 66.2018 312.85 68.8525 312.854 80.7178C312.868 117.317 312.835 153.917 312.854 190.517C312.867 214.453 324.162 225.631 348.346 225.655C373.627 225.681 398.908 225.641 424.189 225.67C435.004 225.682 437.934 228.533 437.939 239.127C437.965 286.845 437.97 334.564 437.938 382.282C437.93 392.895 434.801 396.027 424.37 396.036C396.074 396.062 367.777 396.112 339.481 396.027C303.792 395.921 273.357 365.481 273.268 329.89C273.223 312.053 273.301 294.216 273.249 276.38C273.219 266.075 268.774 259.443 260.153 256.516C252.007 253.749 244.321 256.157 238.041 263.98C204.678 305.54 171.33 347.113 138.181 388.843C134.022 394.078 129.481 396.23 122.798 396.162C94.2727 395.874 65.7429 396.028 37.2148 396.042C33.7125 396.044 30.2039 396.201 27.4385 393.47C24.1591 390.143 24.0421 386.935 24.0449 383.635C24.0689 355.374 24.1088 327.113 24.001 298.854C23.9841 294.442 25.2479 290.872 28.0146 287.416C84.3415 217.064 140.668 146.71 196.747 76.1611C202.475 68.9548 208.661 65.8187 217.992 66.0088Z"
+          fill="black"
+        />
+      </svg>
+    </div>
+    <button class="replay-btn" onclick="runGlitch()">Replay</button>
+  </div>
+
+  <!-- 4. Scale Breathe -->
+  <div class="card">
+    <div class="card-label">Option 4</div>
+    <div class="card-title">Scale Breathe</div>
+    <div class="logo-box" id="box4" style="transform-origin:center">
+      <svg viewBox="0 0 462 462" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="462" height="462" rx="10" fill="#3CDA64"/>
+        <path
+          d="M217.992 66.0088C244.654 66.5522 271.334 66.1748 298.007 66.1934C310.144 66.2018 312.85 68.8525 312.854 80.7178C312.868 117.317 312.835 153.917 312.854 190.517C312.867 214.453 324.162 225.631 348.346 225.655C373.627 225.681 398.908 225.641 424.189 225.67C435.004 225.682 437.934 228.533 437.939 239.127C437.965 286.845 437.97 334.564 437.938 382.282C437.93 392.895 434.801 396.027 424.37 396.036C396.074 396.062 367.777 396.112 339.481 396.027C303.792 395.921 273.357 365.481 273.268 329.89C273.223 312.053 273.301 294.216 273.249 276.38C273.219 266.075 268.774 259.443 260.153 256.516C252.007 253.749 244.321 256.157 238.041 263.98C204.678 305.54 171.33 347.113 138.181 388.843C134.022 394.078 129.481 396.23 122.798 396.162C94.2727 395.874 65.7429 396.028 37.2148 396.042C33.7125 396.044 30.2039 396.201 27.4385 393.47C24.1591 390.143 24.0421 386.935 24.0449 383.635C24.0689 355.374 24.1088 327.113 24.001 298.854C23.9841 294.442 25.2479 290.872 28.0146 287.416C84.3415 217.064 140.668 146.71 196.747 76.1611C202.475 68.9548 208.661 65.8187 217.992 66.0088Z"
+          fill="black"
+        />
+      </svg>
+    </div>
+    <button class="replay-btn" onclick="runBreathe()">Replay</button>
+  </div>
+
+  <!-- 5. Vertical Slice -->
+  <div class="card">
+    <div class="card-label">Option 5</div>
+    <div class="card-title">Vertical Slice</div>
+    <div class="logo-box" id="box5" style="position:relative;overflow:hidden;border-radius:8px;">
+      <svg id="svg5" viewBox="0 0 462 462" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="462" height="462" rx="10" fill="#3CDA64"/>
+        <path
+          d="M217.992 66.0088C244.654 66.5522 271.334 66.1748 298.007 66.1934C310.144 66.2018 312.85 68.8525 312.854 80.7178C312.868 117.317 312.835 153.917 312.854 190.517C312.867 214.453 324.162 225.631 348.346 225.655C373.627 225.681 398.908 225.641 424.189 225.67C435.004 225.682 437.934 228.533 437.939 239.127C437.965 286.845 437.97 334.564 437.938 382.282C437.93 392.895 434.801 396.027 424.37 396.036C396.074 396.062 367.777 396.112 339.481 396.027C303.792 395.921 273.357 365.481 273.268 329.89C273.223 312.053 273.301 294.216 273.249 276.38C273.219 266.075 268.774 259.443 260.153 256.516C252.007 253.749 244.321 256.157 238.041 263.98C204.678 305.54 171.33 347.113 138.181 388.843C134.022 394.078 129.481 396.23 122.798 396.162C94.2727 395.874 65.7429 396.028 37.2148 396.042C33.7125 396.044 30.2039 396.201 27.4385 393.47C24.1591 390.143 24.0421 386.935 24.0449 383.635C24.0689 355.374 24.1088 327.113 24.001 298.854C23.9841 294.442 25.2479 290.872 28.0146 287.416C84.3415 217.064 140.668 146.71 196.747 76.1611C202.475 68.9548 208.661 65.8187 217.992 66.0088Z"
+          fill="black"
+        />
+      </svg>
+      <div id="slices5" style="position:absolute;inset:0;display:flex;pointer-events:none;"></div>
+    </div>
+    <button class="replay-btn" onclick="runSlice()">Replay</button>
+  </div>
+
+</div>
+
+<script>
+// ── 1. Draw On ──────────────────────────────────────────────────────────────
+function runDrawOn() {
+  const p = document.getElementById('path1')
+  const len = p.getTotalLength()
+  p.style.transition = 'none'
+  p.style.strokeDasharray = len
+  p.style.strokeDashoffset = len
+  p.style.fill = 'none'
+  p.style.stroke = 'black'
+  p.style.strokeWidth = '18'
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      p.style.transition = `stroke-dashoffset 1.1s cubic-bezier(0.76,0,0.24,1), fill 0.4s ease 1.0s`
+      p.style.strokeDashoffset = '0'
+      setTimeout(() => { p.style.fill = 'black'; p.style.stroke = 'none' }, 1000)
+    })
+  })
+}
+
+// ── 2. Assemble ─────────────────────────────────────────────────────────────
+function runAssemble() {
+  const bg = document.getElementById('bg2')
+  const logo = document.getElementById('logo2')
+  bg.style.transition = 'none'
+  logo.style.transition = 'none'
+  bg.style.transform = 'scale(0.6)'
+  bg.style.opacity = '0'
+  bg.style.transformOrigin = '231px 231px'
+  logo.style.transform = 'translateY(60px)'
+  logo.style.opacity = '0'
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      bg.style.transition = 'transform 0.7s cubic-bezier(0.34,1.56,0.64,1), opacity 0.4s ease'
+      logo.style.transition = 'transform 0.7s cubic-bezier(0.34,1.56,0.64,1) 0.18s, opacity 0.4s ease 0.18s'
+      bg.style.transform = 'scale(1)'
+      bg.style.opacity = '1'
+      logo.style.transform = 'translateY(0)'
+      logo.style.opacity = '1'
+    })
+  })
+}
+
+// ── 3. Glitch ───────────────────────────────────────────────────────────────
+function runGlitch() {
+  const el = document.getElementById('logo3')
+  const frames = [
+    { opacity: 0, transform: 'translateX(0)' },
+    { opacity: 1, transform: 'translateX(-8px)' },
+    { opacity: 0, transform: 'translateX(6px)' },
+    { opacity: 1, transform: 'translateX(-4px)' },
+    { opacity: 0, transform: 'translateX(0)' },
+    { opacity: 1, transform: 'translateX(3px)' },
+    { opacity: 1, transform: 'translateX(0)' },
+  ]
+  el.animate(frames, { duration: 500, easing: 'steps(1)', fill: 'forwards' })
+}
+
+// ── 4. Scale Breathe ────────────────────────────────────────────────────────
+function runBreathe() {
+  const el = document.getElementById('box4')
+  el.style.transition = 'none'
+  el.style.opacity = '0'
+  el.style.transform = 'scale(0.85)'
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      el.style.transition = 'opacity 0.5s ease, transform 0.8s cubic-bezier(0.34,1.56,0.64,1)'
+      el.style.opacity = '1'
+      el.style.transform = 'scale(1.08)'
+      setTimeout(() => {
+        el.style.transition = 'transform 0.5s cubic-bezier(0.76,0,0.24,1)'
+        el.style.transform = 'scale(1)'
+      }, 750)
+    })
+  })
+}
+
+// ── Theme Toggle ────────────────────────────────────────────────────────────
+function toggleTheme() {
+  const isLight = document.body.classList.toggle('light')
+  document.querySelector('.theme-btn').textContent = isLight ? 'Switch to Dark Mode' : 'Switch to Light Mode'
+  // re-run all after theme switch
+  setTimeout(() => { runDrawOn(); runAssemble(); runGlitch(); runBreathe(); runSlice() }, 100)
+}
+
+// ── 5. Vertical Slice ───────────────────────────────────────────────────────
+function runSlice() {
+  const container = document.getElementById('slices5')
+  container.innerHTML = ''
+  const N = 8
+  const bg = document.body.classList.contains('light') ? '#fafafa' : '#0a0a0a'
+  for (let i = 0; i < N; i++) {
+    const s = document.createElement('div')
+    s.style.cssText = `flex:1;height:100%;background:${bg};transform:scaleY(1);transform-origin:top;`
+    container.appendChild(s)
+  }
+  const slices = container.querySelectorAll('div')
+  slices.forEach((s, i) => {
+    setTimeout(() => {
+      s.style.transition = 'transform 0.45s cubic-bezier(0.76,0,0.24,1)'
+      s.style.transform = 'scaleY(0)'
+    }, i * 55)
+  })
+}
+
+// Auto-run all on load
+window.addEventListener('load', () => {
+  setTimeout(runDrawOn, 300)
+  setTimeout(runAssemble, 300)
+  setTimeout(runGlitch, 300)
+  setTimeout(runBreathe, 300)
+  setTimeout(runSlice, 300)
+})
+</script>
+</body>
+</html>

@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { useState, useEffect } from 'react'
 import emailjs from '@emailjs/browser'
-import { motion, useScroll, useTransform, Variants, AnimatePresence } from 'framer-motion'
+import { motion, useScroll, useTransform, useMotionTemplate, Variants, AnimatePresence } from 'framer-motion'
 import CustomCursor from './components/CustomCursor'
 import Magnetic from './components/Magnetic'
 import ParallaxImage from './components/ParallaxImage'
@@ -13,53 +13,56 @@ import SplitLines from './components/SplitLines'
 // ─── Preloader Component ───────────────────────────────────────────────────────
 function Preloader({ onComplete, isDark }: { onComplete: () => void; isDark: boolean }) {
   useEffect(() => {
-    const timer = setTimeout(onComplete, 1500)
+    const timer = setTimeout(onComplete, 2000)
     return () => clearTimeout(timer)
   }, [onComplete])
 
   const bg = isDark ? '#050505' : '#fafafa'
   const textColor = isDark ? 'rgba(255,255,255,0.4)' : 'rgba(0,0,0,0.4)'
-  const trackColor = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)'
-  const logoSrc = isDark ? '/images/logos/logo-green.svg' : '/images/logos/logo-black.svg'
+  const logoFill = isDark ? '#fff' : '#000'
 
   return (
     <motion.div
       className="fixed inset-0 z-[100] flex flex-col items-center justify-center overflow-hidden"
       style={{ background: bg }}
       initial={{ opacity: 1 }}
-      exit={{ y: '-100%', transition: { duration: 0.85, ease: [0.76, 0, 0.24, 1] } }}
+      exit={{ y: '-100%', opacity: 0, transition: { duration: 0.85, ease: [0.76, 0, 0.24, 1] } }}
     >
-      {/* Logo */}
+      {/* Logo — draw-on SVG */}
       <motion.div
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-        className="mb-8"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.01 }}
+        className="mb-8 w-28 h-28"
       >
-        <img src={logoSrc} alt="Md Afjal Khan" className="w-14 h-14" />
+        <svg viewBox="0 0 462 462" fill="none" xmlns="http://www.w3.org/2000/svg" width="112" height="112">
+          {/* stroke draws on, then fill fades in */}
+          <motion.path
+            d="M217.992 66.0088C244.654 66.5522 271.334 66.1748 298.007 66.1934C310.144 66.2018 312.85 68.8525 312.854 80.7178C312.868 117.317 312.835 153.917 312.854 190.517C312.867 214.453 324.162 225.631 348.346 225.655C373.627 225.681 398.908 225.641 424.189 225.67C435.004 225.682 437.934 228.533 437.939 239.127C437.965 286.845 437.97 334.564 437.938 382.282C437.93 392.895 434.801 396.027 424.37 396.036C396.074 396.062 367.777 396.112 339.481 396.027C303.792 395.921 273.357 365.481 273.268 329.89C273.223 312.053 273.301 294.216 273.249 276.38C273.219 266.075 268.774 259.443 260.153 256.516C252.007 253.749 244.321 256.157 238.041 263.98C204.678 305.54 171.33 347.113 138.181 388.843C134.022 394.078 129.481 396.23 122.798 396.162C94.2727 395.874 65.7429 396.028 37.2148 396.042C33.7125 396.044 30.2039 396.201 27.4385 393.47C24.1591 390.143 24.0421 386.935 24.0449 383.635C24.0689 355.374 24.1088 327.113 24.001 298.854C23.9841 294.442 25.2479 290.872 28.0146 287.416C84.3415 217.064 140.668 146.71 196.747 76.1611C202.475 68.9548 208.661 65.8187 217.992 66.0088Z"
+            stroke={logoFill}
+            strokeWidth="18"
+            fill="transparent"
+            initial={{ pathLength: 0, fillOpacity: 0 }}
+            animate={{ pathLength: 1, fillOpacity: 1 }}
+            transition={{
+              pathLength: { duration: 1.1, ease: [0.76, 0, 0.24, 1] },
+              fillOpacity: { duration: 0.4, ease: 'easeIn', delay: 1.0 },
+            }}
+            style={{ fill: logoFill }}
+          />
+        </svg>
       </motion.div>
 
       {/* Name */}
       <motion.p
         initial={{ opacity: 0, y: 6 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
-        className="text-[10px] tracking-[0.4em] uppercase mb-10 font-sans"
+        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.4 }}
+        className="text-[10px] tracking-[0.4em] uppercase font-sans"
         style={{ color: textColor }}
       >
         Md Afjal Khan
       </motion.p>
-
-      {/* Thin progress line */}
-      <div className="w-32 h-[1px] relative overflow-hidden rounded-full" style={{ background: trackColor }}>
-        <motion.div
-          className="absolute left-0 top-0 h-full rounded-full"
-          style={{ background: '#3CDA64' }}
-          initial={{ width: '0%' }}
-          animate={{ width: '100%' }}
-          transition={{ duration: 1.2, ease: [0.76, 0, 0.24, 1], delay: 0.1 }}
-        />
-      </div>
     </motion.div>
   )
 }
@@ -82,6 +85,11 @@ export default function Home() {
   const heroScale = useTransform(scrollYProgress, [0, 0.18], [1, 0.88])
   const heroCtaY = useTransform(scrollYProgress, [0, 0.18], [0, -20])
   const orbScale = useTransform(scrollYProgress, [0, 0.2], [1, 1.2])
+  const logoGlowOpacity = useTransform(scrollYProgress, [0, 0.18], [0.06, 0.22])
+  const logoGlowScale = useTransform(scrollYProgress, [0, 0.18], [1, 1.12])
+  const logoGlowBlur1 = useTransform(scrollYProgress, [0, 0.18], [0, 55])
+  const logoGlowBlur2 = useTransform(scrollYProgress, [0, 0.18], [0, 110])
+  const logoGlowFilter = useMotionTemplate`drop-shadow(0 0 ${logoGlowBlur1}px #3CDA6466) drop-shadow(0 0 ${logoGlowBlur2}px #3CDA6422)`
 
   useEffect(() => {
     // Read saved theme preference or default to dark
@@ -377,12 +385,13 @@ export default function Home() {
           </motion.div>
 
           <motion.div style={{ y: heroY, opacity: heroOpacity }} className="relative">
-            {/* Background Logo Watermark */}
+            {/* Background Logo Watermark — glow intensifies on scroll */}
             <motion.div
               initial={{ opacity: 0, scale: 0.9, rotate: -5, x: "-50%", y: "-50%" }}
-              animate={{ opacity: 0.06, scale: 1, rotate: 0, x: "-50%", y: "-50%" }}
+              animate={{ opacity: 1, scale: 1, rotate: 0, x: "-50%", y: "-50%" }}
               transition={{ duration: 1.5, ease: "easeOut", delay: 0.2 }}
               className="absolute left-1/2 top-1/2 w-[500px] h-[500px] md:w-[800px] md:h-[800px] -z-10 pointer-events-none"
+              style={{ opacity: logoGlowOpacity, scale: logoGlowScale, filter: logoGlowFilter }}
             >
               <img
                 src="/images/logo-outline.svg"
