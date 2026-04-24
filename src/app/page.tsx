@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import Image from 'next/image'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { motion, useScroll, useTransform, useMotionTemplate, Variants, AnimatePresence } from 'framer-motion'
 import CustomCursor from './components/CustomCursor'
 import Magnetic from './components/Magnetic'
@@ -64,6 +64,66 @@ function Preloader({ onComplete, isDark }: { onComplete: () => void; isDark: boo
         Md Afjal Khan
       </motion.p>
     </motion.div>
+  )
+}
+
+// ─── Image Marquee ─────────────────────────────────────────────────────────────
+const GALLERY = [
+  '/images/gallery/img1.jpg',
+  '/images/gallery/img2.jpg',
+  '/images/gallery/img3.jpg',
+  '/images/gallery/img4.jpg',
+  '/images/gallery/img5.jpg',
+]
+
+function ImageMarquee() {
+  const trackRef = useRef<HTMLDivElement>(null)
+  const xRef = useRef(0)
+  const rafRef = useRef<number>(0)
+
+  useEffect(() => {
+    const track = trackRef.current
+    if (!track) return
+
+    const tick = () => {
+      if (track) {
+        const halfWidth = track.scrollWidth / 2
+        xRef.current -= 0.6
+        if (xRef.current <= -halfWidth) xRef.current = 0
+        track.style.transform = `translateX(${xRef.current}px)`
+      }
+      rafRef.current = requestAnimationFrame(tick)
+    }
+    rafRef.current = requestAnimationFrame(tick)
+    return () => cancelAnimationFrame(rafRef.current)
+  }, [])
+
+  return (
+    <section className="py-24 sm:py-32">
+      <div className="relative w-screen left-1/2 -translate-x-1/2 overflow-hidden">
+        <div
+          ref={trackRef}
+          className="flex gap-8 w-max"
+        >
+          {[...GALLERY, ...GALLERY].map((src, i) => (
+            <div
+              key={i}
+              className="relative overflow-hidden shrink-0 rounded-sm"
+              style={{ width: 'clamp(220px, 22vw, 360px)', height: 'clamp(300px, 38vw, 520px)' }}
+            >
+              <Image
+                src={src}
+                alt=""
+                fill
+                sizes="360px"
+                className="object-cover"
+                style={{ filter: 'grayscale(25%) contrast(1.05) brightness(0.9)' }}
+              />
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
   )
 }
 
@@ -686,7 +746,7 @@ export default function Home() {
             </div>
 
             {/* RIGHT — Large skill text with scroll highlight */}
-            <div className="space-y-4 pb-32 pt-10">
+            <div className="space-y-4 pt-10 pb-0">
               {[
                 'Product Strategy',
                 'Agentic AI Integration',
@@ -706,44 +766,12 @@ export default function Home() {
         </motion.section>
 
         {/* ── EDITORIAL IMAGE MARQUEE ────────────────────────────────────────── */}
-        <section className="py-32 sm:py-40">
-        <div className="relative w-screen left-1/2 -translate-x-1/2 overflow-hidden">
-          <div className="flex gap-8 w-max animate-marquee">
-            {[
-              '/images/gallery/img1.jpg',
-              '/images/gallery/img2.jpg',
-              '/images/gallery/img3.jpg',
-              '/images/gallery/img4.jpg',
-              '/images/gallery/img5.jpg',
-              '/images/gallery/img1.jpg',
-              '/images/gallery/img2.jpg',
-              '/images/gallery/img3.jpg',
-              '/images/gallery/img4.jpg',
-              '/images/gallery/img5.jpg',
-            ].map((src, i) => (
-              <div
-                key={i}
-                className="relative overflow-hidden shrink-0 rounded-sm"
-                style={{ width: 'clamp(220px, 22vw, 360px)', height: 'clamp(300px, 38vw, 520px)' }}
-              >
-                <Image
-                  src={src}
-                  alt=""
-                  fill
-                  sizes="360px"
-                  className="object-cover"
-                  style={{ filter: 'grayscale(25%) contrast(1.05) brightness(0.9)' }}
-                />
-              </div>
-            ))}
-          </div>
-        </div>
-        </section>
+        <ImageMarquee />
 
         {/* ── CONTACT ────────────────────────────────────────────────────────── */}
         <motion.section
           id="contact"
-          className="pb-24 sm:pb-40 scroll-mt-20"
+          className="min-h-screen flex flex-col justify-end pb-24 sm:pb-32 scroll-mt-20"
           initial="hidden"
           whileInView="visible"
           viewport={{ once: false, margin: '-80px' }}

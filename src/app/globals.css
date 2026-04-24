@@ -452,6 +452,7 @@
   animation: gradient-slide 4s linear infinite;
 }
 
+
 /* ── Dark mode fallback for no-JS / prefers-color-scheme ── */
 @media (prefers-color-scheme: dark) {
   :root:not(.light) {
