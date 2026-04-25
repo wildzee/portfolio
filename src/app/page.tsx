@@ -837,12 +837,17 @@ export default function Home() {
           <motion.form
             variants={fadeInUp}
             className="max-w-full sm:max-w-lg space-y-5"
-            action={async (formData: FormData) => {
+            onSubmit={async (e) => {
+              e.preventDefault()
               setFormStatus('sending')
               try {
-                // Dynamically import to ensure server action boundary is respected safely
-                const { submitContactForm } = await import('./actions')
-                await submitContactForm(formData)
+                const emailjs = (await import('@emailjs/browser')).default
+                await emailjs.send(
+                  process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID!,
+                  process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID!,
+                  { name: formData.name, email: formData.email, message: formData.message },
+                  process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY!
+                )
                 setFormStatus('sent')
                 setFormData({ name: '', email: '', message: '' })
               } catch {
