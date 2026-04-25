@@ -14,11 +14,11 @@ export default function Magnetic({
 }) {
     const ref = useRef<HTMLDivElement>(null)
     const [isHovered, setIsHovered] = useState(false)
+    const isHoveredRef = useRef(false)
 
     const x = useMotionValue(0)
     const y = useMotionValue(0)
 
-    // Spring physics: stiffness dictates snap back speed, damping prevents oscillation
     const springX = useSpring(x, { stiffness: 150, damping: 15, mass: 0.1 })
     const springY = useSpring(y, { stiffness: 150, damping: 15, mass: 0.1 })
 
@@ -36,12 +36,14 @@ export default function Magnetic({
             const distance = Math.sqrt(distX * distX + distY * distY)
 
             if (distance < pullRadius + Math.max(width, height) / 2) {
-                setIsHovered(true)
-                // Calculate the pull strength based on distance
+                if (!isHoveredRef.current) {
+                    isHoveredRef.current = true
+                    setIsHovered(true)
+                }
                 x.set((distX / width) * strength)
                 y.set((distY / height) * strength)
-            } else if (isHovered) {
-                // Snap back
+            } else if (isHoveredRef.current) {
+                isHoveredRef.current = false
                 setIsHovered(false)
                 x.set(0)
                 y.set(0)
@@ -49,6 +51,7 @@ export default function Magnetic({
         }
 
         const handleMouseLeave = () => {
+            isHoveredRef.current = false
             setIsHovered(false)
             x.set(0)
             y.set(0)
@@ -65,7 +68,7 @@ export default function Magnetic({
                 document.body.removeEventListener('mouseleave', handleMouseLeave)
             }
         }
-    }, [strength, pullRadius, isHovered, x, y])
+    }, [strength, pullRadius, x, y]) // isHovered removed — use ref to avoid listener re-attachment on hover
 
     return (
         <motion.div

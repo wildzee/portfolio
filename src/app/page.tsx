@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { useState, useEffect, useRef } from 'react'
-import { motion, useScroll, useTransform, useMotionTemplate, Variants, AnimatePresence } from 'framer-motion'
+import { motion, useScroll, useTransform, Variants, AnimatePresence } from 'framer-motion'
 import CursorBlurOriginal from './components/cursors/CursorBlurOriginal'
 import Magnetic from './components/Magnetic'
 import ParallaxImage from './components/ParallaxImage'
@@ -85,17 +85,50 @@ function ImageMarquee() {
     const track = trackRef.current
     if (!track) return
 
+    let running = true
+
     const tick = () => {
-      if (track) {
-        const halfWidth = track.scrollWidth / 2
-        xRef.current -= 0.6
-        if (xRef.current <= -halfWidth) xRef.current = 0
-        track.style.transform = `translateX(${xRef.current}px)`
-      }
+      if (!running) return
+      const halfWidth = track.scrollWidth / 2
+      xRef.current -= 0.6
+      if (xRef.current <= -halfWidth) xRef.current = 0
+      track.style.transform = `translateX(${xRef.current}px)`
       rafRef.current = requestAnimationFrame(tick)
     }
+
+    const handleVisibility = () => {
+      if (document.hidden) {
+        running = false
+        cancelAnimationFrame(rafRef.current)
+      } else {
+        running = true
+        rafRef.current = requestAnimationFrame(tick)
+      }
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !running) {
+          running = true
+          rafRef.current = requestAnimationFrame(tick)
+        } else if (!entry.isIntersecting && running) {
+          running = false
+          cancelAnimationFrame(rafRef.current)
+        }
+      },
+      { threshold: 0 }
+    )
+    observer.observe(track)
+
+    document.addEventListener('visibilitychange', handleVisibility)
     rafRef.current = requestAnimationFrame(tick)
-    return () => cancelAnimationFrame(rafRef.current)
+
+    return () => {
+      running = false
+      cancelAnimationFrame(rafRef.current)
+      document.removeEventListener('visibilitychange', handleVisibility)
+      observer.disconnect()
+    }
   }, [])
 
   return (
@@ -147,9 +180,16 @@ export default function Home() {
   const orbScale = useTransform(scrollYProgress, [0, 0.2], [1, 1.2])
   const logoGlowOpacity = useTransform(scrollYProgress, [0, 0.18], [0.06, 0.22])
   const logoGlowScale = useTransform(scrollYProgress, [0, 0.18], [1, 1.12])
-  const logoGlowBlur1 = useTransform(scrollYProgress, [0, 0.18], [0, 55])
-  const logoGlowBlur2 = useTransform(scrollYProgress, [0, 0.18], [0, 110])
-  const logoGlowFilter = useMotionTemplate`drop-shadow(0 0 ${logoGlowBlur1}px #3CDA6466) drop-shadow(0 0 ${logoGlowBlur2}px #3CDA6422)`
+  const logoGlowRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    return scrollYProgress.on('change', (v) => {
+      const p = Math.min(v / 0.18, 1)
+      if (logoGlowRef.current)
+        logoGlowRef.current.style.filter =
+          `drop-shadow(0 0 ${p * 55}px #3CDA6466) drop-shadow(0 0 ${p * 110}px #3CDA6422)`
+    })
+  }, [scrollYProgress])
 
   useEffect(() => {
     // Read saved theme preference or default to dark
@@ -450,7 +490,8 @@ export default function Home() {
               animate={{ opacity: 1, scale: 1, rotate: 0, x: "-50%", y: "-50%" }}
               transition={{ duration: 1.5, ease: "easeOut", delay: 0.2 }}
               className="absolute left-1/2 top-1/2 w-[280px] h-[280px] sm:w-[420px] sm:h-[420px] md:w-[650px] md:h-[650px] lg:w-[800px] lg:h-[800px] -z-10 pointer-events-none"
-              style={{ opacity: logoGlowOpacity, scale: logoGlowScale, filter: logoGlowFilter }}
+              ref={logoGlowRef}
+              style={{ opacity: logoGlowOpacity, scale: logoGlowScale }}
             >
               <img
                 src="/images/logo-outline.svg"

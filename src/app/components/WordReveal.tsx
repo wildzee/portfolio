@@ -1,5 +1,6 @@
 'use client'
 
+import { memo, useMemo } from 'react'
 import { motion } from 'framer-motion'
 import { ease } from '@/lib/motion'
 
@@ -10,8 +11,8 @@ interface WordRevealProps {
   staggerDelay?: number
 }
 
-export default function WordReveal({ children, className = '', delay = 0, staggerDelay = 0.06 }: WordRevealProps) {
-  const words = children.split(' ')
+const WordReveal = memo(function WordReveal({ children, className = '', delay = 0, staggerDelay = 0.06 }: WordRevealProps) {
+  const words = useMemo(() => children.split(' '), [children])
 
   return (
     <span className={className} style={{ display: 'inline' }}>
@@ -29,4 +30,6 @@ export default function WordReveal({ children, className = '', delay = 0, stagge
       ))}
     </span>
   )
-}
+})
+
+export default WordReveal

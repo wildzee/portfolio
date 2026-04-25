@@ -14,28 +14,24 @@ export async function submitContactForm(formData: FormData) {
         throw new Error('Missing fields')
     }
 
-    // To send emails using EmailJS safely from the server instead of exposing it to the browser, 
-    // you must use their REST API and store your Public Key inside an Environment Variable (.env)
-
-    /*
     const response = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        service_id: 'service_g9tmvkw',
-        template_id: 'template_npjrat5',
-        user_id: process.env.EMAILJS_PUBLIC_KEY, 
-        template_params: { name, email, message }
-      })
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            service_id: 'service_g9tmvkw',
+            template_id: 'template_npjrat5',
+            user_id: process.env.EMAILJS_PUBLIC_KEY,
+            accessToken: process.env.EMAILJS_PRIVATE_KEY,
+            template_params: { name, email, message }
+        })
     })
-  
-    if (!response.ok) {
-       throw new Error('Failed to send message')
-    }
-    */
 
-    // Using a mock return for now, replacing the client-side EmailJS wrapper with a secure POST action
-    return { success: true, message: 'Message sent securely via Server Actions!' }
+    if (!response.ok) {
+        const errText = await response.text()
+        throw new Error(`EmailJS error ${response.status}: ${errText}`)
+    }
+
+    return { success: true }
 }
 
 // =========================================================================

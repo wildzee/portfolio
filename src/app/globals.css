@@ -3,7 +3,6 @@
   position: fixed;
   pointer-events: none !important;
   z-index: 99999;
-  mix-blend-mode: difference;
   top: 0;
   left: 0;
   opacity: 0;
@@ -26,14 +25,14 @@
   height: 40px;
   border: 1.5px solid var(--primary);
   border-radius: 50%;
-  backdrop-filter: blur(2px);
-  -webkit-backdrop-filter: blur(2px);
   display: flex;
   align-items: center;
   justify-content: center;
   transition: width 0.3s cubic-bezier(0.2, 1, 0.3, 1), height 0.3s cubic-bezier(0.2, 1, 0.3, 1), background 0.3s ease, border-color 0.3s ease, border-radius 0.3s ease;
   transform: translate(-50%, -50%);
   will-change: transform;
+  mix-blend-mode: difference;
+  isolation: isolate;
 }
 
 .cursor-circle.cursor-hover {
@@ -75,7 +74,7 @@
   align-items: center;
   padding: 2rem 0;
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-  transition: all 0.3s ease;
+  transition: padding 0.3s ease, border-color 0.3s ease;
   position: relative;
 }
 
@@ -97,7 +96,7 @@
 .work-arrow {
   opacity: 0;
   transform: translateX(-8px);
-  transition: all 0.3s ease;
+  transition: opacity 0.3s ease, transform 0.3s ease;
   color: #3ddc84;
   font-size: 1.5rem;
 }
@@ -129,15 +128,7 @@
 
   *,
   *::before,
-  *::after,
-  html,
-  body,
-  a,
-  button,
-  input,
-  textarea,
-  select,
-  [role="button"] {
+  *::after {
     cursor: none !important;
   }
 }
@@ -436,20 +427,26 @@
 
 /* ===== ANIMATED GRADIENT LINE ===== */
 @keyframes gradient-slide {
-  0% {
-    background-position: 0% 50%;
-  }
-
-  100% {
-    background-position: 200% 50%;
-  }
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
 }
 
 .animated-divider {
   height: 1px;
-  background: linear-gradient(90deg, transparent, #3ddc84, #6aeaa4, transparent);
-  background-size: 200% 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+.animated-divider::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 200%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, #3ddc84, #6aeaa4, transparent, transparent, #3ddc84, #6aeaa4, transparent);
   animation: gradient-slide 4s linear infinite;
+  will-change: transform;
 }
 
 

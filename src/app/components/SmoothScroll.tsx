@@ -11,13 +11,32 @@ export default function SmoothScroll({ children }: { children: React.ReactNode }
       smoothWheel: true,
     })
 
-    function raf(time: number) {
-      lenis.raf(time)
-      requestAnimationFrame(raf)
-    }
+    let rafId: number
+    let running = true
 
-    const rafId = requestAnimationFrame(raf)
-    return () => cancelAnimationFrame(rafId)
+    function raf(time: number) {
+      if (!running) return
+      lenis.raf(time)
+      rafId = requestAnimationFrame(raf)
+    }
+    rafId = requestAnimationFrame(raf)
+
+    const handleVisibility = () => {
+      if (document.hidden) {
+        running = false
+        cancelAnimationFrame(rafId)
+      } else {
+        running = true
+        rafId = requestAnimationFrame(raf)
+      }
+    }
+    document.addEventListener('visibilitychange', handleVisibility)
+
+    return () => {
+      running = false
+      cancelAnimationFrame(rafId)
+      document.removeEventListener('visibilitychange', handleVisibility)
+    }
   }, [])
 
   return <>{children}</>

@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useRef } from 'react'
+import Image from 'next/image'
 import { motion, useScroll, useTransform, useInView } from 'framer-motion'
 
 interface ParallaxImageProps {
@@ -11,6 +12,8 @@ interface ParallaxImageProps {
 }
 
 const ease: [number, number, number, number] = [0.76, 0, 0.24, 1]
+
+const MotionImage = motion(Image)
 
 export default function ParallaxImage({ src, alt, className = '', containerClassName = '' }: ParallaxImageProps) {
     const ref = useRef<HTMLDivElement>(null)
@@ -41,8 +44,7 @@ export default function ParallaxImage({ src, alt, className = '', containerClass
                     className="w-full"
                     style={{ willChange: 'transform' }}
                 >
-                    {/* negative margin gives the parallax room so overflow-hidden never clips the edge */}
-                    <motion.img
+                    <MotionImage
                         style={{
                             y,
                             scale: 1.08,
@@ -52,6 +54,9 @@ export default function ParallaxImage({ src, alt, className = '', containerClass
                         }}
                         src={src}
                         alt={alt}
+                        width={1600}
+                        height={900}
+                        sizes="(max-width: 768px) 100vw, 60vw"
                         className={`w-full h-auto block ${className}`}
                     />
                 </motion.div>

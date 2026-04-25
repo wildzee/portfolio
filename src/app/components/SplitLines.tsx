@@ -1,5 +1,6 @@
 'use client'
 
+import { memo } from 'react'
 import { motion } from 'framer-motion'
 import { easePremium } from '@/lib/motion'
 
@@ -9,7 +10,7 @@ interface Props {
   className?: string
 }
 
-export default function SplitLines({ children, delay = 0, className }: Props) {
+const SplitLines = memo(function SplitLines({ children, delay = 0, className }: Props) {
   return (
     <motion.div
       className={className}
@@ -33,4 +34,6 @@ export default function SplitLines({ children, delay = 0, className }: Props) {
       </div>
     </motion.div>
   )
-}
+})
+
+export default SplitLines

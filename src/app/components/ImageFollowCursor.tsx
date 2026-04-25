@@ -1,5 +1,6 @@
 'use client'
 
+import Image from 'next/image'
 import { motion, useMotionValue, useSpring } from 'framer-motion'
 import { useEffect } from 'react'
 import { easePremium } from '@/lib/motion'
@@ -37,10 +38,12 @@ export default function ImageFollowCursor({ src, visible }: Props) {
         style={{ transform: 'translate(20px, -60%)' }}
       >
         {src && (
-          <img
+          <Image
             src={src}
             alt=""
-            className="w-48 h-32 object-cover rounded-xl shadow-2xl"
+            width={192}
+            height={128}
+            className="object-cover rounded-xl shadow-2xl"
             style={{ display: 'block' }}
           />
         )}
