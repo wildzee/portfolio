@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { motion, useMotionValue, useSpring } from 'framer-motion'
 
 export default function Magnetic({
@@ -13,7 +13,6 @@ export default function Magnetic({
     pullRadius?: number
 }) {
     const ref = useRef<HTMLDivElement>(null)
-    const [isHovered, setIsHovered] = useState(false)
     const isHoveredRef = useRef(false)
 
     const x = useMotionValue(0)
@@ -38,13 +37,11 @@ export default function Magnetic({
             if (distance < pullRadius + Math.max(width, height) / 2) {
                 if (!isHoveredRef.current) {
                     isHoveredRef.current = true
-                    setIsHovered(true)
                 }
                 x.set((distX / width) * strength)
                 y.set((distY / height) * strength)
             } else if (isHoveredRef.current) {
                 isHoveredRef.current = false
-                setIsHovered(false)
                 x.set(0)
                 y.set(0)
             }
@@ -52,7 +49,6 @@ export default function Magnetic({
 
         const handleMouseLeave = () => {
             isHoveredRef.current = false
-            setIsHovered(false)
             x.set(0)
             y.set(0)
         }
