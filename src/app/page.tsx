@@ -850,7 +850,8 @@ export default function Home() {
                 )
                 setFormStatus('sent')
                 setFormData({ name: '', email: '', message: '' })
-              } catch {
+              } catch (err) {
+                console.error('EmailJS error:', err)
                 setFormStatus('error')
               }
             }}
