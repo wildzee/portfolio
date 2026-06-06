@@ -21,22 +21,21 @@ export default function CustomCursor() {
     useEffect(() => {
         if (window.matchMedia('(pointer: coarse)').matches) return
 
-        const move = (e: MouseEvent) => {
-            posRef.current = { x: e.clientX, y: e.clientY }
-            lastMoveRef.current = performance.now()
-            if (!visibleRef.current) {
-                visibleRef.current = true
-                setVisible(true)
-            }
-        }
         const tick = () => {
             const cp = curPosRef.current
             const { x, y } = posRef.current
             const dx = x - cp.x
             const dy = y - cp.y
             const dist = Math.sqrt(dx * dx + dy * dy)
-            const idle = performance.now() - lastMoveRef.current > 16
-            if (idle || dist > 80) {
+            const idle = performance.now() - lastMoveRef.current > 100
+
+            if (idle && dist < 0.5) {
+                // cursor settled — stop the loop until next mousemove
+                rafRef.current = 0
+                return
+            }
+
+            if (dist > 80) {
                 cp.x = x
                 cp.y = y
             } else {
@@ -48,6 +47,20 @@ export default function CustomCursor() {
             }
             rafRef.current = requestAnimationFrame(tick)
         }
+
+        const move = (e: MouseEvent) => {
+            posRef.current = { x: e.clientX, y: e.clientY }
+            lastMoveRef.current = performance.now()
+            if (!visibleRef.current) {
+                visibleRef.current = true
+                setVisible(true)
+            }
+            // restart the loop if it self-paused
+            if (!rafRef.current) {
+                rafRef.current = requestAnimationFrame(tick)
+            }
+        }
+
         rafRef.current = requestAnimationFrame(tick)
         window.addEventListener('mousemove', move)
 
@@ -69,6 +82,15 @@ export default function CustomCursor() {
             // Fast path: data-cursor elements — synchronous, no layout queries
             const el = target.closest('[data-cursor]')
             if (el) {
+                const tag = (el as HTMLElement).tagName
+                if (tag === 'INPUT' || tag === 'TEXTAREA') {
+                    const fontSize = parseFloat(window.getComputedStyle(el as HTMLElement).fontSize) || 16
+                    const cursorHeight = Math.max(20, Math.min(120, fontSize * 1.4))
+                    setLabel('')
+                    setDynamicSize({ width: 2, height: cursorHeight })
+                    setCursorType('text')
+                    return
+                }
                 setLabel(el.getAttribute('data-cursor') || '')
                 const rect = el.getBoundingClientRect()
                 const size = Math.max(50, Math.min(90, Math.min(rect.width, rect.height) * 0.6))

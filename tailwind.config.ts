@@ -10,8 +10,8 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ["Space Grotesk", "sans-serif"],
-        display: ["Syne", "sans-serif"],
+        sans: ["var(--font-space-grotesk)", "sans-serif"],
+        display: ["var(--font-syne)", "sans-serif"],
       },
       colors: {
         background: "var(--background)",

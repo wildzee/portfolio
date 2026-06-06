@@ -1,43 +1,35 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
+import { useAnimationFrame } from 'framer-motion'
 import Lenis from 'lenis'
 
+// Expose Lenis instance so other components can access scroll state
+export let lenis: Lenis | null = null
+
 export default function SmoothScroll({ children }: { children: React.ReactNode }) {
+  const lenisRef = useRef<Lenis | null>(null)
+
   useEffect(() => {
-    const lenis = new Lenis({
+    const instance = new Lenis({
       duration: 1.2,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smoothWheel: true,
     })
-
-    let rafId: number
-    let running = true
-
-    function raf(time: number) {
-      if (!running) return
-      lenis.raf(time)
-      rafId = requestAnimationFrame(raf)
-    }
-    rafId = requestAnimationFrame(raf)
-
-    const handleVisibility = () => {
-      if (document.hidden) {
-        running = false
-        cancelAnimationFrame(rafId)
-      } else {
-        running = true
-        rafId = requestAnimationFrame(raf)
-      }
-    }
-    document.addEventListener('visibilitychange', handleVisibility)
+    lenisRef.current = instance
+    lenis = instance
 
     return () => {
-      running = false
-      cancelAnimationFrame(rafId)
-      document.removeEventListener('visibilitychange', handleVisibility)
+      instance.destroy()
+      lenisRef.current = null
+      lenis = null
     }
   }, [])
+
+  // Drive Lenis from Framer Motion's RAF — one shared loop instead of two
+  useAnimationFrame((time) => {
+    lenisRef.current?.raf(time)
+  })
 
   return <>{children}</>
 }

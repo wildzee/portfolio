@@ -177,19 +177,6 @@ export default function Home() {
   const heroOpacity = useTransform(scrollYProgress, [0, 0.18], [1, 0])
   const heroScale = useTransform(scrollYProgress, [0, 0.18], [1, 0.88])
   const heroCtaY = useTransform(scrollYProgress, [0, 0.18], [0, -20])
-  const orbScale = useTransform(scrollYProgress, [0, 0.2], [1, 1.2])
-  const logoGlowOpacity = useTransform(scrollYProgress, [0, 0.18], [0.06, 0.22])
-  const logoGlowScale = useTransform(scrollYProgress, [0, 0.18], [1, 1.12])
-  const logoGlowRef = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    return scrollYProgress.on('change', (v) => {
-      const p = Math.min(v / 0.18, 1)
-      if (logoGlowRef.current)
-        logoGlowRef.current.style.filter =
-          `drop-shadow(0 0 ${p * 55}px #3CDA6466) drop-shadow(0 0 ${p * 110}px #3CDA6422)`
-    })
-  }, [scrollYProgress])
 
   useEffect(() => {
     // Read saved theme preference or default to dark
@@ -213,8 +200,6 @@ export default function Home() {
     document.documentElement.classList.toggle('dark', isDark)
     localStorage.setItem('theme', isDark ? 'dark' : 'light')
   }, [isDark, mounted])
-
-  if (!mounted) return null
 
   const scrollToSection = (sectionId: string) => {
     document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' })
@@ -477,28 +462,28 @@ export default function Home() {
           animate={!showPreloader ? "visible" : "hidden"}
           variants={stagger}
         >
-          {/* Floating orbs with breathing animation */}
-          <motion.div style={{ scale: orbScale }} className="absolute inset-0 -z-10 overflow-hidden pointer-events-none">
-            <div className="orb-breathing absolute top-[-5%] left-[-10%] w-[300px] h-[300px] sm:w-[450px] sm:h-[450px] md:w-[600px] md:h-[600px] rounded-full bg-primary/5 blur-[130px]" />
-            <div className="orb-breathing-reverse absolute bottom-[10%] right-[-10%] w-[200px] h-[200px] sm:w-[300px] sm:h-[300px] md:w-[400px] md:h-[400px] rounded-full bg-amber-900/5 blur-[100px]" />
-          </motion.div>
+          {/* Floating orbs — static (no animation/scroll transform) to avoid
+              re-rasterizing the large blur every frame, which caused scroll jank. */}
+          <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none">
+            <div className="absolute top-[-5%] left-[-10%] w-[300px] h-[300px] sm:w-[450px] sm:h-[450px] md:w-[600px] md:h-[600px] rounded-full bg-primary/5 blur-[130px]" />
+            <div className="absolute bottom-[10%] right-[-10%] w-[200px] h-[200px] sm:w-[300px] sm:h-[300px] md:w-[400px] md:h-[400px] rounded-full bg-amber-900/5 blur-[100px]" />
+          </div>
 
           <motion.div style={{ y: heroY, opacity: heroOpacity }} className="relative">
-            {/* Background Logo Watermark — glow intensifies on scroll */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9, rotate: -5, x: "-50%", y: "-50%" }}
-              animate={{ opacity: 1, scale: 1, rotate: 0, x: "-50%", y: "-50%" }}
-              transition={{ duration: 1.5, ease: "easeOut", delay: 0.2 }}
-              className="absolute left-1/2 top-1/2 w-[280px] h-[280px] sm:w-[420px] sm:h-[420px] md:w-[650px] md:h-[650px] lg:w-[800px] lg:h-[800px] -z-10 pointer-events-none"
-              ref={logoGlowRef}
-              style={{ opacity: logoGlowOpacity, scale: logoGlowScale }}
+            {/* Background Logo Watermark — static, no animation */}
+            <div
+              className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[280px] h-[280px] sm:w-[420px] sm:h-[420px] md:w-[650px] md:h-[650px] lg:w-[800px] lg:h-[800px] -z-10 pointer-events-none opacity-[0.12]"
             >
-              <img
+              <Image
                 src="/images/logo-outline.svg"
                 alt=""
-                className="w-full h-full object-contain dark:invert"
+                fill
+                unoptimized
+                priority
+                sizes="(max-width: 640px) 280px, (max-width: 768px) 420px, (max-width: 1024px) 650px, 800px"
+                className="object-contain dark:invert"
               />
-            </motion.div>
+            </div>
 
             <motion.p variants={fadeInUp} className="text-xs uppercase tracking-[0.3em] text-secondary mb-10">
               Based in Dubai, UAE
