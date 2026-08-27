@@ -366,7 +366,8 @@ export default function Home() {
                       href="#contact"
                       data-cursor=""
                       onClick={(e) => { e.preventDefault(); setShowMenu(false); scrollToSection('contact') }}
-                      className="hidden sm:flex items-center gap-2 px-4 py-2 border border-white/20 rounded-md text-xs uppercase tracking-widest hover:border-white transition-colors"
+                      className="hidden sm:flex items-center gap-2 px-4 py-2 border rounded-md text-xs uppercase tracking-widest hover:border-primary hover:text-primary transition-colors"
+                      style={{ borderColor: 'var(--border)' }}
                     >
                       <i className="bx bx-phone" /> Book a call
                     </a>
@@ -402,7 +403,7 @@ export default function Home() {
                     <a
                       href={`#${item.id}`}
                       data-cursor=""
-                      className="text-4xl sm:text-5xl md:text-7xl leading-[1.1] font-display font-medium text-foreground hover:text-white transition-colors inline-block"
+                      className="text-4xl sm:text-5xl md:text-7xl leading-[1.1] font-display font-medium text-foreground hover:text-primary transition-colors inline-block"
                       onClick={(e) => { e.preventDefault(); scrollToSection(item.id) }}
                     >
                       {item.label}
