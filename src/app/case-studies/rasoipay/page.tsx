@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { motion, useScroll, useTransform, type Variants } from 'framer-motion'
-import { useRef, useState, useEffect } from 'react'
+import { useRef } from 'react'
 import CursorBlurOriginal from '../../components/cursors/CursorBlurOriginal'
 import ProcessStep from '@/app/components/ProcessStep'
 import ThemeToggle from '../../components/ThemeToggle'
@@ -19,36 +19,6 @@ const stagger: Variants = {
   visible: { opacity: 1, transition: { staggerChildren: 0.12 } },
 }
 
-function CountUp({ target, duration = 2 }: { target: number; duration?: number }) {
-  const ref = useRef<HTMLSpanElement>(null)
-  const [count, setCount] = useState(0)
-  const [started, setStarted] = useState(false)
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) setStarted(true) },
-      { threshold: 0.5 }
-    )
-    if (ref.current) observer.observe(ref.current)
-    return () => observer.disconnect()
-  }, [])
-
-  useEffect(() => {
-    if (!started) return
-    let start = 0
-    const increment = target / (duration * 60)
-    const tick = () => {
-      start += increment
-      if (start >= target) { setCount(target); return }
-      setCount(Math.floor(start))
-      requestAnimationFrame(tick)
-    }
-    requestAnimationFrame(tick)
-  }, [started, target, duration])
-
-  return <span ref={ref}>{count.toLocaleString()}</span>
-}
-
 export default function RasoiPayCaseStudy() {
   const heroRef = useRef<HTMLDivElement>(null)
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ['start start', 'end start'] })
@@ -56,10 +26,10 @@ export default function RasoiPayCaseStudy() {
   const heroOpacity = useTransform(scrollYProgress, [0, 0.6], [1, 0])
 
   const metrics = [
-    { value: 22, suffix: '%', label: 'Boost in AOV' },
-    { value: 50, suffix: 'ms', label: 'Load Times', isFloat: true, prefix: '<' },
-    { value: 5, suffix: '+', label: 'Pilot Partners' },
-    { value: 100, suffix: '%', label: 'Cashless Workflow' },
+    { value: '5', label: 'Pilot restaurants' },
+    { value: '2', label: 'Sides shipped — diner + merchant' },
+    { value: '1', label: 'Solo founder, design and build' },
+    { value: 'Live', label: 'Product status' },
   ]
 
   const processSteps = [
@@ -72,7 +42,7 @@ export default function RasoiPayCaseStudy() {
     {
       number: '02',
       title: 'Product Strategy & Next.js Architecture',
-      description: `Architected a scalable B2B SaaS solution. Designed a real-time dashboard for restaurant owners and a seamless, commission-free QR ordering flow for their dine-in customers.`,
+      description: `Architected a two-sided B2B2C platform. Designed a real-time dashboard for restaurant owners and a seamless, commission-free QR ordering flow for their dine-in customers.`,
       tags: ['SaaS Architecture', 'Next.js', 'Firebase Auth'],
     },
     {
@@ -83,14 +53,14 @@ export default function RasoiPayCaseStudy() {
     },
     {
       number: '04',
-      title: 'AI Integration & Analytics',
-      description: `Integrated AI-driven insights to predict peak hours and recommend dynamic menu adjustments. Built analytics dashboards giving owners real-time visibility into sales metrics.`,
-      tags: ['AI/ML', 'Data Visualization', 'Analytics'],
+      title: 'Analytics & Roadmap',
+      description: `Built analytics dashboards giving owners real-time visibility into sales metrics. AI-driven insights to predict peak hours and recommend dynamic menu adjustments are scoped as a roadmap item.`,
+      tags: ['Data Visualization', 'Analytics', 'Roadmap'],
     },
     {
       number: '05',
       title: 'Deployment & Pilot Programs',
-      description: `Successfully onboarded 5+ pilot partners. Monitored session recordings and analytics to continuously iterate the checkout flow, ultimately achieving sub-50ms load times.`,
+      description: `Onboarded 5 pilot restaurants onto the live platform. Monitoring session recordings and analytics to continuously iterate the ordering flow.`,
       tags: ['Deployment', 'Iteration', 'Pilot Testing'],
     },
   ]
@@ -109,7 +79,7 @@ export default function RasoiPayCaseStudy() {
     {
       icon: 'bx bx-brain',
       title: 'AI Revenue Predictor',
-      description: 'Machine learning models integrated to project daily revenue patterns and optimize staffing requirements.',
+      description: 'Roadmap — ML models to project daily revenue patterns and optimize staffing requirements, planned for a future release.',
     },
     {
       icon: 'bx bx-wallet',
@@ -123,8 +93,8 @@ export default function RasoiPayCaseStudy() {
     },
     {
       icon: 'bx bx-timer',
-      title: '<50ms Performance',
-      description: 'Optimized Next.js frontend ensuring immediate load times even on spotty restaurant 4G connections.',
+      title: 'Fast, Lightweight Frontend',
+      description: 'Optimized Next.js frontend built for immediate load times, even on spotty restaurant 4G connections.',
     },
   ]
 
@@ -192,7 +162,7 @@ export default function RasoiPayCaseStudy() {
             <motion.div variants={fadeUp} className="flex items-center gap-3 mb-8">
               <span className="text-[10px] font-bold tracking-widest uppercase text-emerald-400 flex items-center gap-1.5">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block" />
-                LIVE · B2B SAAS
+                LIVE · B2B2C
               </span>
             </motion.div>
 
@@ -209,11 +179,11 @@ export default function RasoiPayCaseStudy() {
               variants={fadeUp}
               className="text-lg sm:text-xl md:text-2xl text-secondary leading-relaxed max-w-2xl mb-10"
             >
-              An AI-powered B2B platform transforming legacy restaurant management into blazing-fast digital operations.
+              A QR ordering and restaurant management platform — a fast, commission-free ordering flow for diners, and a real-time dashboard for the restaurants running it.
             </motion.p>
 
             <motion.div variants={fadeUp} className="flex flex-wrap gap-3">
-              {['B2B SaaS', 'Next.js', 'AI/ML', 'UX/UI Engineering', 'Payment Systems'].map((tag) => (
+              {['B2B2C', 'Next.js', 'UX/UI Design', 'Payment Systems'].map((tag) => (
                 <span
                   key={tag}
                   className="text-xs px-3 py-1.5 rounded-full border font-medium tracking-wide"
@@ -263,13 +233,7 @@ export default function RasoiPayCaseStudy() {
                 className="text-center"
               >
                 <p className="text-4xl sm:text-5xl font-display font-bold text-foreground mb-1">
-                  {m.prefix && <span>{m.prefix}</span>}
-                  {m.isFloat ? (
-                    <span>{m.value}</span>
-                  ) : (
-                    <CountUp target={m.value as number} />
-                  )}
-                  <span>{m.suffix}</span>
+                  {m.value}
                 </p>
                 <p className="text-xs uppercase tracking-[0.2em] text-secondary">{m.label}</p>
               </motion.div>
@@ -313,7 +277,7 @@ export default function RasoiPayCaseStudy() {
             >
               <p className="text-sm uppercase tracking-widest text-primary mb-2 font-bold">The Core Insight</p>
               <p className="text-base text-secondary leading-relaxed">
-                By removing friction in the ordering phase, customers naturally order more. Providing zero-touch QR ordering immediately drove a 22% bump in revenue for pilot partners.
+                Removing the wait for a server compresses the gap between wanting to order and ordering. The design bet: lower friction at the ordering step raises basket size and table turnover.
               </p>
             </div>
           </motion.div>
@@ -333,21 +297,21 @@ export default function RasoiPayCaseStudy() {
           <motion.div variants={fadeUp} className="md:sticky md:top-32 self-start">
             <p className="text-xs uppercase tracking-[0.3em] text-secondary mb-4">02 — Role</p>
             <h2 className="text-4xl sm:text-5xl font-display font-medium leading-[1.1]">
-              Founder &<br />UX/UI Engineer
+              Founder &<br />Product Lead
             </h2>
             <div className="mt-8 space-y-2 text-sm text-secondary">
               <p className="flex items-center gap-2"><i className="bx bx-buildings text-primary" /> Start-up</p>
               <p className="flex items-center gap-2"><i className="bx bx-world text-primary" /> Remote, India</p>
-              <p className="flex items-center gap-2"><i className="bx bx-calendar text-primary" /> Apr 2025 — Present</p>
+              <p className="flex items-center gap-2"><i className="bx bx-calendar text-primary" /> Feb 2024 — Present</p>
             </div>
           </motion.div>
 
           <motion.div variants={fadeUp} className="space-y-6">
             <p className="text-xl md:text-2xl leading-[1.65] text-secondary">
-              As the sole founder and product owner, I engineered Rasoi Pay completely <span className="text-foreground font-medium">from 0 to 1</span>, bridging the gap between rigorous enterprise needs and consumer-friendly aesthetics.
+              As the sole founder and product owner, I engineered Rasoi Pay completely <span className="text-foreground font-medium">from 0 to 1</span>, bridging the gap between rigorous operational needs and consumer-friendly aesthetics.
             </p>
             <p className="text-xl md:text-2xl leading-[1.65] text-secondary">
-              My responsibilities span both deep technical architecture and granular pixel-pushing. I designed the modular design system, developed the Next.js frontend, integrated real-time Firebase backend systems, and built the AI revenue prediction pipeline.
+              My responsibilities span both deep technical architecture and granular pixel-pushing. I designed the modular design system, developed the Next.js frontend, and integrated real-time Firebase backend systems across both the diner-facing ordering flow and the merchant dashboard.
             </p>
           </motion.div>
         </motion.section>
@@ -503,14 +467,14 @@ export default function RasoiPayCaseStudy() {
                 Operational speed that scales
               </h2>
               <p className="text-lg text-secondary leading-relaxed">
-                By deeply aligning technical architecture with real-world restaurant operations, Rasoi Pay has successfully modernized its pilot partners&apos; workflows. Table turnover is faster, menus can pivot dynamically without print costs, and AI predictions empower owners with unprecedented foresight.
+                Rasoi Pay is a live, two-sided product: diners order and pay from their table without waiting for a server, and restaurant owners manage the menu and orders from a real-time dashboard. Five pilot restaurants are onboarded and running on it. Menu items, prices, and availability update instantly with no reprint cost — a direct fix for the static-menu problem the research surfaced.
               </p>
             </motion.div>
 
             <div className="grid grid-cols-2 gap-6 items-center">
               {[
-                { label: 'Pilot Retention', val: '100%' },
-                { label: 'Reduced Admin', val: '-40%' },
+                { label: 'Pilot restaurants live', val: '5' },
+                { label: 'Reprint cost on menu changes', val: '0' },
               ].map((res, i) => (
                 <motion.div
                   key={i}

@@ -243,27 +243,27 @@ export default function Home() {
   const projects = [
     {
       status: 'SHIPPED',
-      title: 'Rasoi Pay',
-      role: 'Founder & Product Lead',
-      description: 'B2B SaaS for restaurant management',
-      href: '/case-studies/rasoipay',
-      public: true,
-      image: '/Rasoi_Pay/rp_desktop_1.png',
-    },
-    {
-      status: 'SHIPPED',
       title: 'Iqra App',
-      role: 'UX Lead & Co-Designer',
-      description: 'Mobile product, 50,000+ active users',
+      role: 'UX Lead & Designer',
+      description: 'Mobile product, 100,000+ users · Full redesign shipping now',
       href: '/case-studies/iqra',
       public: true,
       image: '/Iqra/Iqra_mockup.png',
     },
     {
+      status: 'SHIPPED',
+      title: 'Rasoi Pay',
+      role: 'Founder & Product Lead',
+      description: 'QR ordering and restaurant management platform',
+      href: '/case-studies/rasoipay',
+      public: true,
+      image: '/Rasoi_Pay/rp_desktop_1.png',
+    },
+    {
       status: 'CONFIDENTIAL',
       title: 'Danway EME',
-      role: 'Lead Product Designer',
-      description: 'Enterprise workforce & labor-cost dashboard',
+      role: 'Product Designer',
+      description: 'Manpower and procurement system built on SAP',
       href: null,
       public: false,
       image: '',
@@ -537,7 +537,7 @@ export default function Home() {
               Product Designer at{' '}
               <span className="text-foreground font-semibold">Danway EME</span>
               {' '}·{' '}
-              UX/UI Engineer at{' '}
+              Founder at{' '}
               <span className="text-foreground font-semibold">Rasoi Pay</span>
             </motion.p>
 
@@ -660,16 +660,19 @@ export default function Home() {
               {/* Bio */}
               <div className="space-y-5 sm:space-y-8 text-base sm:text-lg md:text-xl leading-[1.65] text-secondary">
                 <SplitLines delay={0} className="text-base sm:text-lg md:text-xl leading-[1.65] text-secondary">
-                  I&apos;m Afjal — a Strategic Product Designer and Founder based in Dubai, UAE. I specialize in architecting AI-driven SaaS solutions from 0 to 1, transforming complex business logic into <span className="text-primary font-medium">high-conversion user experiences</span> for B2B and B2C platforms.
+                  I&apos;m Afjal, a product designer based in Dubai.
                 </SplitLines>
                 <SplitLines delay={0.1} className="text-base sm:text-lg md:text-xl leading-[1.65] text-secondary">
-                  Currently at <span className="text-primary font-medium">Danway EME</span> leading the digitization of workforce management for a multi-million dollar industrial firm — transitioning 3,000+ field employees from paper-based tracking to a real-time analytics suite.
+                  I designed the UI for <span className="text-primary font-medium">Iqra</span>, a Quran app now past 100,000 users across iOS and Android, and led the full redesign that is shipping in stages right now.
                 </SplitLines>
                 <SplitLines delay={0.2} className="text-base sm:text-lg md:text-xl leading-[1.65] text-secondary">
-                  I also co-founded <span className="text-primary font-medium">Rasoi Pay</span>, scaling a production-ready QR-ordering SaaS from concept to live — boosting average order value by 22% and achieving &lt;50ms menu load times. Expert in <span className="text-primary font-medium">Agentic AI</span>, scalable design systems, and full-stack UX/UI methodologies.
+                  At <span className="text-primary font-medium">Danway</span> I build internal systems on top of SAP. The work started with automating daily manpower reporting, which used to take 40 to 60 minutes by hand every morning, and grew into a procurement tool. Per-seat SAP licence cost meant site storekeepers had no access to the system, so item lists travelled by spreadsheet to a head office assistant who searched and keyed in every item one at a time. I scraped and restructured the item master so storekeepers can search and raise requisitions themselves. That module is in build; the timekeeping side is live and cut the daily workload from three or four hours to fifteen minutes.
                 </SplitLines>
                 <SplitLines delay={0.3} className="text-base sm:text-lg md:text-xl leading-[1.65] text-secondary">
-                  In my downtime, I explore new destinations, shoot film, and push pixels on side projects.
+                  I also founded <span className="text-primary font-medium">Rasoi Pay</span>, a QR-ordering platform for restaurants, and designed and built it end to end.
+                </SplitLines>
+                <SplitLines delay={0.4} className="text-base sm:text-lg md:text-xl leading-[1.65] text-secondary">
+                  Outside work I shoot film and travel.
                 </SplitLines>
               </div>
 
@@ -682,25 +685,19 @@ export default function Home() {
                       company: 'Danway EME',
                       role: 'Product Designer',
                       period: 'June 2025 — Present · Dubai, UAE',
-                      description: 'Digitizing legacy workforce management for a multi-million dollar industrial firm. Engineered a proprietary automated dashboard prototype, reducing administrative man-hours by 35%. Conducted ethnographic user research with 3,000+ field employees to design a high-contrast, mobile-first UI for high-pressure industrial environments. Delivered a real-time analytics suite providing instant visibility into manpower allocation and labor cost-coding.'
+                      description: 'Building internal systems on top of SAP, starting with automating daily manpower reporting that used to take 40 to 60 minutes by hand each morning. Grew the scope into a procurement tool: restructured the item master so site storekeepers, who had no direct SAP access, can search and raise requisitions themselves instead of routing everything through a head-office assistant. The timekeeping module is live and cut the daily workload from three or four hours to fifteen minutes; the procurement module is in build.'
                     },
                     {
                       company: 'Rasoi Pay',
-                      role: 'UX/UI Engineer',
-                      period: 'April 2025 — Present · Remote, India',
-                      description: 'Disrupting the F&B market with a QR-ordering ecosystem. Scaled a production-ready SaaS platform (rasoipay.com) from concept to live — automating personalized menu recommendations and boosting average order value (AOV) by 22%. Owned the entire product lifecycle: UX research, Figma prototyping, and full-stack deployment using Next.js/Firebase. Optimized technical architecture to achieve <50ms menu load times, securing 5+ pilot partnerships.'
+                      role: 'Founder & Product Lead',
+                      period: 'Feb 2024 — Present · Remote, India',
+                      description: 'Disrupting the F&B market with a QR-ordering ecosystem. Built a production platform (rasoipay.com) from concept to live, with 5 pilot restaurants onboarded and running. Owned the entire product lifecycle: UX research, Figma prototyping, and full-stack deployment using Next.js/Firebase.'
                     },
                     {
                       company: 'Webzspot Technologies',
-                      role: 'Senior UX/UI Designer',
+                      role: 'UI/UX Designer',
                       period: 'May 2023 — Feb 2024 · Remote, India',
                       description: 'Led the end-to-end redesign of the agency\'s corporate identity and client portals, driving a 50% increase in lead generation. Established a modular Figma design system that decreased front-end development time by 30%. Collaborated with cross-functional teams to deliver pixel-perfect, WCAG-compliant responsive prototypes for 12+ international clients.'
-                    },
-                    {
-                      company: 'Independent Creative Strategist',
-                      role: 'Digital Growth & Content Lead',
-                      period: 'Jan 2021 — May 2023 · Global / Remote',
-                      description: 'Engineered a digital brand strategy that generated over 400,000 organic engagements across YouTube and streaming platforms. Utilized audience retention analytics and A/B testing on content thumbnails to maximize user engagement and conversion.'
                     },
                   ].map((exp, i) => (
                     <div key={i} className="group">
@@ -809,7 +806,7 @@ export default function Home() {
               <h2
                 className="text-2xl sm:text-3xl md:text-5xl font-display font-medium leading-[1.2] hover:text-primary transition-colors w-fit"
               >
-                Let talk
+                Let&apos;s talk
               </h2>
               <h2
                 className="text-2xl sm:text-3xl md:text-5xl font-display font-medium leading-[1.2] hover:text-primary transition-colors w-fit"

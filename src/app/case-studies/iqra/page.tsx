@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { motion, useScroll, useTransform, type Variants } from 'framer-motion'
-import { useRef, useState, useEffect } from 'react'
+import { useRef } from 'react'
 import CursorBlurOriginal from '../../components/cursors/CursorBlurOriginal'
 import ProcessStep from '@/app/components/ProcessStep'
 import ThemeToggle from '../../components/ThemeToggle'
@@ -19,36 +19,6 @@ const stagger: Variants = {
   visible: { opacity: 1, transition: { staggerChildren: 0.12 } },
 }
 
-function CountUp({ target, duration = 2 }: { target: number; duration?: number }) {
-  const ref = useRef<HTMLSpanElement>(null)
-  const [count, setCount] = useState(0)
-  const [started, setStarted] = useState(false)
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) setStarted(true) },
-      { threshold: 0.5 }
-    )
-    if (ref.current) observer.observe(ref.current)
-    return () => observer.disconnect()
-  }, [])
-
-  useEffect(() => {
-    if (!started) return
-    let start = 0
-    const increment = target / (duration * 60)
-    const tick = () => {
-      start += increment
-      if (start >= target) { setCount(target); return }
-      setCount(Math.floor(start))
-      requestAnimationFrame(tick)
-    }
-    requestAnimationFrame(tick)
-  }, [started, target, duration])
-
-  return <span ref={ref}>{count.toLocaleString()}</span>
-}
-
 export default function IqraCaseStudy() {
   const heroRef = useRef<HTMLDivElement>(null)
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ['start start', 'end start'] })
@@ -56,17 +26,17 @@ export default function IqraCaseStudy() {
   const heroOpacity = useTransform(scrollYProgress, [0, 0.6], [1, 0])
 
   const metrics = [
-    { value: 50000, suffix: '+', label: 'Active Users' },
-    { value: 4.9, suffix: '★', label: 'App Store Rating', isFloat: true },
-    { value: 600, suffix: '+', label: 'Reviews' },
-    { value: 2, suffix: ' Platforms', label: 'iOS & Android' },
+    { value: '100,000+', label: 'Active Users' },
+    { value: '4.9★', label: 'Rating on Google Play' },
+    { value: '600+', label: 'Reviews' },
+    { value: '2', label: 'Platforms — iOS & Android' },
   ]
 
   const processSteps = [
     {
       number: '01',
       title: 'Discovery & Research',
-      description: `Conducted in-depth user interviews with Roman Hindi speakers across multiple regions to understand their pain points with existing Quran apps. Mapped existing journeys to identify accessibility gaps and authenticity concerns.`,
+      description: `Conducted in-depth user interviews with Roman Urdu readers across multiple regions to understand their pain points with existing Quran apps. Mapped existing journeys to identify accessibility gaps and authenticity concerns.`,
       tags: ['User Interviews', 'Competitive Audit', 'Journey Mapping'],
     },
     {
@@ -98,7 +68,7 @@ export default function IqraCaseStudy() {
   const features = [
     {
       icon: 'bx bx-font',
-      title: 'Roman Hindi Transliteration',
+      title: 'Roman Urdu Transliteration',
       description: 'First-class support for Roman script readers — the primary gap in the market that Iqra was built to solve.',
     },
     {
@@ -200,7 +170,7 @@ export default function IqraCaseStudy() {
               variants={fadeUp}
               className="text-5xl sm:text-6xl md:text-7xl lg:text-[5.5rem] font-display font-bold leading-[1.0] tracking-tight mb-6"
             >
-              Iqra — Roman Hindi
+              Iqra — Roman Urdu
               <br />
               <span className="text-gradient">Quran App</span>
             </motion.h1>
@@ -209,7 +179,7 @@ export default function IqraCaseStudy() {
               variants={fadeUp}
               className="text-lg sm:text-xl md:text-2xl text-secondary leading-relaxed max-w-2xl mb-10"
             >
-              Making the Quran accessible to 150M+ Roman Hindi speakers who were underserved by every existing app on the market.
+              Making the Quran accessible to Roman Urdu readers who were underserved by every existing app on the market.
             </motion.p>
 
             <motion.div variants={fadeUp} className="flex flex-wrap gap-3">
@@ -263,11 +233,7 @@ export default function IqraCaseStudy() {
                 className="text-center"
               >
                 <p className="text-4xl sm:text-5xl font-display font-bold text-foreground mb-1">
-                  {m.isFloat ? (
-                    <span>{m.value}{m.suffix}</span>
-                  ) : (
-                    <><CountUp target={m.value as number} />{m.suffix}</>
-                  )}
+                  {m.value}
                 </p>
                 <p className="text-xs uppercase tracking-[0.2em] text-secondary">{m.label}</p>
               </motion.div>
@@ -295,13 +261,13 @@ export default function IqraCaseStudy() {
 
           <motion.div variants={fadeUp} className="space-y-6">
             <p className="text-xl md:text-2xl leading-[1.65] text-secondary">
-              Over <span className="text-foreground font-medium">150 million Muslims</span> speak Hindi but cannot read Arabic or Devanagari script. Every existing Quran app on iOS and Android was either Arabic-first or lacked Roman script support entirely.
+              Millions of Urdu speakers can speak and understand the language but cannot read Arabic script, and in many cases cannot read Urdu script either. They read Urdu written in Roman letters. <span className="text-foreground font-medium">Every major Quran app was Arabic-first</span> or treated Roman Urdu as a bolt-on.
             </p>
             <p className="text-xl md:text-2xl leading-[1.65] text-secondary">
               Beyond the script barrier, users reported deep concerns about the <span className="text-foreground font-medium">authenticity of sources</span> — many apps failed to cite their Hadith and Duas from verified Salaf references, creating a trust gap for devout users.
             </p>
             <p className="text-xl md:text-2xl leading-[1.65] text-secondary">
-              The opportunity: build the <span className="text-primary font-medium">definitive Roman Hindi Quran app</span> — one that is accessible, deeply customizable, authenticated, and beautifully designed from first launch to daily use.
+              The opportunity: build the <span className="text-primary font-medium">definitive Roman Urdu Quran app</span> — one that is accessible, deeply customizable, authenticated, and beautifully designed from first launch to daily use.
             </p>
 
             {/* Problem callout */}
@@ -311,7 +277,7 @@ export default function IqraCaseStudy() {
             >
               <p className="text-sm uppercase tracking-widest text-primary mb-2 font-bold">The Core Insight</p>
               <p className="text-base text-secondary leading-relaxed">
-                Existing apps treated Roman Hindi as a secondary feature. We designed Iqra to treat it as the primary experience.
+                Existing apps treated Roman Urdu as a secondary feature. We designed Iqra to treat it as the primary experience.
               </p>
             </div>
           </motion.div>
@@ -336,7 +302,7 @@ export default function IqraCaseStudy() {
             <div className="mt-8 space-y-2 text-sm text-secondary">
               <p className="flex items-center gap-2"><i className="bx bx-user text-primary" /> With Aman Maqsood (Dev)</p>
               <p className="flex items-center gap-2"><i className="bx bx-devices text-primary" /> iOS & Android</p>
-              <p className="flex items-center gap-2"><i className="bx bx-calendar text-primary" /> 2023 — 2024</p>
+              <p className="flex items-center gap-2"><i className="bx bx-calendar text-primary" /> 2023 — Present</p>
             </div>
           </motion.div>
 
@@ -345,7 +311,7 @@ export default function IqraCaseStudy() {
               I led the complete <span className="text-foreground font-medium">end-to-end UX design process</span> — from initial user research and information architecture through to high-fidelity prototyping, design system creation, and developer handoff.
             </p>
             <p className="text-xl md:text-2xl leading-[1.65] text-secondary">
-              Working in close collaboration with developer Aman Maqsood, I owned every design decision: the reading experience, the navigation system, the customization model, and the visual language that today serves <span className="text-primary font-medium">50,000+ users</span> daily.
+              Working in close collaboration with developer Aman Maqsood, I owned every design decision: the reading experience, the navigation system, the customization model, and the visual language that today serves <span className="text-primary font-medium">100,000+ active users</span>.
             </p>
           </motion.div>
         </motion.section>
@@ -482,13 +448,13 @@ export default function IqraCaseStudy() {
           <motion.div variants={fadeUp} className="space-y-8">
             {[
               {
-                metric: '50,000+',
+                metric: '100,000+',
                 label: 'Active Users',
-                description: 'Significant market penetration validating product-market fit within the Roman Hindi Quran reader segment — a category with virtually no competition at launch.',
+                description: 'Significant market penetration validating product-market fit within the Roman Urdu Quran reader segment — a category with virtually no competition at launch.',
               },
               {
                 metric: '4.9★',
-                label: 'Rating (600+ Reviews)',
+                label: 'Rating on Google Play (600+ Reviews)',
                 description: 'Exceptional user satisfaction driven by the reading customization system and content authenticity — the two pillars of our initial research.',
               },
               {
@@ -511,6 +477,101 @@ export default function IqraCaseStudy() {
                 </div>
               </div>
             ))}
+          </motion.div>
+        </motion.section>
+
+        {/* ── DIVIDER ── */}
+        <div className="animated-divider" />
+
+        {/* ── REDESIGN 2026 ── */}
+        <motion.section
+          className="py-24 sm:py-32 grid md:grid-cols-[1fr_1.5fr] gap-12 md:gap-24 items-start"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: false, margin: '-80px' }}
+          variants={stagger}
+        >
+          <motion.div variants={fadeUp} className="md:sticky md:top-32 self-start">
+            <p className="text-xs uppercase tracking-[0.3em] text-secondary mb-4">06 — Redesign, 2026</p>
+            <h2 className="text-4xl sm:text-5xl font-display font-medium leading-[1.1]">
+              Rebuilding for the next 100,000
+            </h2>
+          </motion.div>
+
+          <motion.div variants={fadeUp} className="space-y-6">
+            <p className="text-xl md:text-2xl leading-[1.65] text-secondary">
+              Three years of daily-use data surfaced where the original IA was straining — navigation depth for the Hadith library, inconsistent spacing across the reading and dashboard surfaces, and a component set that had grown ad hoc as features shipped.
+            </p>
+            <p className="text-xl md:text-2xl leading-[1.65] text-secondary">
+              I&apos;m leading a full redesign now shipping in staged releases: a rebuilt design system underneath the entire app, a flattened navigation model, and a refined reading surface that carries the font-slider and dark-mode customization further than the original version could support.
+            </p>
+          </motion.div>
+        </motion.section>
+
+        {/* ── DIVIDER ── */}
+        <div className="animated-divider" />
+
+        {/* ── DESIGN SYSTEM ── */}
+        <motion.section
+          className="py-24 sm:py-32"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: false, margin: '-80px' }}
+          variants={stagger}
+        >
+          <motion.div variants={fadeUp} className="mb-16 max-w-2xl">
+            <p className="text-xs uppercase tracking-[0.3em] text-secondary mb-4">07 — Design System</p>
+            <h2 className="text-4xl sm:text-5xl font-display font-medium leading-[1.1] mb-6">
+              The system behind the screens
+            </h2>
+            <p className="text-lg text-secondary leading-relaxed">
+              Identical quality across iOS and Android from a two-person team doesn&apos;t happen by eye. Every screen in Iqra is assembled from one shared system of type, color, and components — the same system the font-slider and high-contrast dark mode are built on top of, not bolted onto.
+            </p>
+          </motion.div>
+
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
+            {[
+              {
+                icon: 'bx bx-text',
+                title: 'Type Scale',
+                description: 'A modular scale spanning Arabic script, Roman Urdu transliteration, and English translation — each with independent size steps so the three reading layers stay legible and balanced at every font-slider setting.',
+              },
+              {
+                icon: 'bx bx-palette',
+                title: 'Color Tokens',
+                description: 'Light and dark mode are derived from one token set, not maintained as two separate palettes — surface, border, and text tokens remap together so contrast ratios hold in both modes.',
+              },
+              {
+                icon: 'bx bx-shapes',
+                title: 'Component Set',
+                description: 'A shared library of reading surfaces, cards, navigation, and controls used identically on iOS and Android, so parity between platforms is a property of the system rather than a QA checklist.',
+              },
+            ].map((item, i) => (
+              <motion.div
+                key={i}
+                variants={fadeUp}
+                className="rounded-xl p-6 border group hover:border-primary/30 transition-colors"
+                style={{ background: 'var(--surface)', borderColor: 'var(--border)' }}
+              >
+                <i className={`${item.icon} text-xl text-primary mb-4 block`} />
+                <h3 className="text-base font-display font-semibold text-foreground mb-2 group-hover:text-primary transition-colors">
+                  {item.title}
+                </h3>
+                <p className="text-sm leading-relaxed text-secondary">{item.description}</p>
+              </motion.div>
+            ))}
+          </div>
+
+          <motion.div variants={fadeUp} className="flex flex-wrap gap-3">
+            <a
+              href="#"
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-2 px-6 py-3 border rounded-full text-sm tracking-wide hover:border-primary hover:text-primary transition-all"
+              style={{ borderColor: 'var(--border)' }}
+            >
+              <i className="bx bxl-figma text-lg" /> View the system on Figma
+            </a>
           </motion.div>
         </motion.section>
 
